@@ -1,0 +1,52 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.11, pytest-8.4.2, pluggy-1.6.0 -- /usr/local/bin/python3.13
+cachedir: .pytest_cache
+rootdir: /tests
+collecting ... collected 8 items
+
+../tests/test_outputs.py::test_pyproject_toml_exists PASSED              [ 12%]
+../tests/test_outputs.py::test_pyproject_toml_has_pep732_config PASSED   [ 25%]
+../tests/test_outputs.py::test_package_source_structure PASSED           [ 37%]
+../tests/test_outputs.py::test_package_has_add_function PASSED           [ 50%]
+../tests/test_outputs.py::test_uv_build_succeeds PASSED                  [ 62%]
+../tests/test_outputs.py::test_editable_installation PASSED              [ 75%]
+../tests/test_outputs.py::test_add_function_works FAILED                 [ 87%]
+../tests/test_outputs.py::test_editable_mode_reflects_changes PASSED     [100%]
+
+=================================== FAILURES ===================================
+___________________________ test_add_function_works ____________________________
+
+    def test_add_function_works():
+        """Test that the add function works correctly."""
+        result = subprocess.run(
+            [sys.executable, "-c", "from mathutils import add; assert add(2, 3) == 5; print('OK')"],
+            cwd="/tmp",
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+    
+>       assert result.returncode == 0, (
+            f"add function test failed. stdout: {result.stdout}, stderr: {result.stderr}"
+        )
+E       AssertionError: add function test failed. stdout: , stderr: Traceback (most recent call last):
+E           File "<string>", line 1, in <module>
+E             from mathutils import add; assert add(2, 3) == 5; print('OK')
+E                                               ^^^^^^^^^^^^^^
+E         AssertionError
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/usr/local/bin/python3.13', '-c', "from mathutils import add; assert add(2, 3) == 5; print('OK')"], returncode=1, stdout='', stderr='Traceback (most recent call last):\n  File "<string>", line 1, in <module>\n    from mathutils import add; assert add(2, 3) == 5; print(\'OK\')\n                                      ^^^^^^^^^^^^^^\nAssertionError\n').returncode
+
+/tests/test_outputs.py:131: AssertionError
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_outputs.py::test_pyproject_toml_exists
+PASSED ../tests/test_outputs.py::test_pyproject_toml_has_pep732_config
+PASSED ../tests/test_outputs.py::test_package_source_structure
+PASSED ../tests/test_outputs.py::test_package_has_add_function
+PASSED ../tests/test_outputs.py::test_uv_build_succeeds
+PASSED ../tests/test_outputs.py::test_editable_installation
+PASSED ../tests/test_outputs.py::test_editable_mode_reflects_changes
+FAILED ../tests/test_outputs.py::test_add_function_works - AssertionError: ad...
+========================= 1 failed, 7 passed in 0.65s ==========================

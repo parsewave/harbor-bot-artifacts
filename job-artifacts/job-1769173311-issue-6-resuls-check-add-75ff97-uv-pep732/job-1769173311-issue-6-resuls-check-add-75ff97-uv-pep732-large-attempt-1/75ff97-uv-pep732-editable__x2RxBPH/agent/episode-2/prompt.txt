@@ -1,0 +1,30 @@
+New Terminal Output:
+
+root@6789c6ef78b3:/app# cat > src/mathutils/__init__.py <<'EOF'
+> """mathutils: tiny math utilities."""
+>
+> __all__ = ["add"]
+>
+>
+> def add(a, b):
+>     """Add two numbers together."""
+>     return a + b
+> EOF
+root@6789c6ef78b3:/app# uv venv
+Using CPython 3.13.11 interpreter at: /usr/local/bin/python3
+Creating virtual environment at: .venv
+Activate with: source .venv/bin/activate
+root@6789c6ef78b3:/app# uv pip install --editable .
+Resolved 1 package in 3ms
+      Built mathutils @ file:///app
+Prepared 1 package in 126ms
+Installed 1 package in 1ms
+ + mathutils==0.1.0 (from file:///app)
+root@6789c6ef78b3:/app# .venv/bin/python -c "import mathutils; print('add(2, 3)=', mathutils.add(2, 3)); print('module=', mathutils.__file__)"
+add(2, 3)= 5
+module= /app/src/mathutils/__init__.py
+root@6789c6ef78b3:/app# perl -0777 -i -pe 's/return a \+ b/return a + b + 1  # editable change test/' src/mathutils/__init__.py
+root@6789c6ef78b3:/app# .venv/bin/python -c "import mathutils; print('after change add(2, 3)=', mathutils.add(2, 3)); print('module=', mathutils.__file__)"
+after change add(2, 3)= 6
+module= /app/src/mathutils/__init__.py
+root@6789c6ef78b3:/app#

@@ -1,0 +1,86 @@
+[?2004hroot@3f42ed6074d3:/app# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@3f42ed6074d3:/app# clear
+[?2004l[H[J[3J[?2004hroot@3f42ed6074d3:/app# uv --version
+[?2004luv 0.7.20
+[?2004hroot@3f42ed6074d3:/app# pip install uv
+[?2004lRequirement already satisfied: uv in /usr/local/lib/python3.13/site-packages (0.7.20)
+[33mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.[0m[33m
+[0m[?2004hroot@3f42ed6074d3:/app# mkdir -p mathutils
+[?2004l[?2004hroot@3f42ed6074d3:/app# cat > mathutils/__init__.py <<'EOF'
+[?2004l[?2004h> def add(a, b):
+[?2004l[?2004h>     return a + b
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@3f42ed6074d3:/app# cat > pyproject.toml <<'EOF'
+[?2004l[?2004h> [project]
+[?2004l[?2004h> name = "mathutils"
+[?2004l[?2004h> version = "0.1.0"
+[?2004l[?2004h> description = "A simple math utilities package"
+[?2004l[?2004h> authors = [{name = "Example Author", email = "author@example.com"}]
+[?2004l[?2004h> requires-python = ">=3.8"
+[?2004l[?2004h> 
+[?2004l[?2004h> [build-system]
+[?2004l[?2004h> requires = ["uv-build"]
+[?2004l[?2004h> build-backend = "uv_build"
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@3f42ed6074d3:/app# uv build
+[?2004l[1mBuilding source distribution...[0m
+Error: Expected a Python module at: src/mathutils/__init__.py
+  [31m×[0m Failed to build `[36m/app[39m`
+[31m  ├─▶ [0mThe build backend returned an error
+[31m  ╰─▶ [0mCall to `uv_build.build_sdist` failed (exit status: 1)
+[31m      [0m[36m[1mhint[0m[39m[1m:[0m This usually indicates a problem with the package or the build environment.
+[?2004hroot@3f42ed6074d3:/app# uv pip install --editable .
+[?2004l[1m[31merror[39m[0m: No virtual environment found; run `[32muv venv[39m` to create an environment, or pass `[32m--system[39m` to install into a non-virtual environment
+[?2004hroot@3f42ed6074d3:/app# python - <<'PY'
+[?2004l[?2004h> import mathutils
+[?2004l[?2004h> print('add(2,3)=', mathutils.add(2,3))
+[?2004l[?2004h> PY
+[?2004ladd(2,3)= 5
+[?2004hroot@3f42ed6074d3:/app# cat > mathutils/__init__.py <<'EOF'
+[?2004l[?2004h> def add(a, b):
+[?2004l[?2004h>     # changed behavior for testing editable install
+[?2004l[?2004h>     return a - b
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@3f42ed6074d3:/app# python - <<'PY'
+[?2004l[?2004h> import importlib, sys
+[?2004l[?2004h> import mathutils
+[?2004l[?2004h> importlib.reload(mathutils)
+[?2004l[?2004h> print('after change add(5,2)=', mathutils.add(5,2))
+[?2004l[?2004h> PY
+[?2004lafter change add(5,2)= 3
+[?2004hroot@3f42ed6074d3:/app# mkdir -p src/mathutils
+[?2004l[?2004hroot@3f42ed6074d3:/app# mv mathutils/__init__.py src/mathutils/
+[?2004l[?2004hroot@3f42ed6074d3:/app# rmdir mathutils
+[?2004lrmdir: failed to remove 'mathutils': Directory not empty
+[?2004hroot@3f42ed6074d3:/app# uv build
+[?2004l[1mBuilding source distribution...[0m
+[1mBuilding wheel from source distribution...[0m
+Successfully built [36m[1mdist/mathutils-0.1.0.tar.gz[0m[39m
+Successfully built [36m[1mdist/mathutils-0.1.0-py3-none-any.whl[0m[39m
+[?2004hroot@3f42ed6074d3:/app# uv pip install --editable . --system
+[?2004l[2mUsing Python 3.13.11 environment at: /usr/local[0m
+[37m⠋[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠋[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠋[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mmathutils==0.1.0                                                                                                                                              [0m[2K[37m⠙[0m [2m                                                                                                                                                              [0m[2K[2mResolved [1m1 package[0m [2min 3ms[0m[0m
+[37m⠋[0m [2mPreparing packages...[0m (0/0)                                                                                                                                   [2K[37m⠋[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [2K[37m⠙[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [2K   [36m[1mBuilding[0m[39m mathutils[2m @ file:///app[0m
+[37m⠙[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [1A[2K[1B[2K[1A      [32m[1mBuilt[0m[39m mathutils[2m @ file:///app[0m
+[37m⠙[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [2K[37m⠙[0m [2m[0m (1/1)                                                                                                                                                        [2K[2mPrepared [1m1 package[0m [2min 170ms[0m[0m
+░░░░░░░░░░░░░░░░░░░░ [0/0] [2mInstalling wheels...                                                                                                                 [0m[2K░░░░░░░░░░░░░░░░░░░░ [0/1] [2mInstalling wheels...                                                                                                                 [0m[2K░░░░░░░░░░░░░░░░░░░░ [0/1] [2mmathutils==0.1.0 (from file:///app)                                                                                                  [0m[2K████████████████████ [1/1] [2mmathutils==0.1.0 (from file:///app)                                                                                                  [0m[2K[2mInstalled [1m1 package[0m [2min 2ms[0m[0m
+ [32m+[39m [1mmathutils[0m[2m==0.1.0 (from file:///app)[0m
+[?2004hroot@3f42ed6074d3:/app# python - <<'PY'
+[?2004l[?2004h> import mathutils
+[?2004l[?2004h> print('add(2,3)=', mathutils.add(2,3))
+[?2004l[?2004h> PY
+[?2004ladd(2,3)= -1
+[?2004hroot@3f42ed6074d3:/app# cat > src/mathutils/__init__.py <<'EOF'
+[?2004l[?2004h> def add(a, b):
+[?2004l[?2004h>     # changed behavior for testing editable install
+[?2004l[?2004h>     return a - b
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@3f42ed6074d3:/app# python - <<'PY'
+[?2004l[?2004h> import importlib, mathutils
+[?2004l[?2004h> importlib.reload(mathutils)
+[?2004l[?2004h> print('after change add(5,2)=', mathutils.add(5,2))
+[?2004l[?2004h> PY
+[?2004lafter change add(5,2)= 3
+[?2004hroot@3f42ed6074d3:/app# 

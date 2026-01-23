@@ -1,0 +1,98 @@
+[?2004hroot@6789c6ef78b3:/app# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@6789c6ef78b3:/app# clear
+[?2004l[H[J[3J[?2004hroot@6789c6ef78b3:/app# cd /app
+[?2004l[?2004hroot@6789c6ef78b3:/app# ls -la
+[?2004ltotal 8
+drwxr-xr-x 2 root root 4096 Jan 23 12:56 .
+drwxr-xr-x 1 root root 4096 Jan 23 13:07 ..
+[?2004hroot@6789c6ef78b3:/app# uv --version
+[?2004luv 0.7.20
+[?2004hroot@6789c6ef78b3:/app# python --version
+[?2004lPython 3.13.11
+[?2004hroot@6789c6ef78b3:/app# mkdir -p src/mathutils
+[?2004l[?2004hroot@6789c6ef78b3:/app# cat > src/mathutils/__init__.py <<'EOF'
+[?2004l[?2004h> """mathutils: tiny math utilities."""
+[?2004l[?2004h> 
+[?2004l[?2004h> __all__ = ["add"]
+[?2004l[?2004h> 
+[?2004l[?2004h> 
+[?2004l[?2004h> def add(a, b):
+[?2004l[?2004h>     """Add two numbers together."""
+[?2004l[?2004h>     return a + b
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@6789c6ef78b3:/app# cat > pyproject.toml <<'EOF'
+[?2004l[?2004h> [project]
+[?2004l[?2004h> name = "mathutils"
+[?2004l[?2004h> version = "0.1.0"
+[?2004l[?2004h> description = "Tiny math utilities"
+[?2004l[?2004h> readme = "README.md"
+[?2004l[?2004h> requires-python = ">=3.9"
+[?2004l[?2004h> 
+[?2004l[?2004h> [build-system]
+[?2004l[?2004h> requires = ["uv-build>=0.1.0"]
+[?2004l[?2004h> build-backend = "uv_build"
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@6789c6ef78b3:/app# cat > README.md <<'EOF'
+[?2004l[?2004h> # mathutils
+[?2004l[?2004h> 
+[?2004l[?2004h> A tiny example package.
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@6789c6ef78b3:/app# find . -maxdepth 3 -type f -print
+[?2004l./pyproject.toml
+./README.md
+./src/mathutils/__init__.py
+[?2004hroot@6789c6ef78b3:/app# uv build
+[?2004l[1mBuilding source distribution...[0m
+[1mBuilding wheel from source distribution...[0m
+Successfully built [36m[1mdist/mathutils-0.1.0.tar.gz[0m[39m
+Successfully built [36m[1mdist/mathutils-0.1.0-py3-none-any.whl[0m[39m
+[?2004hroot@6789c6ef78b3:/app# uv pip install --editable .
+[?2004l[1m[31merror[39m[0m: No virtual environment found; run `[32muv venv[39m` to create an environment, or pass `[32m--system[39m` to install into a non-virtual environment
+[?2004hroot@6789c6ef78b3:/app# python -c "import mathutils; print('add(2, 3)=', mathutils.add(2, 3)); print('module=', mathutils.__file__)"
+[?2004lTraceback (most recent call last):
+  File [35m"<string>"[0m, line [35m1[0m, in [35m<module>[0m
+    [1;31mimport mathutils[0m; print('add(2, 3)=', mathutils.add(2, 3)); print('module=', mathutils.__file__)
+    [1;31m^^^^^^^^^^^^^^^^[0m
+[1;35mModuleNotFoundError[0m: [35mNo module named 'mathutils'[0m
+[?2004hroot@6789c6ef78b3:/app# perl -0777 -i -pe 's/return a \+ b/return a + b + 100  # modified to test editable install/' src/mathutils/__init__.py
+[?2004l[?2004hroot@6789c6ef78b3:/app# python -c "import importlib, mathutils; importlib.reload(mathutils); print('after change add(2, 3)=', mathutils.add(2, 3)); print('module=', mathutils.__file__)"
+[?2004lTraceback (most recent call last):
+  File [35m"<string>"[0m, line [35m1[0m, in [35m<module>[0m
+    [1;31mimport importlib, mathutils[0m; importlib.reload(mathutils); print('after change add(2, 3)=', mathutils.add(2, 3)); print('module=', mathutils.__file__)
+    [1;31m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[1;35mModuleNotFoundError[0m: [35mNo module named 'mathutils'[0m
+[?2004hroot@6789c6ef78b3:/app# cat > src/mathutils/__init__.py <<'EOF'
+[?2004l[?2004h> """mathutils: tiny math utilities."""
+[?2004l[?2004h> 
+[?2004l[?2004h> __all__ = ["add"]
+[?2004l[?2004h> 
+[?2004l[?2004h> 
+[?2004l[?2004h> def add(a, b):
+[?2004l[?2004h>     """Add two numbers together."""
+[?2004l[?2004h>     return a + b
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@6789c6ef78b3:/app# uv venv
+[?2004lUsing CPython 3.13.11 interpreter at: [36m/usr/local/bin/python3[39m
+Creating virtual environment at: [36m.venv[39m
+Activate with: [32msource .venv/bin/activate[39m
+[?2004hroot@6789c6ef78b3:/app# uv pip install --editable .
+[?2004l[37m⠋[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠋[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠋[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mmathutils==0.1.0                                                                                                                                              [0m[2K[37m⠙[0m [2m                                                                                                                                                              [0m[2K[2mResolved [1m1 package[0m [2min 3ms[0m[0m
+[37m⠋[0m [2mPreparing packages...[0m (0/0)                                                                                                                                   [2K[37m⠋[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [2K[37m⠙[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [2K   [36m[1mBuilding[0m[39m mathutils[2m @ file:///app[0m
+[37m⠙[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [1A[2K[1B[2K[1A      [32m[1mBuilt[0m[39m mathutils[2m @ file:///app[0m
+[37m⠙[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [2K[37m⠙[0m [2m[0m (1/1)                                                                                                                                                        [2K[2mPrepared [1m1 package[0m [2min 126ms[0m[0m
+░░░░░░░░░░░░░░░░░░░░ [0/0] [2mInstalling wheels...                                                                                                                 [0m[2K░░░░░░░░░░░░░░░░░░░░ [0/1] [2mInstalling wheels...                                                                                                                 [0m[2K░░░░░░░░░░░░░░░░░░░░ [0/1] [2mmathutils==0.1.0 (from file:///app)                                                                                                  [0m[2K████████████████████ [1/1] [2mmathutils==0.1.0 (from file:///app)                                                                                                  [0m[2K[2mInstalled [1m1 package[0m [2min 1ms[0m[0m
+ [32m+[39m [1mmathutils[0m[2m==0.1.0 (from file:///app)[0m
+[?2004hroot@6789c6ef78b3:/app# .venv/bin/python -c "import mathutils; print('add(2, 3)=', mathutils.add(2, 3)); print('module=', mathutils.__file__)"
+[?2004ladd(2, 3)= 5
+module= /app/src/mathutils/__init__.py
+[?2004hroot@6789c6ef78b3:/app# perl -0777 -i -pe 's/return a \+ b/return a + b + 1  # editable change test/' src/mathutils/__init__.py
+[?2004l[?2004hroot@6789c6ef78b3:/app# .venv/bin/python -c "import mathutils; print('after change add(2, 3)=', mathutils.add(2, 3)); print('module=', mathutils.__file__)"
+[?2004lafter change add(2, 3)= 6
+module= /app/src/mathutils/__init__.py
+[?2004hroot@6789c6ef78b3:/app# perl -0777 -i -pe 's/return a \+ b \+ 1  # editable change test/return a + b/' src/mathutils/__init__.py
+[?2004l[?2004hroot@6789c6ef78b3:/app# .venv/bin/python -c "import mathutils; print('add(2, 3)=', mathutils.add(2, 3)); print('module=', mathutils.__file__)"
+[?2004ladd(2, 3)= 5
+module= /app/src/mathutils/__init__.py
+[?2004hroot@6789c6ef78b3:/app# 

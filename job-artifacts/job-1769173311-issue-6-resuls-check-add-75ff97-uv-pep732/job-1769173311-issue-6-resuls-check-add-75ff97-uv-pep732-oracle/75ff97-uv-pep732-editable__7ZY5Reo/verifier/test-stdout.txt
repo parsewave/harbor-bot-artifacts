@@ -1,0 +1,26 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.11, pytest-8.4.2, pluggy-1.6.0 -- /usr/local/bin/python3.13
+cachedir: .pytest_cache
+rootdir: /tests
+collecting ... collected 8 items
+
+../tests/test_outputs.py::test_pyproject_toml_exists PASSED              [ 12%]
+../tests/test_outputs.py::test_pyproject_toml_has_pep732_config PASSED   [ 25%]
+../tests/test_outputs.py::test_package_source_structure PASSED           [ 37%]
+../tests/test_outputs.py::test_package_has_add_function PASSED           [ 50%]
+../tests/test_outputs.py::test_uv_build_succeeds PASSED                  [ 62%]
+../tests/test_outputs.py::test_editable_installation PASSED              [ 75%]
+../tests/test_outputs.py::test_add_function_works PASSED                 [ 87%]
+../tests/test_outputs.py::test_editable_mode_reflects_changes PASSED     [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_outputs.py::test_pyproject_toml_exists
+PASSED ../tests/test_outputs.py::test_pyproject_toml_has_pep732_config
+PASSED ../tests/test_outputs.py::test_package_source_structure
+PASSED ../tests/test_outputs.py::test_package_has_add_function
+PASSED ../tests/test_outputs.py::test_uv_build_succeeds
+PASSED ../tests/test_outputs.py::test_editable_installation
+PASSED ../tests/test_outputs.py::test_add_function_works
+PASSED ../tests/test_outputs.py::test_editable_mode_reflects_changes
+============================== 8 passed in 0.28s ===============================

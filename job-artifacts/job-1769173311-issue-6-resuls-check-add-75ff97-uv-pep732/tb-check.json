@@ -1,0 +1,58 @@
+[
+  {
+    "name": "TB Check",
+    "passed": true,
+    "message": "All checks passed",
+    "is_warning": false,
+    "details": "\n\ud83d\udd0e Checking task quality...\nWarning: tasks check currently only supports Dockerfile environments.\n\u2713 Results written to \n/tmp/job-1769173311-issue-6-resuls-check-add-75ff97-uv-pep732-tb-check.json\n                              Task Quality Checks                               \n\u250f\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2513\n\u2503 Check                        \u2503 Outcome        \u2503 Explanation                  \u2503\n\u2521\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",
+    "duration_seconds": 53.20728635787964,
+    "result_type": "tb_positive",
+    "check_type": "tb_check",
+    "raw_data": {
+      "behavior_in_task_description": {
+        "explanation": "Tests require additional specifics not stated in instruction.md, including that `uv build` must create `/app/dist/*`, that editable install is done with `uv pip install --system --editable .`, and that the imported module path should contain `/app`/`src`. The instruction mentions `uv build`, `uv pip install --editable .`, and editable reflecting changes, but not these extra constraints/paths.",
+        "outcome": "fail"
+      },
+      "behavior_in_tests": {
+        "explanation": "Core requirements in instruction.md are exercised: presence of `pyproject.toml`, using `uv_build` as build backend, building via `uv build`, installing editable, importing `mathutils.add`, and verifying source edits are reflected (via modifying `__init__.py` and importing in a fresh interpreter). However, tests don\u2019t explicitly validate any specific PEP 732 configuration beyond `build-system.build-backend`/`requires` (e.g., no check of `[tool.uv.build-backend]` fields).",
+        "outcome": "pass"
+      },
+      "informative_test_structure": {
+        "explanation": "Tests are clearly separated into focused `test_*` functions with docstrings indicating intent (pyproject checks, build, editable install, function behavior, editable reflection).",
+        "outcome": "pass"
+      },
+      "anti_cheating_measures": {
+        "explanation": "No solution/tests are available to the agent at runtime, and the checks run real `uv build`/`uv pip install` and Python imports, which makes superficial bypassing unlikely. No external mutable resources are required.",
+        "outcome": "pass"
+      },
+      "structured_data_schema": {
+        "explanation": "Task does not require producing any structured output schema (JSON/CSV/API contract).",
+        "outcome": "not_applicable"
+      },
+      "pinned_dependencies": {
+        "explanation": "Python dependencies installed in the image are pinned (`pytest==8.4.2`, `uv==0.7.20`, `uv_build==0.7.20`).",
+        "outcome": "pass"
+      },
+      "typos": {
+        "explanation": "No obvious typos in referenced filenames/paths/commands (e.g., `pyproject.toml`, `src/mathutils/__init__.py`, `uv build`, `uv pip install`).",
+        "outcome": "pass"
+      },
+      "tests_or_solution_in_image": {
+        "explanation": "Dockerfile only installs packages and does not copy `tests/` or `solution/` into the image.",
+        "outcome": "pass"
+      },
+      "test_deps_in_image": {
+        "explanation": "`pytest` is installed in the Docker image (`RUN pip install pytest==8.4.2 ...`), but it is only needed for running tests and should be installed in `tests/test.sh` instead.",
+        "outcome": "fail"
+      },
+      "hardcoded_solution": {
+        "explanation": "Solution script creates the package, writes `pyproject.toml`, runs `uv build`, installs editable, and verifies behavior via Python import/asserts; it doesn\u2019t just print a precomputed answer.",
+        "outcome": "pass"
+      },
+      "file_reference_mentioned": {
+        "explanation": "Instruction.md explicitly references `pyproject.toml` and the `mathutils` package, but tests also effectively require outputs like `/app/dist` artifacts from `uv build` and accept specific source layouts (`/app/src/mathutils` or `/app/mathutils`) that are not explicitly specified as required in the instructions.",
+        "outcome": "fail"
+      }
+    }
+  }
+]

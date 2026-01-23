@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Test Script Format",
+    "passed": true,
+    "message": "Valid format",
+    "is_warning": false,
+    "details": null,
+    "duration_seconds": null,
+    "result_type": "tb_positive",
+    "check_type": "test_script_format",
+    "raw_data": null
+  }
+]

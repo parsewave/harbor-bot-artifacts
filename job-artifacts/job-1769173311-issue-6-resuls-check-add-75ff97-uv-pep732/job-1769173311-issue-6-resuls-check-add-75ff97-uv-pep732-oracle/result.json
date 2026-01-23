@@ -1,0 +1,31 @@
+{
+    "id": "d58be39d-3d2b-47a7-b561-0995e6dc5c74",
+    "started_at": "2026-01-23T13:02:25.103656",
+    "finished_at": "2026-01-23T13:02:48.779493",
+    "n_total_trials": 3,
+    "stats": {
+        "n_trials": 3,
+        "n_errors": 0,
+        "evals": {
+            "oracle__tb-bot-job-1769173311-issue-6-resuls-check-add-75ff97-uv-pep732-9c9933c8": {
+                "n_trials": 3,
+                "n_errors": 0,
+                "metrics": [
+                    {
+                        "mean": 1.0
+                    }
+                ],
+                "reward_stats": {
+                    "reward": {
+                        "1.0": [
+                            "75ff97-uv-pep732-editable__7ZY5Reo",
+                            "75ff97-uv-pep732-editable__kTwc3Ki",
+                            "75ff97-uv-pep732-editable__PYZMvv4"
+                        ]
+                    }
+                },
+                "exception_stats": {}
+            }
+        }
+    }
+}
