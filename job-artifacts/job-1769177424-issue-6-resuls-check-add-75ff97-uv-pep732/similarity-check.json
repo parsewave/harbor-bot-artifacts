@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Similarity Check",
+    "passed": true,
+    "message": "Max similarity: 29% with 'pypi-server' (threshold: 80%)",
+    "is_warning": false,
+    "details": null,
+    "duration_seconds": null,
+    "result_type": "tb_positive",
+    "check_type": "similarity_check",
+    "raw_data": {
+      "max_similarity": 0.29695402497149026,
+      "most_similar_task": "pypi-server",
+      "threshold": 0.8
+    }
+  }
+]

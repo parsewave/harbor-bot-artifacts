@@ -1,0 +1,87 @@
+{
+    "id": "2ac56f10-e634-4586-a051-bb3c9d4117d6",
+    "task_name": "75ff97-uv-pep732-editable",
+    "trial_name": "75ff97-uv-pep732-editable__TbqisXh",
+    "trial_uri": "file:///tmp/harbor-runs/job-1769177424-issue-6-resuls-check-add-75ff97-uv-pep732-nop/75ff97-uv-pep732-editable__TbqisXh",
+    "task_id": {
+        "path": "/tmp/harbor-runs/workspaces/tb-bot-job-1769177424-issue-6-resuls-check-add-75ff97-uv-pep732-584aad7f/75ff97-uv-pep732-editable"
+    },
+    "source": "tb-bot-job-1769177424-issue-6-resuls-check-add-75ff97-uv-pep732-584aad7f",
+    "task_checksum": "4726d6aaea44817e75539d9354ee5ea88c3b33f9578ac601bfca3054f71f71fe",
+    "config": {
+        "task": {
+            "path": "/tmp/harbor-runs/workspaces/tb-bot-job-1769177424-issue-6-resuls-check-add-75ff97-uv-pep732-584aad7f/75ff97-uv-pep732-editable",
+            "git_url": null,
+            "git_commit_id": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "tb-bot-job-1769177424-issue-6-resuls-check-add-75ff97-uv-pep732-584aad7f"
+        },
+        "trial_name": "75ff97-uv-pep732-editable__TbqisXh",
+        "trials_dir": "/tmp/harbor-runs/job-1769177424-issue-6-resuls-check-add-75ff97-uv-pep732-nop",
+        "timeout_multiplier": 1.0,
+        "agent": {
+            "name": "nop",
+            "import_path": null,
+            "model_name": null,
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "kwargs": {}
+        },
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "kwargs": {}
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "job_id": "013f3c12-3ccf-40e8-8fd7-a5df02ee68a4"
+    },
+    "agent_info": {
+        "name": "nop",
+        "version": "1.0.0",
+        "model_info": null
+    },
+    "agent_result": {
+        "n_input_tokens": null,
+        "n_cache_tokens": null,
+        "n_output_tokens": null,
+        "cost_usd": null,
+        "rollout_details": null,
+        "metadata": null
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.0
+        }
+    },
+    "exception_info": null,
+    "started_at": "2026-01-23T14:12:13.661022Z",
+    "finished_at": "2026-01-23T14:12:33.772259Z",
+    "environment_setup": {
+        "started_at": "2026-01-23T14:12:13.662611Z",
+        "finished_at": "2026-01-23T14:12:16.151612Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-01-23T14:12:16.151669Z",
+        "finished_at": "2026-01-23T14:12:16.151763Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-01-23T14:12:16.151823Z",
+        "finished_at": "2026-01-23T14:12:16.151904Z"
+    },
+    "verifier": {
+        "started_at": "2026-01-23T14:12:16.152186Z",
+        "finished_at": "2026-01-23T14:12:17.757426Z"
+    }
+}

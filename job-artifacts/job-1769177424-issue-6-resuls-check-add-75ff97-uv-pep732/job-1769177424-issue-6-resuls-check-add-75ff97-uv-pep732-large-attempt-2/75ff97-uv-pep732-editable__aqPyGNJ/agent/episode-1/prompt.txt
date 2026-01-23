@@ -1,0 +1,63 @@
+New Terminal Output:
+
+root@a3901840dfad:/app# cd /app
+root@a3901840dfad:/app# uv --version
+uv 0.7.20
+root@a3901840dfad:/app# rm -rf /app/mathutils
+root@a3901840dfad:/app# mkdir -p /app/mathutils/src/mathutils
+root@a3901840dfad:/app# cat > /app/mathutils/src/mathutils/__init__.py <<'PY'
+> """mathutils package."""
+>
+>
+> def add(a, b):
+>     """Add two numbers together."""
+>     return a + b
+> PY
+root@a3901840dfad:/app# cat > /app/mathutils/pyproject.toml <<'TOML'
+> [project]
+> name = "mathutils"
+> version = "0.1.0"
+> description = "Small math utilities."
+> readme = "README.md"
+> requires-python = ">=3.9"
+>
+> [build-system]
+> requires = ["uv-build"]
+> build-backend = "uv_build"
+> TOML
+root@a3901840dfad:/app# cat > /app/mathutils/README.md <<'MD'
+> # mathutils
+>
+> A tiny example package.
+> MD
+root@a3901840dfad:/app# cd /app/mathutils
+root@a3901840dfad:/app/mathutils# uv build
+Building source distribution...
+Building wheel from source distribution...
+Successfully built dist/mathutils-0.1.0.tar.gz
+Successfully built dist/mathutils-0.1.0-py3-none-any.whl
+root@a3901840dfad:/app/mathutils# uv venv .venv
+Using CPython 3.13.11 interpreter at: /usr/local/bin/python3
+Creating virtual environment at: .venv
+Activate with: source .venv/bin/activate
+root@a3901840dfad:/app/mathutils# uv pip -p .venv/bin/python install --editable .
+error: unexpected argument '-p' found
+
+Usage: uv pip [OPTIONS] <COMMAND>
+
+For more information, try '--help'.
+root@a3901840dfad:/app/mathutils# .venv/bin/python -c "import mathutils; print('mathutils from:', mathutils.__file__); print('add(1,2)=', mathutils.add(1,2)); p
+rint('doc:', mathutils.add.__doc__)"
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import mathutils; print('mathutils from:', mathutils.__file__); print('add(1,2)=', mathutils.add(1,2)); print('doc:', mathutils.add.__doc__)
+    ^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'mathutils'
+root@a3901840dfad:/app/mathutils# perl -0777 -i -pe 's/Add two numbers together\./Add two numbers together (edited)\./g' src/mathutils/__init__.py
+root@a3901840dfad:/app/mathutils# .venv/bin/python -c "import mathutils; print('add(1,2)=', mathutils.add(1,2)); print('doc:', mathutils.add.__doc__)"
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import mathutils; print('add(1,2)=', mathutils.add(1,2)); print('doc:', mathutils.add.__doc__)
+    ^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'mathutils'
+root@a3901840dfad:/app/mathutils#

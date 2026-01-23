@@ -1,0 +1,226 @@
+[?2004hroot@a3901840dfad:/app# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@a3901840dfad:/app# clear
+[?2004l[H[J[3J[?2004hroot@a3901840dfad:/app# cd /app
+[?2004l[?2004hroot@a3901840dfad:/app# uv --version
+[?2004luv 0.7.20
+[?2004hroot@a3901840dfad:/app# rm -rf /app/mathutils
+[?2004l[?2004hroot@a3901840dfad:/app# mkdir -p /app/mathutils/src/mathutils
+[?2004l[?2004hroot@a3901840dfad:/app# cat > /app/mathutils/src/mathutils/__init__.py <<'PY'
+[?2004l[?2004h> """mathutils package."""
+[?2004l[?2004h> 
+[?2004l[?2004h> 
+[?2004l[?2004h> def add(a, b):
+[?2004l[?2004h>     """Add two numbers together."""
+[?2004l[?2004h>     return a + b
+[?2004l[?2004h> PY
+[?2004l[?2004hroot@a3901840dfad:/app# cat > /app/mathutils/pyproject.toml <<'TOML'
+[?2004l[?2004h> [project]
+[?2004l[?2004h> name = "mathutils"
+[?2004l[?2004h> version = "0.1.0"
+[?2004l[?2004h> description = "Small math utilities."
+[?2004l[?2004h> readme = "README.md"
+[?2004l[?2004h> requires-python = ">=3.9"
+[?2004l[?2004h> 
+[?2004l[?2004h> [build-system]
+[?2004l[?2004h> requires = ["uv-build"]
+[?2004l[?2004h> build-backend = "uv_build"
+[?2004l[?2004h> TOML
+[?2004l[?2004hroot@a3901840dfad:/app# cat > /app/mathutils/README.md <<'MD'
+[?2004l[?2004h> # mathutils
+[?2004l[?2004h> 
+[?2004l[?2004h> A tiny example package.
+[?2004l[?2004h> MD
+[?2004l[?2004hroot@a3901840dfad:/app# cd /app/mathutils
+[?2004l[?2004hroot@a3901840dfad:/app/mathutils# uv build
+[?2004l[1mBuilding source distribution...[0m
+[1mBuilding wheel from source distribution...[0m
+Successfully built [36m[1mdist/mathutils-0.1.0.tar.gz[0m[39m
+Successfully built [36m[1mdist/mathutils-0.1.0-py3-none-any.whl[0m[39m
+[?2004hroot@a3901840dfad:/app/mathutils# uv venv .venv
+[?2004lUsing CPython 3.13.11 interpreter at: [36m/usr/local/bin/python3[39m
+Creating virtual environment at: [36m.venv[39m
+Activate with: [32msource .venv/bin/activate[39m
+[?2004hroot@a3901840dfad:/app/mathutils# uv pip -p .venv/bin/python install --editable .
+[?2004l[1m[31merror:[0m unexpected argument '[33m-p[0m' found
+
+[1m[32mUsage:[0m [1m[36muv pip[0m [36m[OPTIONS][0m [36m<COMMAND>[0m
+
+For more information, try '[1m[36m--help[0m'.
+[?2004hroot@a3901840dfad:/app/mathutils# .venv/bin/python -c "import mathutils; print('mathutils from:', mathutils.__file__); print('add(1,2)=', mathutils.add(1,2)); print('doc:', mathutils.add.__doc__)"
+[?2004lTraceback (most recent call last):
+  File [35m"<string>"[0m, line [35m1[0m, in [35m<module>[0m
+    [1;31mimport mathutils[0m; print('mathutils from:', mathutils.__file__); print('add(1,2)=', mathutils.add(1,2)); print('doc:', mathutils.add.__doc__)
+    [1;31m^^^^^^^^^^^^^^^^[0m
+[1;35mModuleNotFoundError[0m: [35mNo module named 'mathutils'[0m
+[?2004hroot@a3901840dfad:/app/mathutils# perl -0777 -i -pe 's/Add two numbers together\./Add two numbers together (edited)\./g' src/mathutils/__init__.py
+[?2004l[?2004hroot@a3901840dfad:/app/mathutils# .venv/bin/python -c "import mathutils; print('add(1,2)=', mathutils.add(1,2)); print('doc:', mathutils.add.__doc__)"
+[?2004lTraceback (most recent call last):
+  File [35m"<string>"[0m, line [35m1[0m, in [35m<module>[0m
+    [1;31mimport mathutils[0m; print('add(1,2)=', mathutils.add(1,2)); print('doc:', mathutils.add.__doc__)
+    [1;31m^^^^^^^^^^^^^^^^[0m
+[1;35mModuleNotFoundError[0m: [35mNo module named 'mathutils'[0m
+[?2004hroot@a3901840dfad:/app/mathutils# cd /app/mathutils
+[?2004l[?2004hroot@a3901840dfad:/app/mathutils# uv pip install --help | sed -n '1,120p'
+[?2004lInstall packages into an environment
+
+Usage: uv pip install [OPTIONS] <PACKAGE|--requirements <REQUIREMENTS>|--editable <EDITABLE>|--group <GROUP>>
+
+Arguments:
+  [PACKAGE]...  Install all listed packages
+
+Options:
+  -r, --requirements <REQUIREMENTS>            Install all packages listed in the given `requirements.txt` or `pylock.toml` files
+  -e, --editable <EDITABLE>                    Install the editable package based on the provided local file path
+  -c, --constraints <CONSTRAINTS>              Constrain versions using the given requirements files [env: UV_CONSTRAINT=]
+      --overrides <OVERRIDES>                  Override versions using the given requirements files [env: UV_OVERRIDE=]
+  -b, --build-constraints <BUILD_CONSTRAINTS>  Constrain build dependencies using the given requirements files when building source distributions [env:
+                                               UV_BUILD_CONSTRAINT=]
+      --extra <EXTRA>                          Include optional dependencies from the specified extra name; may be provided more than once
+      --all-extras                             Include all optional dependencies
+      --no-deps                                Ignore package dependencies, instead only installing those packages explicitly listed on the command line or in
+                                               the requirements files
+      --group <GROUP>                          Install the specified dependency group from a `pyproject.toml`
+      --require-hashes                         Require a matching hash for each requirement [env: UV_REQUIRE_HASHES=]
+      --no-verify-hashes                       Disable validation of hashes in the requirements file [env: UV_NO_VERIFY_HASHES=]
+      --system                                 Install packages into the system Python environment [env: UV_SYSTEM_PYTHON=]
+      --break-system-packages                  Allow uv to modify an `EXTERNALLY-MANAGED` Python installation [env: UV_BREAK_SYSTEM_PACKAGES=]
+      --no-break-system-packages               
+      --target <TARGET>                        Install packages into the specified directory, rather than into the virtual or system Python environment. The
+                                               packages will be installed at the top-level of the directory
+      --prefix <PREFIX>                        Install packages into `lib`, `bin`, and other top-level folders under the specified directory, as if a virtual
+                                               environment were present at that location
+      --no-build                               Don't build source distributions
+      --no-binary <NO_BINARY>                  Don't install pre-built wheels
+      --only-binary <ONLY_BINARY>              Only use pre-built wheels; don't build source distributions
+      --python-version <PYTHON_VERSION>        The minimum Python version that should be supported by the requirements (e.g., `3.7` or `3.7.9`)
+      --python-platform <PYTHON_PLATFORM>      The platform for which requirements should be installed [possible values: windows, linux, macos,
+                                               x86_64-pc-windows-msvc, i686-pc-windows-msvc, x86_64-unknown-linux-gnu, aarch64-apple-darwin,
+                                               x86_64-apple-darwin, aarch64-unknown-linux-gnu, aarch64-unknown-linux-musl, x86_64-unknown-linux-musl,
+                                               x86_64-manylinux2014, x86_64-manylinux_2_17, x86_64-manylinux_2_28, x86_64-manylinux_2_31, x86_64-manylinux_2_32,
+                                               x86_64-manylinux_2_33, x86_64-manylinux_2_34, x86_64-manylinux_2_35, x86_64-manylinux_2_36,
+                                               x86_64-manylinux_2_37, x86_64-manylinux_2_38, x86_64-manylinux_2_39, x86_64-manylinux_2_40,
+                                               aarch64-manylinux2014, aarch64-manylinux_2_17, aarch64-manylinux_2_28, aarch64-manylinux_2_31,
+                                               aarch64-manylinux_2_32, aarch64-manylinux_2_33, aarch64-manylinux_2_34, aarch64-manylinux_2_35,
+                                               aarch64-manylinux_2_36, aarch64-manylinux_2_37, aarch64-manylinux_2_38, aarch64-manylinux_2_39,
+                                               aarch64-manylinux_2_40, wasm32-pyodide2024]
+      --exact                                  Perform an exact sync, removing extraneous packages
+      --strict                                 Validate the Python environment after completing the installation, to detect packages with missing dependencies
+                                               or other issues
+      --dry-run                                Perform a dry run, i.e., don't actually install anything but resolve the dependencies and print the resulting
+                                               plan
+      --torch-backend <TORCH_BACKEND>          The backend to use when fetching packages in the PyTorch ecosystem (e.g., `cpu`, `cu126`, or `auto`) [env:
+                                               UV_TORCH_BACKEND=] [possible values: auto, cpu, cu128, cu126, cu125, cu124, cu123, cu122, cu121, cu120, cu118,
+                                               cu117, cu116, cu115, cu114, cu113, cu112, cu111, cu110, cu102, cu101, cu100, cu92, cu91, cu90, cu80, rocm6.3,
+                                               rocm6.2.4, rocm6.2, rocm6.1, rocm6.0, rocm5.7, rocm5.6, rocm5.5, rocm5.4.2, rocm5.4, rocm5.3, rocm5.2, rocm5.1.1,
+                                               rocm4.2, rocm4.1, rocm4.0.1, xpu]
+      --user                                   
+
+Index options:
+      --index <INDEX>                        The URLs to use when resolving dependencies, in addition to the default index [env: UV_INDEX=]
+      --default-index <DEFAULT_INDEX>        The URL of the default package index (by default: <https://pypi.org/simple>) [env: UV_DEFAULT_INDEX=]
+  -i, --index-url <INDEX_URL>                (Deprecated: use `--default-index` instead) The URL of the Python package index (by default:
+                                             <https://pypi.org/simple>) [env: UV_INDEX_URL=]
+      --extra-index-url <EXTRA_INDEX_URL>    (Deprecated: use `--index` instead) Extra URLs of package indexes to use, in addition to `--index-url` [env:
+                                             UV_EXTRA_INDEX_URL=]
+  -f, --find-links <FIND_LINKS>              Locations to search for candidate distributions, in addition to those found in the registry indexes [env:
+                                             UV_FIND_LINKS=]
+      --no-index                             Ignore the registry index (e.g., PyPI), instead relying on direct URL dependencies and those provided via
+                                             `--find-links`
+      --index-strategy <INDEX_STRATEGY>      The strategy to use when resolving against multiple index URLs [env: UV_INDEX_STRATEGY=] [possible values:
+                                             first-index, unsafe-first-match, unsafe-best-match]
+      --keyring-provider <KEYRING_PROVIDER>  Attempt to use `keyring` for authentication for index URLs [env: UV_KEYRING_PROVIDER=] [possible values: disabled,
+                                             subprocess]
+
+Resolver options:
+  -U, --upgrade                            Allow package upgrades, ignoring pinned versions in any existing output file. Implies `--refresh`
+  -P, --upgrade-package <UPGRADE_PACKAGE>  Allow upgrades for a specific package, ignoring pinned versions in any existing output file. Implies
+                                           `--refresh-package`
+      --resolution <RESOLUTION>            The strategy to use when selecting between the different compatible versions for a given package requirement [env:
+                                           UV_RESOLUTION=] [possible values: highest, lowest, lowest-direct]
+      --prerelease <PRERELEASE>            The strategy to use when considering pre-release versions [env: UV_PRERELEASE=] [possible values: disallow, allow,
+                                           if-necessary, explicit, if-necessary-or-explicit]
+      --fork-strategy <FORK_STRATEGY>      The strategy to use when selecting multiple versions of a given package across Python versions and platforms [env:
+                                           UV_FORK_STRATEGY=] [possible values: fewest, requires-python]
+      --exclude-newer <EXCLUDE_NEWER>      Limit candidate packages to those that were uploaded prior to the given date [env: UV_EXCLUDE_NEWER=]
+      --no-sources                         Ignore the `tool.uv.sources` table when resolving dependencies. Used to lock against the standards-compliant,
+                                           publishable package metadata, as opposed to using any workspace, Git, URL, or local path sources
+
+Installer options:
+      --reinstall                              Reinstall all packages, regardless of whether they're already installed. Implies `--refresh`
+      --reinstall-package <REINSTALL_PACKAGE>  Reinstall a specific package, regardless of whether it's already installed. Implies `--refresh-package`
+      --link-mode <LINK_MODE>                  The method to use when installing packages from the global cache [env: UV_LINK_MODE=] [possible values: clone,
+                                               copy, hardlink, symlink]
+      --compile-bytecode                       Compile Python files to bytecode after installation [env: UV_COMPILE_BYTECODE=]
+
+Build options:
+  -C, --config-setting <CONFIG_SETTING>                          Settings to pass to the PEP 517 build backend, specified as `KEY=VALUE` pairs
+      --no-build-isolation                                       Disable isolation when building source distributions [env: UV_NO_BUILD_ISOLATION=]
+      --no-build-isolation-package <NO_BUILD_ISOLATION_PACKAGE>  Disable isolation when building source distributions for a specific package
+
+Cache options:
+  -n, --no-cache                           Avoid reading from or writing to the cache, instead using a temporary directory for the duration of the operation
+                                           [env: UV_NO_CACHE=]
+      --cache-dir <CACHE_DIR>              Path to the cache directory [env: UV_CACHE_DIR=]
+      --refresh                            Refresh all cached data
+      --refresh-package <REFRESH_PACKAGE>  Refresh cached data for a specific package
+
+Python options:
+  -p, --python <PYTHON>      The Python interpreter into which packages should be installed. [env: UV_PYTHON=]
+      --managed-python       Require use of uv-managed Python versions [env: UV_MANAGED_PYTHON=]
+      --no-managed-python    Disable use of uv-managed Python versions [env: UV_NO_MANAGED_PYTHON=]
+      --no-python-downloads  Disable automatic downloads of Python. [env: "UV_PYTHON_DOWNLOADS=never"]
+
+Global options:
+  -q, --quiet...                                   Use quiet output
+  -v, --verbose...                                 Use verbose output
+      --color <COLOR_CHOICE>                       Control the use of color in output [possible values: auto, always, never]
+      --native-tls                                 Whether to load TLS certificates from the platform's native certificate store [env: UV_NATIVE_TLS=]
+      --offline                                    Disable network access [env: UV_OFFLINE=]
+      --allow-insecure-host <ALLOW_INSECURE_HOST>  Allow insecure connections to a host [env: UV_INSECURE_HOST=]
+      --no-progress                                Hide all progress outputs [env: UV_NO_PROGRESS=]
+      --directory <DIRECTORY>                      Change to the given directory prior to running the command
+      --project <PROJECT>                          Run the command within the given project directory [env: UV_PROJECT=]
+      --config-file <CONFIG_FILE>                  The path to a `uv.toml` file to use for configuration [env: UV_CONFIG_FILE=]
+[?2004hroot@a3901840dfad:/app/mathutils# source .venv/bin/activate
+[?2004l[?2004h(.venv) root@a3901840dfad:/app/mathutils# which python
+[?2004l/app/mathutils/.venv/bin/python
+[?2004h(.venv) root@a3901840dfad:/app/mathutils# python -V
+[?2004lPython 3.13.11
+[?2004h(.venv) root@a3901840dfad:/app/mathutils# uv pip install --editable .
+[?2004l[37m⠋[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠋[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠋[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mmathutils==0.1.0                                                                                                                                              [0m[2K[37m⠙[0m [2m                                                                                                                                                              [0m[2K[2mResolved [1m1 package[0m [2min 3ms[0m[0m
+[37m⠋[0m [2mPreparing packages...[0m (0/0)                                                                                                                                   [2K[37m⠋[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [2K[37m⠙[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [2K   [36m[1mBuilding[0m[39m mathutils[2m @ file:///app/mathutils[0m
+[37m⠙[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [1A[2K[1B[2K[1A      [32m[1mBuilt[0m[39m mathutils[2m @ file:///app/mathutils[0m
+[37m⠙[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [2K[37m⠙[0m [2m[0m (1/1)                                                                                                                                                        [2K[2mPrepared [1m1 package[0m [2min 135ms[0m[0m
+░░░░░░░░░░░░░░░░░░░░ [0/0] [2mInstalling wheels...                                                                                                                 [0m[2K░░░░░░░░░░░░░░░░░░░░ [0/1] [2mInstalling wheels...                                                                                                                 [0m[2K░░░░░░░░░░░░░░░░░░░░ [0/1] [2mmathutils==0.1.0 (from file:///app/mathutils)                                                                                        [0m[2K████████████████████ [1/1] [2mmathutils==0.1.0 (from file:///app/mathutils)                                                                                        [0m[2K[2mInstalled [1m1 package[0m [2min 1ms[0m[0m
+ [32m+[39m [1mmathutils[0m[2m==0.1.0 (from file:///app/mathutils)[0m
+[?2004h(.venv) root@a3901840dfad:/app/mathutils# python -c "import mathutils; print('mathutils from:', mathutils.__file__); print('add(1,2)=', mathutils.add(1,2)); print('doc:', mathutils.add.__doc__)"
+[?2004lmathutils from: /app/mathutils/src/mathutils/__init__.py
+add(1,2)= 3
+doc: Add two numbers together (edited).
+[?2004h(.venv) root@a3901840dfad:/app/mathutils# sed -i 's/(edited)/(edited2)/g' src/mathutils/__init__.py
+[?2004l[?2004h(.venv) root@a3901840dfad:/app/mathutils# python -c "import mathutils; print('add(3,4)=', mathutils.add(3,4)); print('doc:', mathutils.add.__doc__)"
+[?2004ladd(3,4)= 7
+doc: Add two numbers together (edited2).
+[?2004h(.venv) root@a3901840dfad:/app/mathutils# ls -la dist
+[?2004ltotal 20
+drwxr-xr-x 2 root root 4096 Jan 23 14:19 .
+drwxr-xr-x 5 root root 4096 Jan 23 14:19 ..
+-rw-r--r-- 1 root root    1 Jan 23 14:19 .gitignore
+-rw------- 1 root root 1314 Jan 23 14:19 mathutils-0.1.0-py3-none-any.whl
+-rw------- 1 root root  539 Jan 23 14:19 mathutils-0.1.0.tar.gz
+[?2004h(.venv) root@a3901840dfad:/app/mathutils# python -c "import mathutils; print(mathutils.add(10, 32))"
+[?2004l42
+[?2004h(.venv) root@a3901840dfad:/app/mathutils# sed -n '1,120p' pyproject.toml
+[?2004l[project]
+name = "mathutils"
+version = "0.1.0"
+description = "Small math utilities."
+readme = "README.md"
+requires-python = ">=3.9"
+
+[build-system]
+requires = ["uv-build"]
+build-backend = "uv_build"
+[?2004h(.venv) root@a3901840dfad:/app/mathutils# 

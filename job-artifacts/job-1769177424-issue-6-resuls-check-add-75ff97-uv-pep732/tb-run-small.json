@@ -1,0 +1,49 @@
+[
+  {
+    "name": "TB Run Small",
+    "passed": true,
+    "message": "Accuracy: 0%",
+    "is_warning": true,
+    "details": "Model: openrouter/openai/gpt-oss-120b:exacto, Attempts: 1",
+    "duration_seconds": 109.42553400993347,
+    "result_type": null,
+    "check_type": "tb_run_small",
+    "raw_data": {
+      "agent": "terminus-2",
+      "model": "openrouter/openai/gpt-oss-120b:exacto",
+      "accuracy": 0.0,
+      "n_attempts": 1,
+      "n_resolved": 0,
+      "n_unresolved": 1,
+      "json_output": {
+        "id": "4543900d-283a-4675-8d66-87383f4e1291",
+        "started_at": "2026-01-23T14:14:00.261696",
+        "finished_at": "2026-01-23T14:15:11.642907",
+        "n_total_trials": 1,
+        "stats": {
+          "n_trials": 1,
+          "n_errors": 0,
+          "evals": {
+            "terminus-2__openai-gpt-oss-120b:exacto__tb-bot-job-1769177424-issue-6-resuls-check-add-75ff97-uv-pep732-584aad7f": {
+              "n_trials": 1,
+              "n_errors": 0,
+              "metrics": [
+                {
+                  "mean": 0.0
+                }
+              ],
+              "reward_stats": {
+                "reward": {
+                  "0.0": [
+                    "75ff97-uv-pep732-editable__QiyuFfz"
+                  ]
+                }
+              },
+              "exception_stats": {}
+            }
+          }
+        }
+      }
+    }
+  }
+]

@@ -1,0 +1,240 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.11, pytest-8.4.2, pluggy-1.6.0 -- /usr/local/bin/python3.13
+cachedir: .pytest_cache
+rootdir: /tests
+collecting ... collected 8 items
+
+../tests/test_outputs.py::test_pyproject_toml_exists FAILED              [ 12%]
+../tests/test_outputs.py::test_pyproject_toml_has_pep732_config FAILED   [ 25%]
+../tests/test_outputs.py::test_package_source_structure FAILED           [ 37%]
+../tests/test_outputs.py::test_package_has_add_function FAILED           [ 50%]
+../tests/test_outputs.py::test_uv_build_succeeds FAILED                  [ 62%]
+../tests/test_outputs.py::test_editable_installation FAILED              [ 75%]
+../tests/test_outputs.py::test_add_function_works FAILED                 [ 87%]
+../tests/test_outputs.py::test_editable_mode_reflects_changes FAILED     [100%]
+
+=================================== FAILURES ===================================
+__________________________ test_pyproject_toml_exists __________________________
+
+    def test_pyproject_toml_exists():
+        """Test that pyproject.toml exists in /app."""
+        pyproject_path = Path("/app/pyproject.toml")
+>       assert pyproject_path.exists(), f"pyproject.toml not found at {pyproject_path}"
+E       AssertionError: pyproject.toml not found at /app/pyproject.toml
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('/app/pyproject.toml').exists
+
+/tests/test_outputs.py:11: AssertionError
+____________________ test_pyproject_toml_has_pep732_config _____________________
+
+    def test_pyproject_toml_has_pep732_config():
+        """Test that pyproject.toml has PEP 732 editable-build configuration."""
+        pyproject_path = Path("/app/pyproject.toml")
+>       content = pyproject_path.read_text()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/pathlib/_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/pathlib/_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/app/pyproject.toml'), mode = 'r', buffering = -1
+encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/app/pyproject.toml'
+
+/usr/local/lib/python3.13/pathlib/_local.py:537: FileNotFoundError
+________________________ test_package_source_structure _________________________
+
+    def test_package_source_structure():
+        """Test that the package source structure exists."""
+        src_layout = Path("/app/src/mathutils")
+        flat_layout = Path("/app/mathutils")
+    
+        assert src_layout.exists() or flat_layout.exists(), (
+            f"Package source directory not found. Expected /app/src/mathutils or /app/mathutils"
+        )
+    
+        pkg_dir = src_layout if src_layout.exists() else flat_layout
+        init_file = pkg_dir / "__init__.py"
+    
+>       assert init_file.exists(), f"__init__.py not found in {pkg_dir}"
+E       AssertionError: __init__.py not found in /app/mathutils
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('/app/mathutils/__init__.py').exists
+
+/tests/test_outputs.py:50: AssertionError
+________________________ test_package_has_add_function _________________________
+
+    def test_package_has_add_function():
+        """Test that the package source contains the add function."""
+        src_layout = Path("/app/src/mathutils")
+        flat_layout = Path("/app/mathutils")
+        pkg_dir = src_layout if src_layout.exists() else flat_layout
+    
+>       init_content = (pkg_dir / "__init__.py").read_text()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/pathlib/_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/pathlib/_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/app/mathutils/__init__.py'), mode = 'r', buffering = -1
+encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/app/mathutils/__init__.py'
+
+/usr/local/lib/python3.13/pathlib/_local.py:537: FileNotFoundError
+____________________________ test_uv_build_succeeds ____________________________
+
+    def test_uv_build_succeeds():
+        """Test that uv build command succeeds and creates distribution files."""
+        result = subprocess.run(
+            ["uv", "build"],
+            cwd="/app",
+            capture_output=True,
+            text=True,
+            timeout=60
+        )
+    
+>       assert result.returncode == 0, (
+            f"uv build failed with return code {result.returncode}. "
+            f"stdout: {result.stdout}, stderr: {result.stderr}"
+        )
+E       AssertionError: uv build failed with return code 2. stdout: , stderr: Building source distribution...
+E           × Failed to build `/app`
+E           ╰─▶ /app does not appear to be a Python project, as neither `pyproject.toml`
+E               nor `setup.py` are present in the directory
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['uv', 'build'], returncode=2, stdout='', stderr='Building source distribution...\n  × Failed to build `/app`\n  ╰─▶ /app does not appear to be a Python project, as neither `pyproject.toml`\n      nor `setup.py` are present in the directory\n').returncode
+
+/tests/test_outputs.py:75: AssertionError
+__________________________ test_editable_installation __________________________
+
+    def test_editable_installation():
+        """Test that the package can be installed in editable mode."""
+        result = subprocess.run(
+            ["uv", "pip", "install", "--system", "--editable", "."],
+            cwd="/app",
+            capture_output=True,
+            text=True,
+            timeout=60
+        )
+    
+>       assert result.returncode == 0, (
+            f"uv pip install --editable failed with return code {result.returncode}. "
+            f"stdout: {result.stdout}, stderr: {result.stderr}"
+        )
+E       AssertionError: uv pip install --editable failed with return code 2. stdout: , stderr: Using Python 3.13.11 environment at: /usr/local
+E         error: /app does not appear to be a Python project, as neither `pyproject.toml` nor `setup.py` are present in the directory
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['uv', 'pip', 'install', '--system', '--editable', '.'], returncode=2, stdout='', stderr='Using Python 3.13.11 environment at: /usr/local\nerror: /app does not appear to be a Python project, as neither `pyproject.toml` nor `setup.py` are present in the directory\n').returncode
+
+/tests/test_outputs.py:97: AssertionError
+___________________________ test_add_function_works ____________________________
+
+    def test_add_function_works():
+        """Test that the add function works correctly."""
+        result = subprocess.run(
+            [sys.executable, "-c", "from mathutils import add; assert add(2, 3) == 5; print('OK')"],
+            cwd="/tmp",
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+    
+>       assert result.returncode == 0, (
+            f"add function test failed. stdout: {result.stdout}, stderr: {result.stderr}"
+        )
+E       AssertionError: add function test failed. stdout: , stderr: Traceback (most recent call last):
+E           File "<string>", line 1, in <module>
+E             from mathutils import add; assert add(2, 3) == 5; print('OK')
+E             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E         ModuleNotFoundError: No module named 'mathutils'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/usr/local/bin/python3.13', '-c', "from mathutils import add; assert add(2, 3) == 5; print('OK')"], returncode=1, stdout='', stderr='Traceback (most recent call last):\n  File "<string>", line 1, in <module>\n    from mathutils import add; assert add(2, 3) == 5; print(\'OK\')\n    ^^^^^^^^^^^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named \'mathutils\'\n').returncode
+
+/tests/test_outputs.py:131: AssertionError
+_____________________ test_editable_mode_reflects_changes ______________________
+
+    def test_editable_mode_reflects_changes():
+        """Test that editable mode reflects changes to source code."""
+        src_layout = Path("/app/src/mathutils/__init__.py")
+        flat_layout = Path("/app/mathutils/__init__.py")
+        init_file = src_layout if src_layout.exists() else flat_layout
+    
+>       original_content = init_file.read_text()
+                           ^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/pathlib/_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/pathlib/_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/app/mathutils/__init__.py'), mode = 'r', buffering = -1
+encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/app/mathutils/__init__.py'
+
+/usr/local/lib/python3.13/pathlib/_local.py:537: FileNotFoundError
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_pyproject_toml_exists - AssertionError:...
+FAILED ../tests/test_outputs.py::test_pyproject_toml_has_pep732_config - File...
+FAILED ../tests/test_outputs.py::test_package_source_structure - AssertionErr...
+FAILED ../tests/test_outputs.py::test_package_has_add_function - FileNotFound...
+FAILED ../tests/test_outputs.py::test_uv_build_succeeds - AssertionError: uv ...
+FAILED ../tests/test_outputs.py::test_editable_installation - AssertionError:...
+FAILED ../tests/test_outputs.py::test_add_function_works - AssertionError: ad...
+FAILED ../tests/test_outputs.py::test_editable_mode_reflects_changes - FileNo...
+============================== 8 failed in 0.53s ===============================

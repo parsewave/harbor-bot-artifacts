@@ -1,0 +1,23 @@
+[
+  {
+    "name": "TB Debug Small",
+    "passed": true,
+    "message": "Outcome: PASS",
+    "is_warning": true,
+    "details": "The instructions clearly require an `add` function that adds two numbers and should satisfy `add(2, 3) == 5`. The test failure shows `add(2, 3)` returned an incorrect value (assertion error), which is an implementation mistake rather than a missing or ambiguous specification. No evidence of tests requiring undocumented signatures/structure beyond what the instructions state.",
+    "duration_seconds": 14.50895071029663,
+    "result_type": null,
+    "check_type": "tb_debug_small",
+    "raw_data": {
+      "analyzed_agent": "terminus-2",
+      "analyzed_model": "openrouter/openai/gpt-oss-120b:exacto",
+      "analysis_model": "openrouter/openai/gpt-5.2",
+      "outcome": "PASS",
+      "explanation": "The instructions clearly require an `add` function that adds two numbers and should satisfy `add(2, 3) == 5`. The test failure shows `add(2, 3)` returned an incorrect value (assertion error), which is an implementation mistake rather than a missing or ambiguous specification. No evidence of tests requiring undocumented signatures/structure beyond what the instructions state.",
+      "json_output": {
+        "outcome": "PASS",
+        "explanation": "The instructions clearly require an `add` function that adds two numbers and should satisfy `add(2, 3) == 5`. The test failure shows `add(2, 3)` returned an incorrect value (assertion error), which is an implementation mistake rather than a missing or ambiguous specification. No evidence of tests requiring undocumented signatures/structure beyond what the instructions state."
+      }
+    }
+  }
+]

@@ -1,0 +1,29 @@
+{
+    "id": "7f807c60-a585-4ffb-966e-848da3bd8089",
+    "started_at": "2026-01-23T14:21:13.905728",
+    "finished_at": "2026-01-23T14:23:17.700041",
+    "n_total_trials": 1,
+    "stats": {
+        "n_trials": 1,
+        "n_errors": 0,
+        "evals": {
+            "terminus-2__openai-gpt-5.2__tb-bot-job-1769177424-issue-6-resuls-check-add-75ff97-uv-pep732-584aad7f": {
+                "n_trials": 1,
+                "n_errors": 0,
+                "metrics": [
+                    {
+                        "mean": 0.0
+                    }
+                ],
+                "reward_stats": {
+                    "reward": {
+                        "0.0": [
+                            "75ff97-uv-pep732-editable__k4P7Npp"
+                        ]
+                    }
+                },
+                "exception_stats": {}
+            }
+        }
+    }
+}

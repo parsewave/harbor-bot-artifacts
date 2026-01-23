@@ -1,0 +1,152 @@
+New Terminal Output:
+
+root@540b1158f12e:/app# cd /app
+root@540b1158f12e:/app# uv --version
+uv 0.7.20
+root@540b1158f12e:/app# uv init -h
+Create a new project
+
+Usage: uv init [OPTIONS] [PATH]
+
+Arguments:
+  [PATH]  The path to use for the project/script
+
+Options:
+      --name <NAME>                    The name of the project
+      --bare                           Only create a `pyproject.toml`
+      --package                        Set up the project to be built as a Python package
+      --no-package                     Do not set up the project to be built as a Python package
+      --app                            Create a project for an application
+      --lib                            Create a project for a library
+      --script                         Create a script
+      --description <DESCRIPTION>      Set the project description
+      --no-description                 Disable the description for the project
+      --vcs <VCS>                      Initialize a version control system for the project [possible values: git, none]
+      --build-backend <BUILD_BACKEND>  Initialize a build-backend of choice for the project [possible values: hatch, flit, pdm, poetry, setuptools, maturin,
+                                       scikit]
+      --no-readme                      Do not create a `README.md` file
+      --author-from <AUTHOR_FROM>      Fill in the `authors` field in the `pyproject.toml` [possible values: auto, git, none]
+      --no-pin-python                  Do not create a `.python-version` file for the project
+      --no-workspace                   Avoid discovering a workspace and create a standalone project
+
+Python options:
+  -p, --python <PYTHON>      The Python interpreter to use to determine the minimum supported Python version. [env: UV_PYTHON=]
+      --managed-python       Require use of uv-managed Python versions [env: UV_MANAGED_PYTHON=]
+      --no-managed-python    Disable use of uv-managed Python versions [env: UV_NO_MANAGED_PYTHON=]
+      --no-python-downloads  Disable automatic downloads of Python. [env: "UV_PYTHON_DOWNLOADS=never"]
+
+Cache options:
+  -n, --no-cache               Avoid reading from or writing to the cache, instead using a temporary directory for the duration of the operation [env:
+                               UV_NO_CACHE=]
+      --cache-dir <CACHE_DIR>  Path to the cache directory [env: UV_CACHE_DIR=]
+
+Global options:
+  -q, --quiet...                                   Use quiet output
+  -v, --verbose...                                 Use verbose output
+      --color <COLOR_CHOICE>                       Control the use of color in output [possible values: auto, always, never]
+      --native-tls                                 Whether to load TLS certificates from the platform's native certificate store [env: UV_NATIVE_TLS=]
+      --offline                                    Disable network access [env: UV_OFFLINE=]
+      --allow-insecure-host <ALLOW_INSECURE_HOST>  Allow insecure connections to a host [env: UV_INSECURE_HOST=]
+      --no-progress                                Hide all progress outputs [env: UV_NO_PROGRESS=]
+      --directory <DIRECTORY>                      Change to the given directory prior to running the command
+      --project <PROJECT>                          Run the command within the given project directory [env: UV_PROJECT=]
+      --config-file <CONFIG_FILE>                  The path to a `uv.toml` file to use for configuration [env: UV_CONFIG_FILE=]
+      --no-config                                  Avoid discovering configuration files (`pyproject.toml`, `uv.toml`) [env: UV_NO_CONFIG=]
+  -h, --help                                       Display the concise help for this command
+root@540b1158f12e:/app# rm -rf /app/mathutils
+root@540b1158f12e:/app# mkdir -p /app/mathutils
+root@540b1158f12e:/app# cd /app/mathutils
+root@540b1158f12e:/app/mathutils# uv init --lib --name mathutils
+Initialized project `mathutils`
+root@540b1158f12e:/app/mathutils# ls -la
+total 20
+drwxr-xr-x 3 root root 4096 Jan 23 14:22 .
+drwxr-xr-x 1 root root 4096 Jan 23 14:22 ..
+-rw-r--r-- 1 root root    5 Jan 23 14:22 .python-version
+-rw-r--r-- 1 root root    0 Jan 23 14:22 README.md
+-rw-r--r-- 1 root root  230 Jan 23 14:22 pyproject.toml
+drwxr-xr-x 3 root root 4096 Jan 23 14:22 src
+root@540b1158f12e:/app/mathutils# find . -maxdepth 3 -type f -print
+./.python-version
+./pyproject.toml
+./README.md
+./src/mathutils/__init__.py
+./src/mathutils/py.typed
+root@540b1158f12e:/app/mathutils# cat pyproject.toml
+[project]
+name = "mathutils"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+root@540b1158f12e:/app/mathutils# python3 - <<'PY'
+> import pathlib
+> p = pathlib.Path('pyproject.toml')
+> text = p.read_text()
+> # Ensure uv_build backend configuration exists as required by the task.
+> if 'build-backend = "uv_build"' not in text:
+>     import re
+>     if '[build-system]' in text:
+>         # Replace any existing build-backend line and ensure uv-build requirement.
+>         text = re.sub(r'(?m)^build-backend\s*=\s*"[^"]+"\s*$', 'build-backend = "uv_build"', text)
+>         if 'uv-build' not in text:
+>             text = re.sub(r'(?ms)\[build-system\]\s*\nrequires\s*=\s*\[(.*?)\]', lambda m: '[build-system]\nrequires = [' + (m.group(1).strip() + (', ' if m.g
+roup(1).strip() else '') + '"uv-build"') + ']', text)
+>     else:
+>         text = '[build-system]\nrequires = ["uv-build"]\nbuild-backend = "uv_build"\n\n' + text
+> p.write_text(text)
+> print('Updated pyproject.toml (ensured uv_build backend).')
+> PY
+Updated pyproject.toml (ensured uv_build backend).
+root@540b1158f12e:/app/mathutils# cat pyproject.toml
+[project]
+name = "mathutils"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[build-system]
+requires = ["hatchling", "uv-build"]
+build-backend = "uv_build"root@540b1158f12e:/app/mathutils# mkdir -p src/mathutils
+root@540b1158f12e:/app/mathutils# cat > src/mathutils/__init__.py <<'PY'
+> """mathutils: simple math utilities."""
+>
+> from .core import add
+>
+> __all__ = ["add"]
+> PY
+root@540b1158f12e:/app/mathutils# cat > src/mathutils/core.py <<'PY'
+> """Core math utility functions."""
+>
+> def add(a, b):
+>     """Return the sum of two numbers."""
+>     return a + b
+> PY
+root@540b1158f12e:/app/mathutils# uv build
+Building source distribution...
+Building wheel from source distribution...
+Successfully built dist/mathutils-0.1.0.tar.gz
+Successfully built dist/mathutils-0.1.0-py3-none-any.whl
+root@540b1158f12e:/app/mathutils# uv venv
+Using CPython 3.13.11 interpreter at: /usr/local/bin/python3.13
+Creating virtual environment at: .venv
+Activate with: source .venv/bin/activate
+root@540b1158f12e:/app/mathutils# uv pip install --python .venv/bin/python --editable .
+Resolved 1 package in 3ms
+      Built mathutils @ file:///app/mathutils
+Prepared 1 package in 137ms
+Installed 1 package in 1ms
+ + mathutils==0.1.0 (from file:///app/mathutils)
+root@540b1158f12e:/app/mathutils# .venv/bin/python -c "import mathutils; print('add(2, 3)=', mathutils.add(2, 3))"
+add(2, 3)= 5
+root@540b1158f12e:/app/mathutils# perl -0777 -i -pe 's/return a \+ b/return a + b + 100/' src/mathutils/core.py
+root@540b1158f12e:/app/mathutils# .venv/bin/python -c "import importlib, mathutils; importlib.reload(mathutils); print('add(2, 3)=', mathutils.add(2, 3))"
+add(2, 3)= 105
+root@540b1158f12e:/app/mathutils#

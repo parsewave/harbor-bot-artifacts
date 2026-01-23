@@ -1,0 +1,23 @@
+[
+  {
+    "name": "TB Debug Large",
+    "passed": true,
+    "message": "Outcome: PASS",
+    "is_warning": true,
+    "details": "All failures stem from the project not being created at all in the expected workspace (/app): pyproject.toml and the mathutils package files are missing, so uv build/install and imports fail. The instructions explicitly require creating the package, adding an add() function, configuring pyproject.toml for uv_build/PEP 732, building, and editable installing\u2014so the tests\u2019 checks (presence of pyproject.toml, package directory, add function, and editable behavior) are direct consequences of stated r",
+    "duration_seconds": 21.399818658828735,
+    "result_type": null,
+    "check_type": "tb_debug_large",
+    "raw_data": {
+      "analyzed_agent": "terminus-2",
+      "analyzed_model": "openrouter/openai/gpt-5.2",
+      "analysis_model": "openrouter/openai/gpt-5.2",
+      "outcome": "PASS",
+      "explanation": "All failures stem from the project not being created at all in the expected workspace (/app): pyproject.toml and the mathutils package files are missing, so uv build/install and imports fail. The instructions explicitly require creating the package, adding an add() function, configuring pyproject.toml for uv_build/PEP 732, building, and editable installing\u2014so the tests\u2019 checks (presence of pyproject.toml, package directory, add function, and editable behavior) are direct consequences of stated requirements rather than unstated/overly specific expectations.",
+      "json_output": {
+        "outcome": "PASS",
+        "explanation": "All failures stem from the project not being created at all in the expected workspace (/app): pyproject.toml and the mathutils package files are missing, so uv build/install and imports fail. The instructions explicitly require creating the package, adding an add() function, configuring pyproject.toml for uv_build/PEP 732, building, and editable installing\u2014so the tests\u2019 checks (presence of pyproject.toml, package directory, add function, and editable behavior) are direct consequences of stated requirements rather than unstated/overly specific expectations."
+      }
+    }
+  }
+]

@@ -1,0 +1,11 @@
+Building source distribution (uv build backend)...
+Building wheel from source distribution (uv build backend)...
+Successfully built dist/mathutils-0.1.0.tar.gz
+Successfully built dist/mathutils-0.1.0-py3-none-any.whl
+Using Python 3.13.11 environment at: /usr/local
+Resolved 1 package in 3ms
+   Building mathutils @ file:///app
+      Built mathutils @ file:///app
+Prepared 1 package in 8ms
+Installed 1 package in 12ms
+ + mathutils==0.1.0 (from file:///app)

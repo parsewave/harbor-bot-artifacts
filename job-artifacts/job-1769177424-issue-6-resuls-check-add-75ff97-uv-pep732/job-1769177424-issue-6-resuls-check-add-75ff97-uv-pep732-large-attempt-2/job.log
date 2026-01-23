@@ -1,0 +1,36 @@
+Installing: tmux, asciinema
+Detected system: {'os': 'debian-based', 'package_manager': 'apt-get', 'update_command': None}
+Installing tools using apt-get: DEBIAN_FRONTEND=noninteractive apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y tmux asciinema
+Starting recording.
+Sending keys: ['asciinema rec --stdin /logs/agent/recording.cast', 'Enter'] min_timeout_sec: 1.0 max_timeout_sec: 180.0
+Sending keys: ['clear', 'Enter'] min_timeout_sec: 0.0 max_timeout_sec: 180.0
+Sending keys: ['cd /app\n'] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Sending keys: ['uv --version\n'] min_timeout_sec: 1.0 max_timeout_sec: 180.0
+Sending keys: ['rm -rf /app/mathutils\n'] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Sending keys: ['mkdir -p /app/mathutils/src/mathutils\n'] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Sending keys: ['cat > /app/mathutils/src/mathutils/__init__.py <<\'PY\'\n"""mathutils package."""\n\n\ndef add(a, b):\n    """Add two numbers together."""\n    return a + b\nPY\n'] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Sending keys: ['cat > /app/mathutils/pyproject.toml <<\'TOML\'\n[project]\nname = "mathutils"\nversion = "0.1.0"\ndescription = "Small math utilities."\nreadme = "README.md"\nrequires-python = ">=3.9"\n\n[build-system]\nrequires = ["uv-build"]\nbuild-backend = "uv_build"\nTOML\n'] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Sending keys: ["cat > /app/mathutils/README.md <<'MD'\n# mathutils\n\nA tiny example package.\nMD\n"] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Sending keys: ['cd /app/mathutils\n'] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Sending keys: ['uv build\n'] min_timeout_sec: 10.0 max_timeout_sec: 180.0
+Sending keys: ['uv venv .venv\n'] min_timeout_sec: 5.0 max_timeout_sec: 180.0
+Sending keys: ['uv pip -p .venv/bin/python install --editable .\n'] min_timeout_sec: 10.0 max_timeout_sec: 180.0
+Sending keys: ['.venv/bin/python -c "import mathutils; print(\'mathutils from:\', mathutils.__file__); print(\'add(1,2)=\', mathutils.add(1,2)); print(\'doc:\', mathutils.add.__doc__)"\n'] min_timeout_sec: 1.0 max_timeout_sec: 180.0
+Sending keys: ["perl -0777 -i -pe 's/Add two numbers together\\./Add two numbers together (edited)\\./g' src/mathutils/__init__.py\n"] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Sending keys: ['.venv/bin/python -c "import mathutils; print(\'add(1,2)=\', mathutils.add(1,2)); print(\'doc:\', mathutils.add.__doc__)"\n'] min_timeout_sec: 1.0 max_timeout_sec: 180.0
+Trajectory dumped to /tmp/harbor-runs/job-1769177424-issue-6-resuls-check-add-75ff97-uv-pep732-large-attempt-2/75ff97-uv-pep732-editable__aqPyGNJ/agent/trajectory.json
+Sending keys: ['cd /app/mathutils\n'] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Sending keys: ["uv pip install --help | sed -n '1,120p'\n"] min_timeout_sec: 1.0 max_timeout_sec: 180.0
+Sending keys: ['source .venv/bin/activate\n'] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Sending keys: ['which python\npython -V\n'] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Sending keys: ['uv pip install --editable .\n'] min_timeout_sec: 10.0 max_timeout_sec: 180.0
+Sending keys: ['python -c "import mathutils; print(\'mathutils from:\', mathutils.__file__); print(\'add(1,2)=\', mathutils.add(1,2)); print(\'doc:\', mathutils.add.__doc__)"\n'] min_timeout_sec: 1.0 max_timeout_sec: 180.0
+Sending keys: ["sed -i 's/(edited)/(edited2)/g' src/mathutils/__init__.py\n"] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Sending keys: ['python -c "import mathutils; print(\'add(3,4)=\', mathutils.add(3,4)); print(\'doc:\', mathutils.add.__doc__)"\n'] min_timeout_sec: 1.0 max_timeout_sec: 180.0
+Trajectory dumped to /tmp/harbor-runs/job-1769177424-issue-6-resuls-check-add-75ff97-uv-pep732-large-attempt-2/75ff97-uv-pep732-editable__aqPyGNJ/agent/trajectory.json
+Sending keys: ['ls -la dist\n'] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Sending keys: ['python -c "import mathutils; print(mathutils.add(10, 32))"\n'] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Sending keys: ["sed -n '1,120p' pyproject.toml\n"] min_timeout_sec: 0.1 max_timeout_sec: 180.0
+Trajectory dumped to /tmp/harbor-runs/job-1769177424-issue-6-resuls-check-add-75ff97-uv-pep732-large-attempt-2/75ff97-uv-pep732-editable__aqPyGNJ/agent/trajectory.json
+Trajectory dumped to /tmp/harbor-runs/job-1769177424-issue-6-resuls-check-add-75ff97-uv-pep732-large-attempt-2/75ff97-uv-pep732-editable__aqPyGNJ/agent/trajectory.json
+Trajectory dumped to /tmp/harbor-runs/job-1769177424-issue-6-resuls-check-add-75ff97-uv-pep732-large-attempt-2/75ff97-uv-pep732-editable__aqPyGNJ/agent/trajectory.json

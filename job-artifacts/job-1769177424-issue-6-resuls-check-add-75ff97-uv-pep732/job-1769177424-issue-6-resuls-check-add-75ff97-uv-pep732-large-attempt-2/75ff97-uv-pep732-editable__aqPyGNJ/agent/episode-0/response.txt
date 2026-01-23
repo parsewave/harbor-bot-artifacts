@@ -1,0 +1,63 @@
+{
+  "analysis": "We are in /app with an empty-looking shell session. Nothing for the Python package exists yet. We need to (1) create a new Python package named mathutils with an add() function, (2) configure pyproject.toml to use the uv_build backend (PEP 732 editable-build mechanism), (3) run `uv build`, (4) create a venv and install the project in editable mode with `uv pip install --editable .`, and (5) verify imports and that source changes are reflected without reinstalling.",
+  "plan": "First confirm `uv` is available. Then create a src-layout project under /app/mathutils with `src/mathutils/__init__.py` containing add(). Create a pyproject.toml using PEP 621 metadata and a [build-system] section pointing to the uv_build backend. Run `uv build` to ensure the build backend works. Next create a virtual environment, install the project editable into it with `uv pip ... --editable .`, and verify by importing mathutils and calling add(). Finally, change the function docstring in source and re-run Python without reinstalling to prove the editable install reflects the source change.",
+  "commands": [
+    {
+      "keystrokes": "cd /app\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "uv --version\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "rm -rf /app/mathutils\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "mkdir -p /app/mathutils/src/mathutils\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "cat > /app/mathutils/src/mathutils/__init__.py <<'PY'\n\"\"\"mathutils package.\"\"\"\n\n\ndef add(a, b):\n    \"\"\"Add two numbers together.\"\"\"\n    return a + b\nPY\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "cat > /app/mathutils/pyproject.toml <<'TOML'\n[project]\nname = \"mathutils\"\nversion = \"0.1.0\"\ndescription = \"Small math utilities.\"\nreadme = \"README.md\"\nrequires-python = \">=3.9\"\n\n[build-system]\nrequires = [\"uv-build\"]\nbuild-backend = \"uv_build\"\nTOML\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "cat > /app/mathutils/README.md <<'MD'\n# mathutils\n\nA tiny example package.\nMD\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "cd /app/mathutils\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "uv build\n",
+      "duration": 10.0
+    },
+    {
+      "keystrokes": "uv venv .venv\n",
+      "duration": 5.0
+    },
+    {
+      "keystrokes": "uv pip -p .venv/bin/python install --editable .\n",
+      "duration": 10.0
+    },
+    {
+      "keystrokes": ".venv/bin/python -c \"import mathutils; print('mathutils from:', mathutils.__file__); print('add(1,2)=', mathutils.add(1,2)); print('doc:', mathutils.add.__doc__)\"\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "perl -0777 -i -pe 's/Add two numbers together\\./Add two numbers together (edited)\\./g' src/mathutils/__init__.py\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": ".venv/bin/python -c \"import mathutils; print('add(1,2)=', mathutils.add(1,2)); print('doc:', mathutils.add.__doc__)\"\n",
+      "duration": 1.0
+    }
+  ],
+  "task_complete": false
+}
