@@ -1,0 +1,99 @@
+{
+    "id": "3e1a3d85-5e3f-44dd-b5fb-7182bda6827c",
+    "task_name": "java7-span-margin-engine",
+    "trial_name": "java7-span-margin-engine__SkezMdM",
+    "trial_uri": "file:///tmp/harbor-runs/job-1769162652-issue-32-resuls-check-main-large-attempt-3/java7-span-margin-engine__SkezMdM",
+    "task_id": {
+        "path": "/tmp/harbor-runs/workspaces/tb-bot-job-1769162652-issue-32-resuls-check-main-6f1f9fe1/java7-span-margin-engine"
+    },
+    "source": "tb-bot-job-1769162652-issue-32-resuls-check-main-6f1f9fe1",
+    "task_checksum": "48cd871793ac2ff7883727572da28dd7abb9d97dfdea444efe222498619e9398",
+    "config": {
+        "task": {
+            "path": "/tmp/harbor-runs/workspaces/tb-bot-job-1769162652-issue-32-resuls-check-main-6f1f9fe1/java7-span-margin-engine",
+            "git_url": null,
+            "git_commit_id": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "tb-bot-job-1769162652-issue-32-resuls-check-main-6f1f9fe1"
+        },
+        "trial_name": "java7-span-margin-engine__SkezMdM",
+        "trials_dir": "/tmp/harbor-runs/job-1769162652-issue-32-resuls-check-main-large-attempt-3",
+        "timeout_multiplier": 1.0,
+        "agent": {
+            "name": "terminus-2",
+            "import_path": null,
+            "model_name": "openrouter/openai/gpt-5.2",
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "kwargs": {}
+        },
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "kwargs": {}
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "job_id": "85a66083-c29d-4a1e-854b-6f04d09eb819"
+    },
+    "agent_info": {
+        "name": "terminus-2",
+        "version": "2.0.0",
+        "model_info": {
+            "name": "openai/gpt-5.2",
+            "provider": "openrouter"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 33828,
+        "n_cache_tokens": 11392,
+        "n_output_tokens": 11331,
+        "cost_usd": 0.19789169400000003,
+        "rollout_details": [],
+        "metadata": {
+            "n_episodes": 4,
+            "api_request_times_msec": [
+                147920.3326702118,
+                56607.96356201172,
+                7092.139005661011,
+                2873.3623027801514
+            ],
+            "summarization_count": 0
+        }
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.0
+        }
+    },
+    "exception_info": null,
+    "started_at": "2026-01-23T10:17:32.904890Z",
+    "finished_at": "2026-01-23T10:21:47.202699Z",
+    "environment_setup": {
+        "started_at": "2026-01-23T10:17:32.906201Z",
+        "finished_at": "2026-01-23T10:17:34.033774Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-01-23T10:17:34.033826Z",
+        "finished_at": "2026-01-23T10:17:44.556282Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-01-23T10:17:44.556394Z",
+        "finished_at": "2026-01-23T10:21:27.600172Z"
+    },
+    "verifier": {
+        "started_at": "2026-01-23T10:21:27.600389Z",
+        "finished_at": "2026-01-23T10:21:32.067787Z"
+    }
+}

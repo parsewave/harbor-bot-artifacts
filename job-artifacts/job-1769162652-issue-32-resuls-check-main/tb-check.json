@@ -1,0 +1,58 @@
+[
+  {
+    "name": "TB Check",
+    "passed": true,
+    "message": "All checks passed",
+    "is_warning": false,
+    "details": "\n\ud83d\udd0e Checking task quality...\nWarning: tasks check currently only supports Dockerfile environments.\n\u2713 Results written to \n/tmp/job-1769162652-issue-32-resuls-check-main-tb-check.json\n                              Task Quality Checks                               \n\u250f\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2513\n\u2503 Check                        \u2503 Outcome \u2503 Explanation                         \u2503\n\u2521\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",
+    "duration_seconds": 50.641995668411255,
+    "result_type": "tb_positive",
+    "check_type": "tb_check",
+    "raw_data": {
+      "behavior_in_task_description": {
+        "explanation": "PASS: instruction.md specifies the CLI interface (4 args in order), required CSV header/columns, sorting by account_id, the exact margin formulas (netting, scanning risk, spread charge, PnL, status), and mandates 7 specific Java source files in /app/src compiled to /app/bin with -source/-target 1.7. Tests exercise these same interfaces/outputs (java -cp /app/bin Main ... and CSV validation).",
+        "outcome": "pass"
+      },
+      "behavior_in_tests": {
+        "explanation": "FAIL: instruction.md requires additional behaviors that are not asserted in tests, notably: (1) compilation must produce no stdout/stderr and no warnings, and execution must produce no stderr; tests only check returncode==0 and do not assert empty stderr/stdout. (2) The spec\u2019s representative contract selection rule (highest open interest equivalent within an underlying, tie-handling) is not directly targeted by a focused unit test; it\u2019s only indirectly covered via the \u201cactual data\u201d end-to-end check.",
+        "outcome": "fail"
+      },
+      "informative_test_structure": {
+        "explanation": "PASS: tests are broken into many small, clearly named functions with docstrings describing the specific behavior (netting, scanning risk, spread charge, PnL, header, sorting, and end-to-end actual data verification).",
+        "outcome": "pass"
+      },
+      "anti_cheating_measures": {
+        "explanation": "PASS: although /app/data is baked into the image, tests include multiple synthetic temp inputs (temp CSVs) so a solution cannot simply hardcode outputs for the provided dataset; it must actually implement the computations to satisfy formula-based assertions.",
+        "outcome": "pass"
+      },
+      "structured_data_schema": {
+        "explanation": "PASS: instruction.md explicitly defines the output CSV schema, exact header string, column order, and required formatting (no spaces), which matches what tests assert (test_csv_header_format and DictReader-based checks).",
+        "outcome": "pass"
+      },
+      "pinned_dependencies": {
+        "explanation": "fail: Dockerfile installs pytest via `pip3 install --break-system-packages pytest` without a version pin, which harms reproducibility. (Tests do pin pytest via uvx, but the image itself still installs an unpinned dependency.)",
+        "outcome": "fail"
+      },
+      "typos": {
+        "explanation": "PASS: paths and filenames are consistent across Dockerfile (/app/data), instruction (positions.csv, market_data.csv, contract_specs.csv), and tests (same). Required class/source filenames also match exactly.",
+        "outcome": "pass"
+      },
+      "tests_or_solution_in_image": {
+        "explanation": "PASS: Dockerfile only copies `data/` into the image (`COPY data/ ${APP_HOME}/data/`) and does not include `/tests` or `/solution`.",
+        "outcome": "pass"
+      },
+      "test_deps_in_image": {
+        "explanation": "FAIL: Dockerfile installs test-only tooling (`pytest`) during image build; per guidance, test dependencies should be installed in tests/test.sh (which already installs pytest via uvx).",
+        "outcome": "fail"
+      },
+      "hardcoded_solution": {
+        "explanation": "PASS: solution/solve.sh writes Java source code implementing the described formulas, compiles with `javac -source 1.7 -target 1.7`, and runs the program to generate output; it does not echo/cat a precomputed final report.",
+        "outcome": "pass"
+      },
+      "file_reference_mentioned": {
+        "explanation": "pass: instruction.md explicitly names the required output as `output_path` argument and specifies the required source directory (/app/src) and compile output directory (/app/bin), which are the key file/path expectations used by tests.",
+        "outcome": "pass"
+      }
+    }
+  }
+]

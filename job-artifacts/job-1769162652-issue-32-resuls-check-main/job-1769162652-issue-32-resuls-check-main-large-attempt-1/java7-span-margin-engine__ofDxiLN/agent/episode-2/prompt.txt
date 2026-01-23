@@ -1,0 +1,221 @@
+Current terminal state:
+New Terminal Output:
+
+root@04e751d4d1e1:/app# ls -1 /app/src
+AccountMargin.java
+ContractSpec.java
+Csv.java
+Main.java
+MarginCalculator.java
+MarketData.java
+Position.java
+PositionAggregator.java
+root@04e751d4d1e1:/app# cat > /app/src/Main.java <<'EOF'
+> import java.io.BufferedReader;
+> import java.io.BufferedWriter;
+> import java.io.FileInputStream;
+> import java.io.FileOutputStream;
+> import java.io.InputStreamReader;
+on> import java.io.OutputStreamWriter;
+> import java.math.BigDecimal;
+> import java.util.ArrayList;
+> import java.util.Collections;
+r> import java.util.HashMap;
+> import java.util.List;
+> import java.util.Map;
+ >
+ > public class Main {
+ne.t>
+>     public static void main(String[] args) throws Exception {
+     >         if (args.length != 4) {
+>             throw new IllegalArgumentException("Expected 4 args: positions_path market_data_path contract_specs_path output_path");
+   >         }
+>         String positionsPath = args[0];
+>         String marketPath = args[1];
+>         String specsPath = args[2];
+>         String outputPath = args[3];
+>
+>         List<Position> positions = loadPositions(positionsPath);
+>         Map<String, MarketData> marketByContract = loadMarketData(marketPath);
+>         Map<String, ContractSpec> specsByContract = loadContractSpecs(specsPath);
+>
+ >         PositionAggregator.AccountAggregates agg = PositionAggregator.aggregate(positions, specsByContract);
+>         Map<String, Long> unrealizedPnlByAccount = computeUnrealizedPnlByAccount(positions, specsByContract, marketByContract);
+>
+>         MarginCalculator calc = new MarginCalculator(specsByContract, marketByContract);
+>         List<String> accounts = new ArrayList<String>(agg.accounts);
+>         Collections.sort(accounts);
+>
+>         List<AccountMargin> results = new ArrayList<AccountMargin>();
+>         for (int i = 0; i < accounts.size(); i++) {
+>             String accountId = accounts.get(i);
+>             Map<String, Long> netQtyByContract = agg.netQtyByContract.get(accountId);
+>             Map<String, Long> netDeltaByUnderlying = agg.netDeltaByUnderlying.get(accountId);
+>             Map<String, Map<String, Long>> oieByUndContract = agg.openInterestEqByUnderlyingContract.get(accountId);
+>             long pnl = getOrZero(unrealizedPnlByAccount, accountId);
+>
+>             AccountMargin am = calc.computeForAccount(accountId, netQtyByContract, netDeltaByUnderlying, oieByUndContract, pnl);
+>             results.add(am);
+>         }
+ >
+ >         writeOutput(outputPath, results);
+>     }
+l.>
+>     private static long getOrZero(Map<String, Long> m, String k) {
+>         Long v = m.get(k);
+>         return v == null ? 0L : v.longValue();
+>     }
+ >
+>     private static List<Position> loadPositions(String path) throws Exception {
+>         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+>         try {
+>             String header = br.readLine();
+>             if (header == null) {
+>                 return new ArrayList<Position>();
+>             }
+>             List<Position> list = new ArrayList<Position>();
+>             String line;
+>             while ((line = br.readLine()) != null) {
+n>                 line = line.trim();
+>                 if (line.length() == 0) {
+  }
+    }>                     continue;
+riv>                 }
+>                 list.add(Position.parse(line));
+>             }
+>             return list;
+>         } finally {
+>             br.close();
+>         }
+>     }
+>
+>     private static Map<String, MarketData> loadMarketData(String path) throws Exception {
+>         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+>         try {
+>             String header = br.readLine();
+>             if (header == null) {
+>                 return new HashMap<String, MarketData>();
+>             }
+>             Map<String, MarketData> m = new HashMap<String, MarketData>();
+>             String line;
+>             while ((line = br.readLine()) != null) {
+>                 line = line.trim();
+>                 if (line.length() == 0) {
+>                     continue;
+>                 }
+>                 MarketData md = MarketData.parse(line);
+>                 m.put(md.contractCode, md);
+>             }
+>             return m;
+>         } finally {
+>             br.close();
+>         }
+>     }
+>
+>     private static Map<String, ContractSpec> loadContractSpecs(String path) throws Exception {
+>         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+>         try {
+>             String header = br.readLine();
+>             if (header == null) {
+>                 return new HashMap<String, ContractSpec>();
+>             }
+>             Map<String, ContractSpec> m = new HashMap<String, ContractSpec>();
+>             String line;
+>             while ((line = br.readLine()) != null) {
+>                 line = line.trim();
+>                 if (line.length() == 0) {
+>                     continue;
+>                 }
+>                 ContractSpec cs = ContractSpec.parse(line);
+>                 m.put(cs.contractCode, cs);
+>             }
+>             return m;
+>         } finally {
+>             br.close();
+>         }
+>     }
+>
+>     private static Map<String, Long> computeUnrealizedPnlByAccount(List<Position> positions,
+>                                                                   Map<String, ContractSpec> specsByContract,
+>                                                                   Map<String, MarketData> marketByContract) {
+>         Map<String, BigDecimal> pnl = new HashMap<String, BigDecimal>();
+>
+>         for (int i = 0; i < positions.size(); i++) {
+>             Position p = positions.get(i);
+>             ContractSpec spec = specsByContract.get(p.contractCode);
+>             if (spec == null) {
+>                 throw new IllegalArgumentException("Missing contract spec for contract_code=" + p.contractCode);
+>             }
+>             MarketData md = marketByContract.get(p.contractCode);
+>             if (md == null) {
+>                 throw new IllegalArgumentException("Missing market data for contract_code=" + p.contractCode);
+>             }
+>
+>             BigDecimal qty = new BigDecimal(Integer.toString(p.positionQty));
+>             BigDecimal mult = new BigDecimal(Integer.toString(spec.multiplier));
+>             BigDecimal priceDiff = md.settlementPrice.subtract(p.entryPrice);
+>             BigDecimal posPnl = qty.multiply(mult).multiply(priceDiff);
+>
+>             BigDecimal prev = pnl.get(p.accountId);
+>             pnl.put(p.accountId, (prev == null ? BigDecimal.ZERO : prev).add(posPnl));
+>         }
+>
+>         Map<String, Long> out = new HashMap<String, Long>();
+>         for (Map.Entry<String, BigDecimal> e : pnl.entrySet()) {
+>             out.put(e.getKey(), Long.valueOf(e.getValue().longValue()));
+>         }
+>         return out;
+>     }
+>
+>     private static void writeOutput(String path, List<AccountMargin> results) throws Exception {
+>         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
+>         try {
+>             bw.write("account_id,net_delta_exposure,scanning_risk,spread_charge,initial_margin,unrealized_pnl,margin_status");
+>             bw.newLine();
+>             for (int i = 0; i < results.size(); i++) {
+>                 bw.write(results.get(i).toCsvRow());
+>                 bw.newLine();
+>             }
+>         } finally {
+>             bw.close();
+>         }
+>     }
+> }
+>
+> final class Csv {
+>     private Csv() {
+>     }
+>
+>     public static String[] split(String line) {
+>         // Assumes no quoted commas (simple benchmark CSV)
+>         String[] parts = line.split(",", -1);
+>         for (int i = 0; i < parts.length; i++) {
+>             parts[i] = parts[i].trim();
+>         }
+>         return parts;
+>     }
+> }
+> EOF
+root@04e751d4d1e1:/app# rm -f /app/src/Csv.java
+root@04e751d4d1e1:/app# ls -1 /app/src
+AccountMargin.java
+ContractSpec.java
+Main.java
+MarginCalculator.java
+MarketData.java
+Position.java
+PositionAggregator.java
+root@04e751d4d1e1:/app# rm -rf /app/bin/*
+root@04e751d4d1e1:/app# javac -source 1.7 -target 1.7 -d /app/bin /app/src/*.java
+java -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /tmp/margin_report.csv
+root@04e751d4d1e1:/app# java -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /tmp/margin_report.csv
+root@04e751d4d1e1:/app# head -n 5 /tmp/margin_report.csv
+account_id,net_delta_exposure,scanning_risk,spread_charge,initial_margin,unrealized_pnl,margin_status
+ACC001,15410,343305,10805,354110,31937,CALL
+ACC002,3100,528149,6725,534874,88900,CALL
+ACC003,19500,238031,27900,265931,51375,CALL
+ACC004,1150,84893,5200,90093,83825,CALL
+root@04e751d4d1e1:/app#
+
+
+Are you sure you want to mark the task as complete? This will trigger your solution to be graded and you won't be able to make any further corrections. If so, include "task_complete": true in your JSON response again.

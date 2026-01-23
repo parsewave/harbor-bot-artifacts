@@ -1,0 +1,862 @@
+[?2004hroot@4b8a5911d6b5:/app# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@4b8a5911d6b5:/app# clear
+[?2004l[H[J[3J[?2004hroot@4b8a5911d6b5:/app# ls -ლა /app
+[?2004lls: invalid option -- '�'
+Try 'ls --help' for more information.
+[?2004hroot@4b8a5911d6b5:/app# mkdir -p /app/src /app/bin
+[?2004l[?2004hroot@4b8a5911d6b5:/app# cat > /app/src/Position.java <<'EOF'
+[?2004l[?2004h> import java.math.BigDecimal;
+[?2004l[?2004h> 
+[?2004l[?2004h> public class Position {
+[?2004l[?2004h>     private final String accountId;
+[?2004l[?2004h>     private final String contractCode;
+[?2004l[?2004h>     private final int positionQty;
+[?2004l[?2004h>     private final BigDecimal entryPrice;
+[?2004l[?2004h> 
+[?2004l[?2004h>     public Position(String accountId, String contractCode, int positionQty, BigDecimal entryPrice) {
+[?2004l[?2004h>         this.accountId = accountId;
+[?2004l[?2004h>         this.contractCode = contractCode;
+[?2004l[?2004h>         this.positionQty = positionQty;
+[?2004l[?2004h>         this.entryPrice = entryPrice;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public String getAccountId() {
+[?2004l[?2004h>         return accountId;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public String getContractCode() {
+[?2004l[?2004h>         return contractCode;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public int getPositionQty() {
+[?2004l[?2004h>         return positionQty;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public BigDecimal getEntryPrice() {
+[?2004l[?2004h>         return entryPrice;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public static Position parseCsv(String line) {
+[?2004l[?2004h>         String[] parts = CsvUtil.split(line);
+[?2004l[?2004h>         if (parts.length < 4) {
+[?2004l[?2004h>             throw new IllegalArgumentException("Invalid positions row: " + line);
+[?2004l[?2004h>         }
+[?2004l[?2004h>         String accountId = parts[0];
+[?2004l[?2004h>         String contractCode = parts[1];
+[?2004l[?2004h>         int qty = Integer.parseInt(parts[2]);
+[?2004l[?2004h>         BigDecimal entryPrice = new BigDecimal(parts[3]);
+[?2004l[?2004h>         return new Position(accountId, contractCode, qty, entryPrice);
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004l[?2004h> class CsvUtil {
+[?2004l[?2004h>     private CsvUtil() {
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public static String[] split(String line) {
+[?2004l[?2004h>         String[] raw = line.split(",", -1);
+[?2004l[?2004h>         for (int i = 0; i < raw.length; i++) {
+[?2004l[?2004h>             raw[i] = raw[i].trim();
+[?2004l[?2004h>         }
+[?2004l[?2004h>         return raw;
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@4b8a5911d6b5:/app# cat > /app/src/MarketData.java <<'EOF'
+[?2004l[?2004h> import java.math.BigDecimal;
+[?2004l[?2004h> 
+[?2004l[?2004h> public class MarketData {
+[?2004l[?2004h>     private final String contractCode;
+[?2004l[?2004h>     private final BigDecimal settlementPrice;
+[?2004l[?2004h>     private final BigDecimal scanningRangePct;
+[?2004l[?2004h>     private final BigDecimal intraSpreadCharge;
+[?2004l[?2004h> 
+[?2004l[?2004h>     public MarketData(String contractCode, BigDecimal settlementPrice, BigDecimal scanningRangePct, BigDecimal intraSpreadCharge) {
+[?2004l[?2004h>         this.contractCode = contractCode;
+[?2004l[?2004h>         this.settlementPrice = settlementPrice;
+[?2004l[?2004h>         this.scanningRangePct = scanningRangePct;
+[?2004l[?2004h>         this.intraSpreadCharge = intraSpreadCharge;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public String getContractCode() {
+[?2004l[?2004h>         return contractCode;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public BigDecimal getSettlementPrice() {
+[?2004l[?2004h>         return settlementPrice;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public BigDecimal getScanningRangePct() {
+[?2004l[?2004h>         return scanningRangePct;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public BigDecimal getIntraSpreadCharge() {
+[?2004l[?2004h>         return intraSpreadCharge;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public static MarketData parseCsv(String line) {
+[?2004l[?2004h>         String[] parts = CsvUtil.split(line);
+[?2004l[?2004h>         if (parts.length < 4) {
+[?2004l[?2004h>             throw new IllegalArgumentException("Invalid market_data row: " + line);
+[?2004l[?2004h>         }
+[?2004l[?2004h>         String contractCode = parts[0];
+[?2004l[?2004h>         BigDecimal settlement = new BigDecimal(parts[1]);
+[?2004l[?2004h>         BigDecimal scanningRangePct = new BigDecimal(parts[2]);
+[?2004l[?2004h>         BigDecimal spreadCharge = new BigDecimal(parts[3]);
+[?2004l[?2004h>         return new MarketData(contractCode, settlement, scanningRangePct, spreadCharge);
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@4b8a5911d6b5:/app# cat > /app/src/ContractSpec.java <<'EOF'
+[?2004l[?2004h> public class ContractSpec {
+[?2004l[?2004h>     private final String contractCode;
+[?2004l[?2004h>     private final int multiplier;
+[?2004l[?2004h>     private final String expiryMonth;
+[?2004l[?2004h>     private final String underlying;
+[?2004l[?2004h> 
+[?2004l[?2004h>     public ContractSpec(String contractCode, int multiplier, String expiryMonth, String underlying) {
+[?2004l[?2004h>         this.contractCode = contractCode;
+[?2004l[?2004h>         this.multiplier = multiplier;
+[?2004l[?2004h>         this.expiryMonth = expiryMonth;
+[?2004l[?2004h>         this.underlying = underlying;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public String getContractCode() {
+[?2004l[?2004h>         return contractCode;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public int getMultiplier() {
+[?2004l[?2004h>         return multiplier;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public String getExpiryMonth() {
+[?2004l[?2004h>         return expiryMonth;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public String getUnderlying() {
+[?2004l[?2004h>         return underlying;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public static ContractSpec parseCsv(String line) {
+[?2004l[?2004h>         String[] parts = CsvUtil.split(line);
+[?2004l[?2004h>         if (parts.length < 4) {
+[?2004l[?2004h>             throw new IllegalArgumentException("Invalid contract_specs row: " + line);
+[?2004l[?2004h>         }
+[?2004l[?2004h>         String contractCode = parts[0];
+[?2004l[?2004h>         int multiplier = Integer.parseInt(parts[1]);
+[?2004l[?2004h>         String expiryMonth = parts[2];
+[?2004l[?2004h>         String underlying = parts[3];
+[?2004l[?2004h>         return new ContractSpec(contractCode, multiplier, expiryMonth, underlying);
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@4b8a5911d6b5:/app# cat > /app/src/PositionAggregator.java <<'EOF'
+[?2004l[?2004h> import java.util.HashMap;
+[?2004l[?2004h> import java.util.List;
+[?2004l[?2004h> import java.util.Map;
+[?2004l[?2004h> 
+[?2004l[?2004h> public class PositionAggregator {
+[?2004l[?2004h> 
+[?2004l[?2004h>     public static final class UnderlyingNet {
+[?2004l[?2004h>         private final String underlying;
+[?2004l[?2004h>         private long netDeltaExposure;
+[?2004l[?2004h>         private String representativeContractCode;
+[?2004l[?2004h>         private long maxOpenInterestEquivalent;
+[?2004l[?2004h> 
+[?2004l[?2004h>         private UnderlyingNet(String underlying) {
+[?2004l[?2004h>             this.underlying = underlying;
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         public String getUnderlying() {
+[?2004l[?2004h>             return underlying;
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         public long getNetDeltaExposure() {
+[?2004l[?2004h>             return netDeltaExposure;
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         public String getRepresentativeContractCode() {
+[?2004l[?2004h>             return representativeContractCode;
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         private void addPosition(Position p, ContractSpec spec) {
+[?2004l[?2004h>             long deltaEq = (long) p.getPositionQty() * (long) spec.getMultiplier();
+[?2004l[?2004h>             netDeltaExposure += deltaEq;
+[?2004l[?2004h> 
+[?2004l[?2004h>             long openInterestEq = Math.abs((long) p.getPositionQty()) * (long) spec.getMultiplier();
+[?2004l[?2004h>             if (representativeContractCode == null || openInterestEq > maxOpenInterestEquivalent) {
+[?2004l[?2004h>                 maxOpenInterestEquivalent = openInterestEq;
+[?2004l[?2004h>                 representativeContractCode = p.getContractCode();
+[?2004l[?2004h>             }
+[?2004l[?2004h>         }
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public Map<String, Map<String, UnderlyingNet>> aggregateByAccountAndUnderlying(List<Position> positions,
+[?2004l[?2004h>                                                                                    Map<String, ContractSpec> contractSpecs) {
+[?2004l[?2004h>         Map<String, Map<String, UnderlyingNet>> out = new HashMap<String, Map<String, UnderlyingNet>>();
+[?2004l[?2004h> 
+[?2004l[?2004h>         for (int i = 0; i < positions.size(); i++) {
+[?2004l[?2004h>             Position p = positions.get(i);
+[?2004l[?2004h>             ContractSpec spec = contractSpecs.get(p.getContractCode());
+[?2004l[?2004h>             if (spec == null) {
+[?2004l[?2004h>                 throw new IllegalArgumentException("Missing contract spec for contract_code=" + p.getContractCode());
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             String accountId = p.getAccountId();
+[?2004l[?2004h>             String underlying = spec.getUnderlying();
+[?2004l[?2004h> 
+[?2004l[?2004h>             Map<String, UnderlyingNet> byUnderlying = out.get(accountId);
+[?2004l[?2004h>             if (byUnderlying == null) {
+[?2004l[?2004h>                 byUnderlying = new HashMap<String, UnderlyingNet>();
+[?2004l[?2004h>                 out.put(accountId, byUnderlying);
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             UnderlyingNet net = byUnderlying.get(underlying);
+[?2004l[?2004h>             if (net == null) {
+[?2004l[?2004h>                 net = new UnderlyingNet(underlying);
+[?2004l[?2004h>                 byUnderlying.put(underlying, net);
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             net.addPosition(p, spec);
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         return out;
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@4b8a5911d6b5:/app# cat > /app/src/AccountMargin.java <<'EOF'
+[?2004l[?2004h> public class AccountMargin {
+[?2004l[?2004h>     private final String accountId;
+[?2004l[?2004h>     private final long netDeltaExposure;
+[?2004l[?2004h>     private final long scanningRisk;
+[?2004l[?2004h>     private final long spreadCharge;
+[?2004l[?2004h>     private final long initialMargin;
+[?2004l[?2004h>     private final long unrealizedPnl;
+[?2004l[?2004h>     private final String marginStatus;
+[?2004l[?2004h> 
+[?2004l[?2004h>     public AccountMargin(String accountId,
+[?2004l[?2004h>                          long netDeltaExposure,
+[?2004l[?2004h>                          long scanningRisk,
+[?2004l[?2004h>                          long spreadCharge,
+[?2004l[?2004h>                          long initialMargin,
+[?2004l[?2004h>                          long unrealizedPnl,
+[?2004l[?2004h>                          String marginStatus) {
+[?2004l[?2004h>         this.accountId = accountId;
+[?2004l[?2004h>         this.netDeltaExposure = netDeltaExposure;
+[?2004l[?2004h>         this.scanningRisk = scanningRisk;
+[?2004l[?2004h>         this.spreadCharge = spreadCharge;
+[?2004l[?2004h>         this.initialMargin = initialMargin;
+[?2004l[?2004h>         this.unrealizedPnl = unrealizedPnl;
+[?2004l[?2004h>         this.marginStatus = marginStatus;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public String getAccountId() {
+[?2004l[?2004h>         return accountId;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public String toCsvRow() {
+[?2004l[?2004h>         StringBuilder sb = new StringBuilder();
+[?2004l[?2004h>         sb.append(accountId).append(',');
+[?2004l[?2004h>         sb.append(netDeltaExposure).append(',');
+[?2004l[?2004h>         sb.append(scanningRisk).append(',');
+[?2004l[?2004h>         sb.append(spreadCharge).append(',');
+[?2004l[?2004h>         sb.append(initialMargin).append(',');
+[?2004l[?2004h>         sb.append(unrealizedPnl).append(',');
+[?2004l[?2004h>         sb.append(marginStatus);
+[?2004l[?2004h>         return sb.toString();
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@4b8a5911d6b5:/app# cat > /app/src/MarginCalculator.java <<'EOF'
+[?2004l[?2004h> import java.math.BigDecimal;
+[?2004l[?2004h> import java.math.RoundingMode;
+[?2004l[?2004h> import java.util.ArrayList;
+[?2004l[?2004h> import java.util.Collections;
+[?2004l[?2004h> import java.util.Comparator;
+[?2004l[?2004h> import java.util.HashMap;
+[?2004l[?2004h> import java.util.List;
+[?2004l[?2004h> import java.util.Map;
+[?2004l[?2004h> 
+[?2004l[?2004h> public class MarginCalculator {
+[?2004l[?2004h> 
+[?2004l[?2004h>     public List<AccountMargin> calculate(List<Position> positions,
+[?2004l[?2004h>                                          Map<String, MarketData> marketDataByContract,
+[?2004l[?2004h>                                          Map<String, ContractSpec> contractSpecsByContract) {
+[?2004l[?2004h> 
+[?2004l[?2004h>         // Precompute: underlying -> max scanning range (as decimal fraction, e.g. 0.05)
+[?2004l[?2004h>         Map<String, BigDecimal> underlyingMaxScanRange = new HashMap<String, BigDecimal>();
+[?2004l);
+[?2004h>         for (Map.Entry<String, MarketData> e : marketDataByContract.entrySet()) {
+[?2004l[?2004h>             String contract = e.getKey();
+[?2004l[?2004h>             MarketData md = e.getValue();
+[?2004l[?2004h>             ContractSpec spec = contractSpecsByContract.get(contract);
+[?2004l[?2004h>             if (spec == null) {
+[?2004l[?2004h>                 continue;
+[?2004l[?2004h>             }
+[?2004lr[?2004h>             String underlying = spec.getUnderlying();
+[?2004l[?2004h>             BigDecimal rangeFrac = md.getScanningRangePct().divide(new BigDecimal("100"), 18, RoundingMode.HALF_UP);
+[?2004l[?2004h>             BigDecimal cur = underlyingMaxScanRange.get(underlying);
+[?2004l[?2004h>             if (cur == null || rangeFrac.compareTo(cur) > 0) {
+[?2004l[?2004h>                 underlyingMaxScanRange.put(underlying, rangeFrac);
+[?2004l[?2004h>             }
+[?2004l[?2004h>         }
+[?2004lh[?2004h> 
+[?2004la[?2004h>         PositionAggregator aggregator = new PositionAggregator();
+[?2004l[?2004h>         Map<String, Map<String, PositionAggregator.UnderlyingNet>> netted =
+[?2004l[?2004h>                 aggregator.aggregateByAccountAndUnderlying(positions, contractSpecsByContract);
+[?2004l[?2004h> 
+[?2004ll[?2004h>         // Also group positions by account for PnL and spread charge.
+[?2004l[?2004h>         Map<String, List<Position>> positionsByAccount = new HashMap<String, List<Position>>();
+[?2004l[?2004h>         for (int i = 0; i < positions.size(); i++) {
+[?2004l   [?2004h>             Position p = positions.get(i);
+[?2004l[?2004h>             List<Position> list = positionsByAccount.get(p.getAccountId());
+[?2004l[?2004h>             if (list == null) {
+[?2004l[?2004h>                 list = new ArrayList<Position>();
+[?2004l[?2004h>                 positionsByAccount.put(p.getAccountId(), list);
+[?2004l[?2004h>             }
+[?2004l[?2004h>             list.add(p);
+[?2004l[?2004h>         }
+[?2004lt[?2004h> 
+[?2004ls[?2004h>         List<AccountMargin> results = new ArrayList<AccountMargin>();
+[?2004l[?2004h> 
+[?2004lo[?2004h>         for (Map.Entry<String, Map<String, PositionAggregator.UnderlyingNet>> acctEntry : netted.entrySet()) {
+[?2004l[?2004h>             String accountId = acctEntry.getKey();
+[?2004l[?2004h>             Map<String, PositionAggregator.UnderlyingNet> byUnderlying = acctEntry.getValue();
+[?2004l[?2004h> 
+[?2004lo[?2004h>             long sumAbsNetDelta = 0L;
+[?2004l[?2004h>             long scanningRiskTotal = 0L;
+[?2004l[?2004h> 
+[?2004l[?2004h>             for (PositionAggregator.UnderlyingNet net : byUnderlying.values()) {
+[?2004l[?2004h>                 long netDelta = net.getNetDeltaExposure();
+[?2004l[?2004h>                 sumAbsNetDelta += Math.abs(netDelta);
+[?2004l[?2004h> 
+[?2004l[?2004h>                 BigDecimal rangeFrac = underlyingMaxScanRange.get(net.getUnderlying());
+[?2004l[?2004h>                 if (rangeFrac == null) {
+[?2004l[?2004h>                     // If missing, treat as 0 scanning range.
+[?2004l[?2004h>                     rangeFrac = BigDecimal.ZERO;
+[?2004l[?2004h>                 }
+[?2004l[?2004h> 
+[?2004l[?2004h>                 String repContract = net.getRepresentativeContractCode();
+[?2004l[?2004h>                 MarketData repMd = marketDataByContract.get(repContract);
+[?2004l[?2004h>                 if (repMd == null) {
+[?2004l[?2004h>                     throw new IllegalArgumentException("Missing market data for contract_code=" + repContract);
+[?2004l[?2004h>                 }
+[?2004l[?2004h> 
+[?2004l[?2004h>                 BigDecimal repSettle = repMd.getSettlementPrice();
+[?2004l[?2004h>                 BigDecimal absNetDeltaBd = new BigDecimal(Long.toString(Math.abs(netDelta)));
+[?2004l[?2004h> 
+[?2004l[?2004h>                 BigDecimal scanRisk = absNetDeltaBd.multiply(rangeFrac).multiply(repSettle);
+[?2004l[?2004h>                 long scanRiskTrunc = truncateTowardZeroToLong(scanRisk);
+[?2004l[?2004h>                 scanningRiskTotal += scanRiskTrunc;
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             // Spread charge and unrealized PnL
+[?2004l[?2004h>             List<Position> acctPositions = positionsByAccount.get(accountId);
+[?2004l[?2004h>             if (acctPositions == null) {
+[?2004l[?2004h>                 acctPositions = Collections.emptyList();
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             BigDecimal spreadCharge = BigDecimal.ZERO;
+[?2004l[?2004h>             BigDecimal unrealizedPnl = BigDecimal.ZERO;
+[?2004l[?2004h> 
+[?2004l[?2004h>             for (int i = 0; i < acctPositions.size(); i++) {
+[?2004l[?2004h>                 Position p = acctPositions.get(i);
+[?2004l[?2004h>                 ContractSpec spec = contractSpecsByContract.get(p.getContractCode());
+[?2004l[?2004h>                 if (spec == null) {
+[?2004l[?2004h>                     throw new IllegalArgumentException("Missing contract spec for contract_code=" + p.getContractCode());
+[?2004l[?2004h>                 }
+[?2004l[?2004h>                 MarketData md = marketDataByContract.get(p.getContractCode());
+[?2004l[?2004h>                 if (md == null) {
+[?2004l[?2004h>                     throw new IllegalArgumentException("Missing market data for contract_code=" + p.getContractCode());
+[?2004l[?2004h>                 }
+[?2004l[?2004h> 
+[?2004l[?2004h>                 long absQty = Math.abs((long) p.getPositionQty());
+[?2004l[?2004h> 
+[?2004l[?2004h>                 // Spread charge: intra_spread_charge * abs(position_qty)
+[?2004l[?2004h>                 BigDecimal absQtyBd = new BigDecimal(Long.toString(absQty));
+[?2004l[?2004h>                 spreadCharge = spreadCharge.add(md.getIntraSpreadCharge().multiply(absQtyBd));
+[?2004l[?2004h> 
+[?2004l[?2004h>                 // PnL: qty * multiplier * (settlement - entry)
+[?2004l[?2004h>                 BigDecimal priceDiff = md.getSettlementPrice().subtract(p.getEntryPrice());
+[?2004l[?2004h>                 long qtyTimesMult = (long) p.getPositionQty() * (long) spec.getMultiplier();
+[?2004l[?2004h>                 BigDecimal qtyMultBd = new BigDecimal(Long.toString(qtyTimesMult));
+[?2004l[?2004h>                 unrealizedPnl = unrealizedPnl.add(qtyMultBd.multiply(priceDiff));
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             long spreadChargeTrunc = truncateTowardZeroToLong(spreadCharge);
+[?2004l[?2004h>             long unrealizedPnlTrunc = truncateTowardZeroToLong(unrealizedPnl);
+[?2004l[?2004h> 
+[?2004l[?2004h>             BigDecimal initialMarginBd = new BigDecimal(Long.toString(scanningRiskTotal)).add(new BigDecimal(Long.toString(spreadChargeTrunc)));
+[?2004l[?2004h>             long initialMarginTrunc = truncateTowardZeroToLong(initialMarginBd);
+[?2004l[?2004h> 
+[?2004l[?2004h>             String status = (unrealizedPnlTrunc >= initialMarginTrunc) ? "ADEQUATE" : "CALL";
+[?2004l[?2004h> 
+[?2004l[?2004h>             results.add(new AccountMargin(accountId,
+[?2004l[?2004h>                     sumAbsNetDelta,
+[?2004l[?2004h>                     scanningRiskTotal,
+[?2004l[?2004h>                     spreadChargeTrunc,
+[?2004l[?2004h>                     initialMarginTrunc,
+[?2004l[?2004h>                     unrealizedPnlTrunc,
+[?2004l[?2004h>                     status));
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         Collections.sort(results, new Comparator<AccountMargin>() {
+[?2004l[?2004h>             public int compare(AccountMargin a, AccountMargin b) {
+[?2004l[?2004h>                 return a.getAccountId().compareTo(b.getAccountId());
+[?2004l[?2004h>             }
+[?2004l[?2004h>         });
+[?2004l[?2004h> 
+[?2004l[?2004h>         return results;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     private static long truncateTowardZeroToLong(BigDecimal v) {
+[?2004l[?2004h>         // RoundingMode.DOWN is toward zero for BigDecimal.
+[?2004l[?2004h>         BigDecimal scaled = v.setScale(0, RoundingMode.DOWN);
+[?2004l[?2004h>         return scaled.longValue();
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@4b8a5911d6b5:/app# cat > /app/src/Main.java <<'EOF'
+[?2004l[?2004h> import java.io.BufferedReader;
+[?2004ls.s[?2004h> import java.io.BufferedWriter;
+[?2004l  b[?2004h> import java.io.FileInputStream;
+[?2004l[?2004h> import java.io.FileOutputStream;
+[?2004l[?2004h> import java.io.InputStreamReader;
+[?2004l[?2004h> import java.io.OutputStreamWriter;
+[?2004l[?2004h> import java.nio.charset.Charset;
+[?2004l[?2004h> import java.util.ArrayList;
+[?2004l[?2004h> import java.util.HashMap;
+[?2004l[?2004h> import java.util.List;
+[?2004l[?2004h> import java.util.Map;
+[?2004l[?2004h> 
+[?2004l[?2004h> public class Main {
+[?2004l[?2004h>     private static final Charset UTF8 = Charset.forName("UTF-8");
+[?2004l[?2004h> 
+[?2004l[?2004h>     public static void main(String[] args) throws Exception {
+[?2004l[?2004h>         if (args == null || args.length != 4) {
+[?2004l[?2004h>             // No stderr output per requirement; just exit non-zero if misused.
+[?2004l[?2004h>             System.exit(2);
+[?2004l[?2004h>             return;
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         String positionsPath = args[0];
+[?2004l[?2004h>         String marketDataPath = args[1];
+[?2004l[?2004h>         String contractSpecsPath = args[2];
+[?2004l[?2004h>         String outputPath = args[3];
+[?2004l[?2004h> 
+[?2004l[?2004h>         List<Position> positions = loadPositions(positionsPath);
+[?2004l[?2004h>         Map<String, MarketData> market = loadMarketData(marketDataPath);
+[?2004l[?2004h>         Map<String, ContractSpec> specs = loadContractSpecs(contractSpecsPath);
+[?2004l[?2004h> 
+[?2004l[?2004h>         MarginCalculator calc = new MarginCalculator();
+[?2004l[?2004h>         List<AccountMargin> margins = calc.calculate(positions, market, specs);
+[?2004l[?2004h> 
+[?2004l[?2004h>         writeReport(outputPath, margins);
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     private static List<Position> loadPositions(String path) throws Exception {
+[?2004l[?2004h>         List<Position> out = new ArrayList<Position>();
+[?2004l[?2004h>         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), UTF8));
+[?2004l[?2004h>         try {
+[?2004l[?2004h>             String line;
+[?2004l[?2004h>             boolean first = true;
+[?2004l[?2004h>             while ((line = br.readLine()) != null) {
+[?2004l[?2004h>                 line = line.trim();
+[?2004l[?2004h>                 if (line.length() == 0) {
+[?2004l[?2004h>                     continue;
+[?2004l[?2004h>                 }
+[?2004l[?2004h>                 if (first) {
+[?2004l[?2004h>                     first = false;
+[?2004l[?2004h>                     continue; // header
+[?2004l[?2004h>                 }
+[?2004l[?2004h>                 out.add(Position.parseCsv(line));
+[?2004l[?2004h>             }
+[?2004l[?2004h>         } finally {
+[?2004l[?2004h>             br.close();
+[?2004l[?2004h>         }
+[?2004l[?2004h>         return out;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     private static Map<String, MarketData> loadMarketData(String path) throws Exception {
+[?2004l[?2004h>         Map<String, MarketData> out = new HashMap<String, MarketData>();
+[?2004l[?2004h>         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), UTF8));
+[?2004l[?2004h>         try {
+[?2004l[?2004h>             String line;
+[?2004l[?2004h>             boolean first = true;
+[?2004l[?2004h>             while ((line = br.readLine()) != null) {
+[?2004l[?2004h>                 line = line.trim();
+[?2004l[?2004h>                 if (line.length() == 0) {
+[?2004l[?2004h>                     continue;
+[?2004l[?2004h>                 }
+[?2004l[?2004h>                 if (first) {
+[?2004l[?2004h>                     first = false;
+[?2004l[?2004h>                     continue; // header
+[?2004l[?2004h>                 }
+[?2004l[?2004h>                 MarketData md = MarketData.parseCsv(line);
+[?2004l[?2004h>                 out.put(md.getContractCode(), md);
+[?2004l[?2004h>             }
+[?2004l[?2004h>         } finally {
+[?2004l[?2004h>             br.close();
+[?2004l[?2004h>         }
+[?2004l[?2004h>         return out;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     private static Map<String, ContractSpec> loadContractSpecs(String path) throws Exception {
+[?2004l[?2004h>         Map<String, ContractSpec> out = new HashMap<String, ContractSpec>();
+[?2004l[?2004h>         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), UTF8));
+[?2004l[?2004h>         try {
+[?2004l[?2004h>             String line;
+[?2004l[?2004h>             boolean first = true;
+[?2004l[?2004h>             while ((line = br.readLine()) != null) {
+[?2004l[?2004h>                 line = line.trim();
+[?2004l[?2004h>                 if (line.length() == 0) {
+[?2004l[?2004h>                     continue;
+[?2004l[?2004h>                 }
+[?2004l[?2004h>                 if (first) {
+[?2004l[?2004h>                     first = false;
+[?2004l[?2004h>                     continue; // header
+[?2004l[?2004h>                 }
+[?2004l[?2004h>                 ContractSpec spec = ContractSpec.parseCsv(line);
+[?2004l[?2004h>                 out.put(spec.getContractCode(), spec);
+[?2004l[?2004h>             }
+[?2004l[?2004h>         } finally {
+[?2004l[?2004h>             br.close();
+[?2004l[?2004h>         }
+[?2004l[?2004h>         return out;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     private static void writeReport(String outputPath, List<AccountMargin> margins) throws Exception {
+[?2004l[?2004h>         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputPath), UTF8));
+[?2004l[?2004h>         try {
+[?2004l[?2004h>             bw.write("account_id,net_delta_exposure,scanning_risk,spread_charge,initial_margin,unrealized_pnl,margin_status");
+[?2004l[?2004h>             bw.newLine();
+[?2004l[?2004h>             for (int i = 0; i < margins.size(); i++) {
+[?2004l[?2004h>                 bw.write(margins.get(i).toCsvRow());
+[?2004l[?2004h>                 bw.newLine();
+[?2004l[?2004h>             }
+[?2004l[?2004h>         } finally {
+[?2004l[?2004h>             bw.close();
+[?2004l[?2004h>         }
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@4b8a5911d6b5:/app# javac -source 1.7 -target 1.7 -d /app/bin /app/src/*.java
+[?2004ljava -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /app/output.csv
+[?2004hroot@4b8a5911d6b5:/app# java -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /app/output.csv
+[?2004l[?2004hroot@4b8a5911d6b5:/app# head -n 20 /app/output.csv
+[?2004laccount_id,net_delta_exposure,scanning_risk,spread_charge,initial_margin,unrealized_pnl,margin_status
+ACC001,15410,343305,10805,354110,31937,CALL
+ACC002,3100,528149,6725,534874,88900,CALL
+ACC003,19500,238031,27900,265931,51375,CALL
+ACC004,1150,84893,5200,90093,83825,CALL
+ACC005,270,176145,3155,179300,13605,CALL
+ACC006,8500,161211,27025,188236,83500,CALL
+ACC007,2250,112238,6125,118363,37125,CALL
+ACC008,20390,355305,14720,370025,30062,CALL
+ACC009,4400,265113,7045,272158,89125,CALL
+ACC010,16650,1007270,12800,1020070,74775,CALL
+ACC011,1650,88552,6445,94997,54275,CALL
+ACC012,25550,978877,18000,996877,56975,CALL
+[?2004hroot@4b8a5911d6b5:/app# ls -la /app/src
+[?2004ltotal 48
+drwxr-xr-x 1 root root 4096 Jan 23 10:15 [0m[01;34m.[0m
+drwxr-xr-x 1 root root 4096 Jan 23 10:15 [01;34m..[0m
+-rw-r--r-- 1 root root 1411 Jan 23 10:15 AccountMargin.java
+-rw-r--r-- 1 root root 1219 Jan 23 10:15 ContractSpec.java
+-rw-r--r-- 1 root root 4299 Jan 23 10:15 Main.java
+-rw-r--r-- 1 root root 6714 Jan 23 10:15 MarginCalculator.java
+-rw-r--r-- 1 root root 1444 Jan 23 10:15 MarketData.java
+-rw-r--r-- 1 root root 1497 Jan 23 10:15 Position.java
+-rw-r--r-- 1 root root 2590 Jan 23 10:15 PositionAggregator.java
+[?2004hroot@4b8a5911d6b5:/app# cat > /app/src/PositionAggregator.java <<'EOF'
+[?2004l[?2004h> import java.util.HashMap;
+[?2004l[?2004h> import java.util.List;
+[?2004l[?2004h> import java.util.Map;
+[?2004l[?2004h> 
+[?2004l[?2004h> public class PositionAggregator {
+[?2004l[?2004h> 
+[?2004l[?2004h>     public static final class UnderlyingNet {
+[?2004l[?2004h>         private final String underlying;
+[?2004l[?2004h>         private long netDeltaExposure;
+[?2004l[?2004h> 
+[?2004l[?2004h>         // Net qty per contract for this underlying (within an account)
+[?2004l[?2004h>         private final Map<String, Long> netQtyByContract = new HashMap<String, Long>();
+[?2004l[?2004h> 
+[?2004l[?2004h>         private String representativeContractCode;
+[?2004l[?2004h>         private long maxOpenInterestEquivalent;
+[?2004l[?2004h> 
+[?2004l[?2004h>         private UnderlyingNet(String underlying) {
+[?2004l[?2004h>             this.underlying = underlying;
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         public String getUnderlying() {
+[?2004l[?2004h>             return underlying;
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         public long getNetDeltaExposure() {
+[?2004l[?2004h>             return netDeltaExposure;
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         public String getRepresentativeContractCode() {
+[?2004l[?2004h>             return representativeContractCode;
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         private void addPosition(Position p, ContractSpec spec) {
+[?2004l[?2004h>             long deltaEq = (long) p.getPositionQty() * (long) spec.getMultiplier();
+[?2004l[?2004h>             netDeltaExposure += deltaEq;
+[?2004l[?2004h> 
+[?2004l[?2004h>             Long cur = netQtyByContract.get(p.getContractCode());
+[?2004l[?2004h>             long next = (cur == null ? 0L : cur.longValue()) + (long) p.getPositionQty();
+[?2004l[?2004h>             netQtyByContract.put(p.getContractCode(), Long.valueOf(next));
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         private void finalizeRepresentative(Map<String, ContractSpec> contractSpecs) {
+[?2004l[?2004h>             String best = null;
+[?2004l[?2004h>             long bestOi = -1L;
+[?2004l[?2004h> 
+[?2004l[?2004h>             for (Map.Entry<String, Long> e : netQtyByContract.entrySet()) {
+[?2004l[?2004h>                 String contractCode = e.getKey();
+[?2004l[?2004h>                 long netQty = e.getValue().longValue();
+[?2004l[?2004h>                 ContractSpec spec = contractSpecs.get(contractCode);
+[?2004l[?2004h>                 if (spec == null) {
+[?2004l[?2004h>                     continue;
+[?2004l[?2004h>                 }
+[?2004l[?2004h>                 long oiEq = Math.abs(netQty) * (long) spec.getMultiplier();
+[?2004l[?2004h>                 if (best == null || oiEq > bestOi) {
+[?2004l[?2004h>                     best = contractCode;
+[?2004l[?2004h>                     bestOi = oiEq;
+[?2004l[?2004h>                 }
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             representativeContractCode = best;
+[?2004l[?2004h>             maxOpenInterestEquivalent = (bestOi < 0L ? 0L : bestOi);
+[?2004l[?2004h>         }
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     public Map<String, Map<String, UnderlyingNet>> aggregateByAccountAndUnderlying(List<Position> positions,
+[?2004l[?2004h>                                                                                    Map<String, ContractSpec> contractSpecs) {
+[?2004l[?2004h>         Map<String, Map<String, UnderlyingNet>> out = new HashMap<String, Map<String, UnderlyingNet>>();
+[?2004l[?2004h> 
+[?2004l[?2004h>         for (int i = 0; i < positions.size(); i++) {
+[?2004l[?2004h>             Position p = positions.get(i);
+[?2004l[?2004h>             ContractSpec spec = contractSpecs.get(p.getContractCode());
+[?2004l[?2004h>             if (spec == null) {
+[?2004l[?2004h>                 throw new IllegalArgumentException("Missing contract spec for contract_code=" + p.getContractCode());
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             String accountId = p.getAccountId();
+[?2004l[?2004h>             String underlying = spec.getUnderlying();
+[?2004l[?2004h> 
+[?2004l[?2004h>             Map<String, UnderlyingNet> byUnderlying = out.get(accountId);
+[?2004l[?2004h>             if (byUnderlying == null) {
+[?2004l[?2004h>                 byUnderlying = new HashMap<String, UnderlyingNet>();
+[?2004l[?2004h>                 out.put(accountId, byUnderlying);
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             UnderlyingNet net = byUnderlying.get(underlying);
+[?2004l[?2004h>             if (net == null) {
+[?2004l[?2004h>                 net = new UnderlyingNet(underlying);
+[?2004l[?2004h>                 byUnderlying.put(underlying, net);
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             net.addPosition(p, spec);
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         // Finalize representative contract selection using net quantities per contract.
+[?2004l[?2004h>         for (Map.Entry<String, Map<String, UnderlyingNet>> acct : out.entrySet()) {
+[?2004l[?2004h>             Map<String, UnderlyingNet> byUnd = acct.getValue();
+[?2004l[?2004h>             for (Map.Entry<String, UnderlyingNet> undEntry : byUnd.entrySet()) {
+[?2004l[?2004h>                 undEntry.getValue().finalizeRepresentative(contractSpecs);
+[?2004l[?2004h>             }
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         return out;
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@4b8a5911d6b5:/app# cat > /app/src/MarginCalculator.java <<'EOF'
+[?2004l[?2004h> import java.math.BigDecimal;
+[?2004l[?2004h> import java.math.RoundingMode;
+[?2004l[?2004h> import java.util.ArrayList;
+[?2004l[?2004h> import java.util.Collections;
+[?2004l[?2004h> import java.util.Comparator;
+[?2004lns[?2004h> import java.util.HashMap;
+[?2004l[?2004h> import java.util.List;
+[?2004l[?2004h> import java.util.Map;
+[?2004l[?2004h> 
+[?2004lo[?2004h> public class MarginCalculator {
+[?2004lext[?2004h> 
+[?2004l [?2004h>     public List<AccountMargin> calculate(List<Position> positions,
+[?2004l);[?2004h>                                          Map<String, MarketData> marketDataByContract,
+[?2004l[?2004h>                                          Map<String, ContractSpec> contractSpecsByContract) {
+[?2004l[?2004h> 
+[?2004l[?2004h>         // Precompute: underlying -> max scanning range (as decimal fraction, e.g. 0.05)
+[?2004l[?2004h>         Map<String, BigDecimal> underlyingMaxScanRange = new HashMap<String, BigDecimal>();
+[?2004l[?2004h>         for (Map.Entry<String, MarketData> e : marketDataByContract.entrySet()) {
+[?2004l[?2004h>             String contract = e.getKey();
+[?2004l[?2004h>             MarketData md = e.getValue();
+[?2004l[?2004h>             ContractSpec spec = contractSpecsByContract.get(contract);
+[?2004lfo[?2004h>             if (spec == null) {
+[?2004lode[?2004h>                 continue;
+[?2004l[?2004h>             }
+[?2004l[?2004h>             String underlying = spec.getUnderlying();
+[?2004l[?2004h>             BigDecimal rangeFrac = md.getScanningRangePct().divide(new BigDecimal("100"), 18, RoundingMode.HALF_UP);
+[?2004l[?2004h>             BigDecimal cur = underlyingMaxScanRange.get(underlying);
+[?2004l[?2004h>             if (cur == null || rangeFrac.compareTo(cur) > 0) {
+[?2004l[?2004h>                 underlyingMaxScanRange.put(underlying, rangeFrac);
+[?2004l[?2004h>             }
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         PositionAggregator aggregator = new PositionAggregator();
+[?2004l[?2004h>         Map<String, Map<String, PositionAggregator.UnderlyingNet>> netted =
+[?2004l[?2004h>                 aggregator.aggregateByAccountAndUnderlying(positions, contractSpecsByContract);
+[?2004l[?2004h> 
+[?2004l.[?2004h>         // Group positions by account for per-lot PnL and for building net qty per contract.
+[?2004l[?2004h>         Map<String, List<Position>> positionsByAccount = new HashMap<String, List<Position>>();
+[?2004l[?2004h>         for (int i = 0; i < positions.size(); i++) {
+[?2004lo[?2004h>             Position p = positions.get(i);
+[?2004l  [?2004h>             List<Position> list = positionsByAccount.get(p.getAccountId());
+[?2004l[?2004h>             if (list == null) {
+[?2004l[?2004h>                 list = new ArrayList<Position>();
+[?2004l[?2004h>                 positionsByAccount.put(p.getAccountId(), list);
+[?2004l[?2004h>             }
+[?2004l[?2004h>             list.add(p);
+[?2004l[?2004h>         }
+[?2004l)[?2004h> 
+[?2004l)[?2004h>         List<AccountMargin> results = new ArrayList<AccountMargin>();
+[?2004l[?2004h> 
+[?2004l([?2004h>         for (Map.Entry<String, Map<String, PositionAggregator.UnderlyingNet>> acctEntry : netted.entrySet()) {
+[?2004l[?2004h>             String accountId = acctEntry.getKey();
+[?2004l[?2004h>             Map<String, PositionAggregator.UnderlyingNet> byUnderlying = acctEntry.getValue();
+[?2004l[?2004h> 
+[?2004l[?2004h>             long sumAbsNetDelta = 0L;
+[?2004l[?2004h>             long scanningRiskTotal = 0L;
+[?2004l [?2004h> 
+[?2004l[?2004h>             for (PositionAggregator.UnderlyingNet net : byUnderlying.values()) {
+[?2004l[?2004h>                 long netDelta = net.getNetDeltaExposure();
+[?2004l[?2004h>                 sumAbsNetDelta += Math.abs(netDelta);
+[?2004l[?2004h> 
+[?2004le[?2004h>                 BigDecimal rangeFrac = underlyingMaxScanRange.get(net.getUnderlying());
+[?2004l[?2004h>                 if (rangeFrac == null) {
+[?2004ladC[?2004h>                     rangeFrac = BigDecimal.ZERO;
+[?2004lun[?2004h>                 }
+[?2004l[?2004h> 
+[?2004l [?2004h>                 String repContract = net.getRepresentativeContractCode();
+[?2004l[?2004h>                 if (repContract == null) {
+[?2004l[?2004h>                     continue;
+[?2004l[?2004h>                 }
+[?2004l[?2004h> 
+[?2004l[?2004h>                 MarketData repMd = marketDataByContract.get(repContract);
+[?2004l[?2004h>                 if (repMd == null) {
+[?2004l[?2004h>                     throw new IllegalArgumentException("Missing market data for contract_code=" + repContract);
+[?2004l[?2004h>                 }
+[?2004l[?2004h> 
+[?2004l[?2004h>                 BigDecimal repSettle = repMd.getSettlementPrice();
+[?2004l[?2004h>                 BigDecimal absNetDeltaBd = new BigDecimal(Long.toString(Math.abs(netDelta)));
+[?2004l[?2004h> 
+[?2004l[?2004h>                 BigDecimal scanRisk = absNetDeltaBd.multiply(rangeFrac).multiply(repSettle);
+[?2004l[?2004h>                 long scanRiskTrunc = truncateTowardZeroToLong(scanRisk);
+[?2004l[?2004h>                 scanningRiskTotal += scanRiskTrunc;
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             List<Position> acctPositions = positionsByAccount.get(accountId);
+[?2004l[?2004h>             if (acctPositions == null) {
+[?2004l[?2004h>                 acctPositions = Collections.emptyList();
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             // Spread charge: compute using net quantity per contract (not per lot)
+[?2004l[?2004h>             Map<String, Long> netQtyByContract = new HashMap<String, Long>();
+[?2004l[?2004h>             for (int i = 0; i < acctPositions.size(); i++) {
+[?2004l[?2004h>                 Position p = acctPositions.get(i);
+[?2004l[?2004h>                 Long cur = netQtyByContract.get(p.getContractCode());
+[?2004l[?2004h>                 long next = (cur == null ? 0L : cur.longValue()) + (long) p.getPositionQty();
+[?2004l[?2004h>                 netQtyByContract.put(p.getContractCode(), Long.valueOf(next));
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             BigDecimal spreadCharge = BigDecimal.ZERO;
+[?2004l[?2004h>             for (Map.Entry<String, Long> e : netQtyByContract.entrySet()) {
+[?2004l[?2004h>                 String contractCode = e.getKey();
+[?2004l[?2004h>                 long netQty = e.getValue().longValue();
+[?2004l[?2004h>                 if (netQty == 0L) {
+[?2004l[?2004h>                     continue;
+[?2004l[?2004h>                 }
+[?2004l[?2004h>                 MarketData md = marketDataByContract.get(contractCode);
+[?2004l[?2004h>                 if (md == null) {
+[?2004l[?2004h>                     throw new IllegalArgumentException("Missing market data for contract_code=" + contractCode);
+[?2004l[?2004h>                 }
+[?2004l[?2004h>                 BigDecimal absQtyBd = new BigDecimal(Long.toString(Math.abs(netQty)));
+[?2004l[?2004h>                 spreadCharge = spreadCharge.add(md.getIntraSpreadCharge().multiply(absQtyBd));
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             // PnL: sum per position lot (entry-price specific)
+[?2004l[?2004h>             BigDecimal unrealizedPnl = BigDecimal.ZERO;
+[?2004l[?2004h>             for (int i = 0; i < acctPositions.size(); i++) {
+[?2004l[?2004h>                 Position p = acctPositions.get(i);
+[?2004l[?2004h>                 ContractSpec spec = contractSpecsByContract.get(p.getContractCode());
+[?2004l[?2004h>                 if (spec == null) {
+[?2004l[?2004h>                     throw new IllegalArgumentException("Missing contract spec for contract_code=" + p.getContractCode());
+[?2004l[?2004h>                 }
+[?2004l[?2004h>                 MarketData md = marketDataByContract.get(p.getContractCode());
+[?2004l[?2004h>                 if (md == null) {
+[?2004l[?2004h>                     throw new IllegalArgumentException("Missing market data for contract_code=" + p.getContractCode());
+[?2004l[?2004h>                 }
+[?2004l[?2004h> 
+[?2004l[?2004h>                 BigDecimal priceDiff = md.getSettlementPrice().subtract(p.getEntryPrice());
+[?2004l[?2004h>                 long qtyTimesMult = (long) p.getPositionQty() * (long) spec.getMultiplier();
+[?2004l[?2004h>                 BigDecimal qtyMultBd = new BigDecimal(Long.toString(qtyTimesMult));
+[?2004l[?2004h>                 unrealizedPnl = unrealizedPnl.add(qtyMultBd.multiply(priceDiff));
+[?2004l[?2004h>             }
+[?2004l[?2004h> 
+[?2004l[?2004h>             long spreadChargeTrunc = truncateTowardZeroToLong(spreadCharge);
+[?2004l[?2004h>             long unrealizedPnlTrunc = truncateTowardZeroToLong(unrealizedPnl);
+[?2004l[?2004h> 
+[?2004l[?2004h>             BigDecimal initialMarginBd = new BigDecimal(Long.toString(scanningRiskTotal)).add(new BigDecimal(Long.toString(spreadChargeTrunc)));
+[?2004l[?2004h>             long initialMarginTrunc = truncateTowardZeroToLong(initialMarginBd);
+[?2004l[?2004h> 
+[?2004l[?2004h>             String status = (unrealizedPnlTrunc >= initialMarginTrunc) ? "ADEQUATE" : "CALL";
+[?2004l[?2004h> 
+[?2004l[?2004h>             results.add(new AccountMargin(accountId,
+[?2004l[?2004h>                     sumAbsNetDelta,
+[?2004l[?2004h>                     scanningRiskTotal,
+[?2004l[?2004h>                     spreadChargeTrunc,
+[?2004l[?2004h>                     initialMarginTrunc,
+[?2004l[?2004h>                     unrealizedPnlTrunc,
+[?2004l[?2004h>                     status));
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h>         Collections.sort(results, new Comparator<AccountMargin>() {
+[?2004l[?2004h>             public int compare(AccountMargin a, AccountMargin b) {
+[?2004l[?2004h>                 return a.getAccountId().compareTo(b.getAccountId());
+[?2004l[?2004h>             }
+[?2004l[?2004h>         });
+[?2004l[?2004h> 
+[?2004l[?2004h>         return results;
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     private static long truncateTowardZeroToLong(BigDecimal v) {
+[?2004l[?2004h>         BigDecimal scaled = v.setScale(0, RoundingMode.DOWN);
+[?2004l[?2004h>         return scaled.longValue();
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@4b8a5911d6b5:/app# rm -rf /app/bin/*
+[?2004l[?2004hroot@4b8a5911d6b5:/app# javac -source 1.7 -target 1.7 -d /app/bin /app/src/*.java
+[?2004ljava -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /app/output.csv
+[?2004hroot@4b8a5911d6b5:/app# java -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /app/output.csv
+[?2004l[?2004hroot@4b8a5911d6b5:/app# head -n 5 /app/output.csv
+[?2004laccount_id,net_delta_exposure,scanning_risk,spread_charge,initial_margin,unrealized_pnl,margin_status
+ACC001,15410,343305,10805,354110,31937,CALL
+ACC002,3100,528149,6725,534874,88900,CALL
+ACC003,19500,238031,27900,265931,51375,CALL
+ACC004,1150,84893,5200,90093,83825,CALL
+[?2004hroot@4b8a5911d6b5:/app# grep -n "ns>" -n /app/src/MarginCalculator.java || true
+[?2004l[?2004hroot@4b8a5911d6b5:/app# rm -rf /app/bin/*
+[?2004l[?2004hroot@4b8a5911d6b5:/app# javac -source 1.7 -target 1.7 -d /app/bin /app/src/*.java
+[?2004ljava -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /app/output.csv
+[?2004hroot@4b8a5911d6b5:/app# java -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /app/output.csv
+[?2004l[?2004hroot@4b8a5911d6b5:/app# head -n 2 /app/output.csv
+[?2004laccount_id,net_delta_exposure,scanning_risk,spread_charge,initial_margin,unrealized_pnl,margin_status
+ACC001,15410,343305,10805,354110,31937,CALL
+[?2004hroot@4b8a5911d6b5:/app# 

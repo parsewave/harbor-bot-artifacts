@@ -1,0 +1,28 @@
+New Terminal Output:
+
+root@671ed272cda9:/app# java -version
+openjdk version "1.7.0_352"
+OpenJDK Runtime Environment (Zulu 7.56.0.11-CA-linux64) (build 1.7.0_352-b01)
+OpenJDK 64-Bit Server VM (Zulu 7.56.0.11-CA-linux64) (build 24.352-b01, mixed mode)
+root@671ed272cda9:/app# javac -version
+javac 1.7.0_352
+root@671ed272cda9:/app# rm -rf /app/bin/*
+root@671ed272cda9:/app# javac -source 1.7 -target 1.7 -d /app/bin /app/src/*.java
+wc -l /app/output.csv
+root@671ed272cda9:/app# wc -l /app/output.csv
+13 /app/output.csv
+root@671ed272cda9:/app# tail -n 20 /app/output.csv
+account_id,net_delta_exposure,scanning_risk,spread_charge,initial_margin,unrealized_pnl,margin_status
+ACC001,15410,343305,10805,354110,31937,CALL
+ACC002,3100,528149,6725,534874,88900,CALL
+ACC003,19500,238031,27900,265931,51375,CALL
+ACC004,1150,84893,5200,90093,83825,CALL
+ACC005,270,176145,3155,179300,13605,CALL
+ACC006,8500,161211,27025,188236,83500,CALL
+ACC007,2250,112238,6125,118363,37125,CALL
+ACC008,20390,355305,14720,370025,30062,CALL
+ACC009,4400,265113,7045,272158,89125,CALL
+ACC010,16650,1007270,12800,1020070,74775,CALL
+ACC011,1650,88552,6445,94997,54275,CALL
+ACC012,25550,978877,18000,996877,56975,CALL
+root@671ed272cda9:/app#

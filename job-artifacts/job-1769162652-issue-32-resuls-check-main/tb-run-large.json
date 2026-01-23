@@ -1,0 +1,47 @@
+[
+  {
+    "name": "TB Run Large",
+    "passed": true,
+    "message": "Accuracy: 0%",
+    "is_warning": false,
+    "details": "Model: openrouter/openai/gpt-5.2",
+    "duration_seconds": 740.5654053688049,
+    "result_type": "tb_positive",
+    "check_type": "tb_run_large",
+    "raw_data": {
+      "agent": "terminus-2",
+      "model": "openrouter/openai/gpt-5.2",
+      "accuracy": 0.0,
+      "n_attempts": 3,
+      "n_resolved": 0,
+      "n_unresolved": 3,
+      "json_output": {
+        "attempts": 3,
+        "successes": 0,
+        "stats": {
+          "n_trials": 3,
+          "evals": {
+            "terminus-2__openrouter/openai/gpt-5.2__aggregated": {
+              "n_trials": 3,
+              "metrics": [
+                {
+                  "mean": 0.0
+                }
+              ],
+              "reward_stats": {
+                "reward": {
+                  "1.0": [],
+                  "0.0": [
+                    "java7-span-margin-engine__ofDxiLN",
+                    "java7-span-margin-engine__mYnJwWq",
+                    "java7-span-margin-engine__SkezMdM"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+]

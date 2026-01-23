@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Task Size",
+    "passed": true,
+    "message": "0.05 MB (max: 10 MB)",
+    "is_warning": true,
+    "details": null,
+    "duration_seconds": null,
+    "result_type": null,
+    "check_type": "task_size",
+    "raw_data": null
+  }
+]

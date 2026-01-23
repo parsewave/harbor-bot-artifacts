@@ -1,0 +1,252 @@
+New Terminal Output:
+
+root@20dec917f55b:/app# ls -R /app/data
+/app/data:
+contract_specs.csv  market_data.csv  positions.csv
+root@20dec917f55b:/app# mkdir -p /app/src
+root@20dec917f55b:/app# cat > /app/src/Position.java <<'EOF'
+> package src;
+>
+> public class Position {
+>     public String accountId;
+>     public String contractCode;
+>     public int positionQty;
+>     public double entryPrice;
+>
+>     public Position(String accountId, String contractCode, int positionQty, double entryPrice) {
+>         this.accountId = accountId;
+>         this.contractCode = contractCode;
+>         this.positionQty = positionQty;
+>         this.entryPrice = entryPrice;
+>     }
+>
+>     public static Position parse(String line) {
+>         String[] parts = line.split(",");
+>         if (parts.length != 4) {
+>             throw new IllegalArgumentException("Invalid position line: " + line);
+>         }
+>         String accountId = parts[0].trim();
+>         String contractCode = parts[1].trim();
+>         int qty = Integer.parseInt(parts[2].trim());
+>         double price = Double.parseDouble(parts[3].trim());
+>         return new Position(accountId, contractCode, qty, price);
+>     }
+> }
+> EOF
+root@20dec917f55b:/app# cat > /app/src/MarketData.java <<'EOF'
+> package src;
+>
+> public class MarketData {
+>     public String contractCode;
+>     public double settlementPrice;
+>     public double scanningRange; // percent, e.g., 5.0 for 5%
+>     public double intraSpreadCharge;
+>
+>     public MarketData(String contractCode, double settlementPrice, double scanningRange, double intraSpreadCharge) {
+>         this.contractCode = contractCode;
+>         this.settlementPrice = settlementPrice;
+>         this.scanningRange = scanningRange;
+>         this.intraSpreadCharge = intraSpreadCharge;
+>     }
+>
+>     public static MarketData parse(String line) {
+>         String[] parts = line.split(",");
+>         if (parts.length != 4) {
+>             throw new IllegalArgumentException("Invalid market data line: " + line);
+>         }
+>         String code = parts[0].trim();
+>         double settlement = Double.parseDouble(parts[1].trim());
+>         double range = Double.parseDouble(parts[2].trim());
+>         double charge = Double.parseDouble(parts[3].trim());
+>         return new MarketData(code, settlement, range, charge);
+>     }
+> }
+> EOF
+root@20dec917f55b:/app# cat > /app/src/ContractSpec.java <<'EOF'
+> package src;
+>
+> public class ContractSpec {
+>     public String contractCode;
+>     public int multiplier;
+>     public String expiryMonth; // YYYYMM
+>     public String underlying;
+>
+>     public ContractSpec(String contractCode, int multiplier, String expiryMonth, String underlying) {
+>         this.contractCode = contractCode;
+>         this.multiplier = multiplier;
+>         this.expiryMonth = expiryMonth;
+>         this.underlying = underlying;
+>     }
+>
+>     public static ContractSpec parse(String line) {
+>         String[] parts = line.split(",");
+>         if (parts.length != 4) {
+>             throw new IllegalArgumentException("Invalid contract spec line: " + line);
+>         }
+>         String code = parts[0].trim();
+>         int mult = Integer.parseInt(parts[1].trim());
+>         String expiry = parts[2].trim();
+>         String underlying = parts[3].trim();
+>         return new ContractSpec(code, mult, expiry, underlying);
+>     }
+> }
+> EOF
+root@20dec917f55b:/app# cat > /app/src/PositionAggregator.java <<'EOF'
+> package src;
+>
+> import java.util.*;
+>
+> public class PositionAggregator {
+>     public static Map<String, Map<String, Long>> aggregateNetDelta(List<Position> positions, Map<String, ContractSpec> specMap) {
+>         Map<String, Map<String, Long>> result = new HashMap<String, Map<String, Long>>();
+>         for (Position p : positions) {
+>             ContractSpec spec = specMap.get(p.contractCode);
+>             if (spec == null) continue;
+>             long delta = (long) p.positionQty * spec.multiplier;
+>             Map<String, Long> underMap = result.get(p.accountId);
+>             if (underMap == null) {
+>                 underMap = new HashMap<String, Long>();
+>                 result.put(p.accountId, underMap);
+>             }
+>             Long existing = underMap.get(spec.underlying);
+>             underMap.put(spec.underlying, (existing == null ? delta : existing + delta));
+>         }
+>         return result;
+>     }
+>
+>     public static Map<String, Map<String, List<Position>>> groupByAccountAndUnderlying(List<Position> positions, Map<String, ContractSpec> specMap) {
+>         Map<String, Map<String, List<Position>>> result = new HashMap<String, Map<String, List<Position>>>();
+>         for (Position p : positions) {
+>             ContractSpec spec = specMap.get(p.contractCode);
+>             if (spec == null) continue;
+>             Map<String, List<Position>> underMap = result.get(p.accountId);
+>             if (underMap == null) {
+>                 underMap = new HashMap<String, List<Position>>();
+>
+[... output limited to 10000 bytes; 70 interior bytes omitted ...]
+accountId.compareTo(a2.accountId);
+>             }
+>         });
+>         return results;
+>     }
+> }
+> EOF
+root@20dec917f55b:/app# cat > /app/src/AccountMargin.java <<'EOF'
+> package src;
+>
+> public class AccountMargin {
+>     public String accountId;
+>     public long netDeltaExposure;
+>     public long scanningRisk;
+>     public long spreadCharge;
+>     public long initialMargin;
+>     public long unrealizedPnl;
+>     public String marginStatus;
+>
+>     public AccountMargin(String accountId, long netDeltaExposure, long scanningRisk, long spreadCharge, long initialMargin, long unrealizedPnl, String marginS
+tatus) {
+>         this.accountId = accountId;
+>         this.netDeltaExposure = netDeltaExposure;
+>         this.scanningRisk = scanningRisk;
+>         this.spreadCharge = spreadCharge;
+>         this.initialMargin = initialMargin;
+>         this.unrealizedPnl = unrealizedPnl;
+>         this.marginStatus = marginStatus;
+>     }
+>
+>     public String toCsv() {
+>         return accountId + "," + netDeltaExposure + "," + scanningRisk + "," + spreadCharge + "," + initialMargin + "," + unrealizedPnl + "," + marginStatus;
+>     }
+> }
+> EOF
+root@20dec917f55b:/app# cat > /app/src/Main.java <<'EOF'
+> package src;
+>
+> import java.io.*;
+> import java.util.*;
+>
+> public class Main {
+>     public static void main(String[] args) throws Exception {
+>         if (args.length != 4) {
+>             System.err.println("Usage: java Main <positions> <market_data> <contract_specs> <output>");
+>             System.exit(1);
+>         }
+>         String positionsPath = args[0];
+>         String marketPath = args[1];
+>         String specsPath = args[2];
+>         String outputPath = args[3];
+>
+>         List<Position> positions = loadPositions(positionsPath);
+>         Map<String, MarketData> marketMap = loadMarketData(marketPath);
+>         Map<String, ContractSpec> specMap = loadSpecs(specsPath);
+>
+>         List<MarginCalculator.AccountResult> results = MarginCalculator.calculate(positions, marketMap, specMap);
+>
+>         writeOutput(outputPath, results);
+>     }
+>
+>     private static List<Position> loadPositions(String path) throws IOException {
+>         List<Position> list = new ArrayList<Position>();
+>         BufferedReader br = new BufferedReader(new FileReader(path));
+>         String line;
+>         while ((line = br.readLine()) != null) {
+>             line = line.trim();
+>             if (line.isEmpty()) continue;
+>             if (line.startsWith("account_id")) continue;
+>             list.add(Position.parse(line));
+>         }
+>         br.close();
+>         return list;
+>     }
+>
+>     private static Map<String, MarketData> loadMarketData(String path) throws IOException {
+>         Map<String, MarketData> map = new HashMap<String, MarketData>();
+>         BufferedReader br = new BufferedReader(new FileReader(path));
+>         String line;
+>         while ((line = br.readLine()) != null) {
+>             line = line.trim();
+>             if (line.isEmpty()) continue;
+>             if (line.startsWith("contract_code")) continue;
+>             MarketData md = MarketData.parse(line);
+>             map.put(md.contractCode, md);
+>         }
+>         br.close();
+>         return map;
+>     }
+>
+>     private static Map<String, ContractSpec> loadSpecs(String path) throws IOException {
+>         Map<String, ContractSpec> map = new HashMap<String, ContractSpec>();
+>         BufferedReader br = new BufferedReader(new FileReader(path));
+>         String line;
+>         while ((line = br.readLine()) != null) {
+>             line = line.trim();
+>             if (line.isEmpty()) continue;
+>             if (line.startsWith("contract_code")) continue;
+>             ContractSpec cs = ContractSpec.parse(line);
+>             map.put(cs.contractCode, cs);
+>         }
+>         br.close();
+>         return map;
+>     }
+>
+>     private static void writeOutput(String path, List<MarginCalculator.AccountResult> results) throws IOException {
+>         BufferedWriter bw = new BufferedWriter(new FileWriter(path));
+>         bw.write("account_id,net_delta_exposure,scanning_risk,spread_charge,initial_margin,unrealized_pnl,margin_status\n");
+>         for (MarginCalculator.AccountResult ar : results) {
+>             bw.write(ar.accountId + "," + ar.netDeltaExposure + "," + ar.scanningRisk + "," + ar.spreadCharge + "," + ar.initialMargin + "," + ar.unrealizedPn
+l + "," + ar.marginStatus + "\n");
+>         }
+>         bw.flush();
+>         bw.close();
+>     }
+> }
+> EOF
+root@20dec917f55b:/app# mkdir -p /app/bin
+root@20dec917f55b:/app# javac -source 1.7 -target 1.7 -d /app/bin /app/src/*.java
+mkdir -p /app/output
+root@20dec917f55b:/app# mkdir -p /app/output
+root@20dec917f55b:/app# java -cp /app/bin src.Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /app/output/margin_report.csv
+root@20dec917f55b:/app# ls -l /app/output
+total 4
+-rw-r--r-- 1 root root 612 Jan 23 10:08 margin_report.csv
+root@20dec917f55b:/app#

@@ -1,0 +1,31 @@
+{
+    "id": "2228432d-7df5-4d0c-966f-58fb3d0febe6",
+    "started_at": "2026-01-23T10:04:49.742001",
+    "finished_at": "2026-01-23T10:05:14.967207",
+    "n_total_trials": 3,
+    "stats": {
+        "n_trials": 3,
+        "n_errors": 0,
+        "evals": {
+            "oracle__tb-bot-job-1769162652-issue-32-resuls-check-main-6f1f9fe1": {
+                "n_trials": 3,
+                "n_errors": 0,
+                "metrics": [
+                    {
+                        "mean": 1.0
+                    }
+                ],
+                "reward_stats": {
+                    "reward": {
+                        "1.0": [
+                            "java7-span-margin-engine__QpwYRAP",
+                            "java7-span-margin-engine__RL3aec7",
+                            "java7-span-margin-engine__2aMfbKZ"
+                        ]
+                    }
+                },
+                "exception_stats": {}
+            }
+        }
+    }
+}

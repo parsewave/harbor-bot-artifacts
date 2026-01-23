@@ -1,0 +1,188 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 14,
+            "passed": 0,
+            "failed": 14,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1769162693.3854706,
+            "stop": 1769162694.8424335
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_all_required_java_classes_exist",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0013968423008918762,
+                "start": 1769162693.4621952,
+                "stop": 1769162693.4992006,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_all_required_java_classes_exist():\n        \"\"\"Verify that all seven required Java class files are compiled in /app/bin.\"\"\"\n        for cls in REQUIRED_CLASSES:\n            path = os.path.join(BIN_DIR, cls)\n>           assert os.path.exists(path), \"Missing required class file: {}\".format(cls)\nE           AssertionError: Missing required class file: Position.class\nE           assert False\nE            +  where False = <function exists at 0x79619bd1f560>('/app/bin/Position.class')\nE            +    where <function exists at 0x79619bd1f560> = <module 'posixpath' (frozen)>.exists\nE            +      where <module 'posixpath' (frozen)> = os.path\n\n/tests/test_outputs.py:175: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_java_sources_exist",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0008845701813697815,
+                "start": 1769162693.4995768,
+                "stop": 1769162693.517576,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_java_sources_exist():\n        \"\"\"Verify that all seven required Java source files exist in /app/src.\"\"\"\n        for src in REQUIRED_SOURCES:\n            path = os.path.join(SRC_DIR, src)\n>           assert os.path.exists(path), \"Missing required source file: {}\".format(src)\nE           AssertionError: Missing required source file: Position.java\nE           assert False\nE            +  where False = <function exists at 0x79619bd1f560>('/app/src/Position.java')\nE            +    where <function exists at 0x79619bd1f560> = <module 'posixpath' (frozen)>.exists\nE            +      where <module 'posixpath' (frozen)> = os.path\n\n/tests/test_outputs.py:182: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_program_runs_with_simple_test_input",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.07473128847777843,
+                "start": 1769162693.5179243,
+                "stop": 1769162693.619873,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_program_runs_with_simple_test_input():\n        \"\"\"Verify the program can process simple test input and produce valid CSV output.\"\"\"\n        with tempfile.TemporaryDirectory() as tmpdir:\n            positions_path = os.path.join(tmpdir, \"positions.csv\")\n            market_data_path = os.path.join(tmpdir, \"market_data.csv\")\n            specs_path = os.path.join(tmpdir, \"specs.csv\")\n            out_path = os.path.join(tmpdir, \"output.csv\")\n    \n            with open(positions_path, 'w') as f:\n                f.write(\"account_id,contract_code,position_qty,entry_price\\n\")\n                f.write(\"TEST001,TESTCONTRACT,10,100.00\\n\")\n    \n            with open(market_data_path, 'w') as f:\n                f.write(\"contract_code,settlement_price,scanning_range,intra_spread_charge\\n\")\n                f.write(\"TESTCONTRACT,105.00,5.0,50.00\\n\")\n    \n            with open(specs_path, 'w') as f:\n                f.write(\"contract_code,multiplier,expiry_month,underlying\\n\")\n                f.write(\"TESTCONTRACT,100,202603,TESTASSET\\n\")\n    \n            env = os.environ.copy()\n            env[\"JAVA_HOME\"] = JAVA_HOME\n            env[\"PATH\"] = JAVA_HOME + \"/bin:\" + env.get(\"PATH\", \"\")\n    \n            result = subprocess.run(\n                [\"java\", \"-cp\", BIN_DIR, \"Main\", positions_path, market_data_path, specs_path, out_path],\n                capture_output=True, text=True, env=env\n            )\n>           assert result.returncode == 0, \"Program failed: {}\".format(result.stderr)\nE           AssertionError: Program failed: Error: Could not find or load main class Main\nE             \nE           assert 1 == 0\nE            +  where 1 = CompletedProcess(args=['java', '-cp', '/app/bin', 'Main', '/tmp/tmptw95czcn/positions.csv', '/tmp/tmptw95czcn/market_d...sv', '/tmp/tmptw95czcn/output.csv'], returncode=1, stdout='', stderr='Error: Could not find or load main class Main\\n').returncode\n\n/tests/test_outputs.py:213: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_scanning_risk_calculation",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0941955940797925,
+                "start": 1769162693.6204162,
+                "stop": 1769162693.741498,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_scanning_risk_calculation():\n        \"\"\"Verify scanning risk is computed correctly using absolute net delta times max scanning range times representative price.\"\"\"\n        with tempfile.TemporaryDirectory() as tmpdir:\n            positions_path = os.path.join(tmpdir, \"positions.csv\")\n            market_data_path = os.path.join(tmpdir, \"market_data.csv\")\n            specs_path = os.path.join(tmpdir, \"specs.csv\")\n            out_path = os.path.join(tmpdir, \"output.csv\")\n    \n            with open(positions_path, 'w') as f:\n                f.write(\"account_id,contract_code,position_qty,entry_price\\n\")\n                f.write(\"ACC001,CONTRACT_A,20,50.00\\n\")\n    \n            with open(market_data_path, 'w') as f:\n                f.write(\"contract_code,settlement_price,scanning_range,intra_spread_charge\\n\")\n                f.write(\"CONTRACT_A,55.00,10.0,25.00\\n\")\n    \n            with open(specs_path, 'w') as f:\n                f.write(\"contract_code,multiplier,expiry_month,underlying\\n\")\n                f.write(\"CONTRACT_A,50,202603,UNDERLYING_X\\n\")\n    \n            env = os.environ.copy()\n            env[\"JAVA_HOME\"] = JAVA_HOME\n            env[\"PATH\"] = JAVA_HOME + \"/bin:\" + env.get(\"PATH\", \"\")\n    \n            result = subprocess.run(\n                [\"java\", \"-cp\", BIN_DIR, \"Main\", positions_path, market_data_path, specs_path, out_path],\n                capture_output=True, text=True, env=env\n            )\n>           assert result.returncode == 0\nE           AssertionError: assert 1 == 0\nE            +  where 1 = CompletedProcess(args=['java', '-cp', '/app/bin', 'Main', '/tmp/tmpovdv07qk/positions.csv', '/tmp/tmpovdv07qk/market_d...sv', '/tmp/tmpovdv07qk/output.csv'], returncode=1, stdout='', stderr='Error: Could not find or load main class Main\\n').returncode\n\n/tests/test_outputs.py:252: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_spread_charge_calculation",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.084076221100986,
+                "start": 1769162693.7419143,
+                "stop": 1769162693.8459353,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_spread_charge_calculation():\n        \"\"\"Verify spread charge is computed as sum of intra_spread_charge times absolute position quantity.\"\"\"\n        with tempfile.TemporaryDirectory() as tmpdir:\n            positions_path = os.path.join(tmpdir, \"positions.csv\")\n            market_data_path = os.path.join(tmpdir, \"market_data.csv\")\n            specs_path = os.path.join(tmpdir, \"specs.csv\")\n            out_path = os.path.join(tmpdir, \"output.csv\")\n    \n            with open(positions_path, 'w') as f:\n                f.write(\"account_id,contract_code,position_qty,entry_price\\n\")\n                f.write(\"ACC001,CONTRACT_A,15,100.00\\n\")\n                f.write(\"ACC001,CONTRACT_B,-10,200.00\\n\")\n    \n            with open(market_data_path, 'w') as f:\n                f.write(\"contract_code,settlement_price,scanning_range,intra_spread_charge\\n\")\n                f.write(\"CONTRACT_A,105.00,5.0,30.00\\n\")\n                f.write(\"CONTRACT_B,210.00,6.0,45.00\\n\")\n    \n            with open(specs_path, 'w') as f:\n                f.write(\"contract_code,multiplier,expiry_month,underlying\\n\")\n                f.write(\"CONTRACT_A,10,202603,ASSET_A\\n\")\n                f.write(\"CONTRACT_B,20,202606,ASSET_B\\n\")\n    \n            env = os.environ.copy()\n            env[\"JAVA_HOME\"] = JAVA_HOME\n            env[\"PATH\"] = JAVA_HOME + \"/bin:\" + env.get(\"PATH\", \"\")\n    \n            result = subprocess.run(\n                [\"java\", \"-cp\", BIN_DIR, \"Main\", positions_path, market_data_path, specs_path, out_path],\n                capture_output=True, text=True, env=env\n            )\n>           assert result.returncode == 0\nE           AssertionError: assert 1 == 0\nE            +  where 1 = CompletedProcess(args=['java', '-cp', '/app/bin', 'Main', '/tmp/tmpsa7tvzcw/positions.csv', '/tmp/tmpsa7tvzcw/market_d...sv', '/tmp/tmpsa7tvzcw/output.csv'], returncode=1, stdout='', stderr='Error: Could not find or load main class Main\\n').returncode\n\n/tests/test_outputs.py:297: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_position_netting_same_underlying",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0822998033836484,
+                "start": 1769162693.8464267,
+                "stop": 1769162693.9599469,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_position_netting_same_underlying():\n        \"\"\"Verify positions in contracts with the same underlying are netted by delta-equivalent quantity.\"\"\"\n        with tempfile.TemporaryDirectory() as tmpdir:\n            positions_path = os.path.join(tmpdir, \"positions.csv\")\n            market_data_path = os.path.join(tmpdir, \"market_data.csv\")\n            specs_path = os.path.join(tmpdir, \"specs.csv\")\n            out_path = os.path.join(tmpdir, \"output.csv\")\n    \n            with open(positions_path, 'w') as f:\n                f.write(\"account_id,contract_code,position_qty,entry_price\\n\")\n                f.write(\"ACC001,CONTRACT_MAR,20,100.00\\n\")\n                f.write(\"ACC001,CONTRACT_JUN,-15,102.00\\n\")\n    \n            with open(market_data_path, 'w') as f:\n                f.write(\"contract_code,settlement_price,scanning_range,intra_spread_charge\\n\")\n                f.write(\"CONTRACT_MAR,105.00,8.0,50.00\\n\")\n                f.write(\"CONTRACT_JUN,106.00,8.5,50.00\\n\")\n    \n            with open(specs_path, 'w') as f:\n                f.write(\"contract_code,multiplier,expiry_month,underlying\\n\")\n                f.write(\"CONTRACT_MAR,50,202603,SAME_UNDERLYING\\n\")\n                f.write(\"CONTRACT_JUN,50,202606,SAME_UNDERLYING\\n\")\n    \n            env = os.environ.copy()\n            env[\"JAVA_HOME\"] = JAVA_HOME\n            env[\"PATH\"] = JAVA_HOME + \"/bin:\" + env.get(\"PATH\", \"\")\n    \n            result = subprocess.run(\n                [\"java\", \"-cp\", BIN_DIR, \"Main\", positions_path, market_data_path, specs_path, out_path],\n                capture_output=True, text=True, env=env\n            )\n>           assert result.returncode == 0\nE           AssertionError: assert 1 == 0\nE            +  where 1 = CompletedProcess(args=['java', '-cp', '/app/bin', 'Main', '/tmp/tmpu9lpupgd/positions.csv', '/tmp/tmpu9lpupgd/market_d...sv', '/tmp/tmpu9lpupgd/output.csv'], returncode=1, stdout='', stderr='Error: Could not find or load main class Main\\n').returncode\n\n/tests/test_outputs.py:341: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_unrealized_pnl_calculation",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.08118531573563814,
+                "start": 1769162693.9605317,
+                "stop": 1769162694.0604436,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_unrealized_pnl_calculation():\n        \"\"\"Verify unrealized PnL equals position_qty times multiplier times (settlement_price minus entry_price).\"\"\"\n        with tempfile.TemporaryDirectory() as tmpdir:\n            positions_path = os.path.join(tmpdir, \"positions.csv\")\n            market_data_path = os.path.join(tmpdir, \"market_data.csv\")\n            specs_path = os.path.join(tmpdir, \"specs.csv\")\n            out_path = os.path.join(tmpdir, \"output.csv\")\n    \n            with open(positions_path, 'w') as f:\n                f.write(\"account_id,contract_code,position_qty,entry_price\\n\")\n                f.write(\"ACC001,CONTRACT_X,10,1000.00\\n\")\n    \n            with open(market_data_path, 'w') as f:\n                f.write(\"contract_code,settlement_price,scanning_range,intra_spread_charge\\n\")\n                f.write(\"CONTRACT_X,1050.00,5.0,100.00\\n\")\n    \n            with open(specs_path, 'w') as f:\n                f.write(\"contract_code,multiplier,expiry_month,underlying\\n\")\n                f.write(\"CONTRACT_X,25,202603,INDEX\\n\")\n    \n            env = os.environ.copy()\n            env[\"JAVA_HOME\"] = JAVA_HOME\n            env[\"PATH\"] = JAVA_HOME + \"/bin:\" + env.get(\"PATH\", \"\")\n    \n            result = subprocess.run(\n                [\"java\", \"-cp\", BIN_DIR, \"Main\", positions_path, market_data_path, specs_path, out_path],\n                capture_output=True, text=True, env=env\n            )\n>           assert result.returncode == 0\nE           AssertionError: assert 1 == 0\nE            +  where 1 = CompletedProcess(args=['java', '-cp', '/app/bin', 'Main', '/tmp/tmppdzhg6t1/positions.csv', '/tmp/tmppdzhg6t1/market_d...sv', '/tmp/tmppdzhg6t1/output.csv'], returncode=1, stdout='', stderr='Error: Could not find or load main class Main\\n').returncode\n\n/tests/test_outputs.py:383: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_margin_status_adequate",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.10096746496856213,
+                "start": 1769162694.0608346,
+                "stop": 1769162694.1864505,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_margin_status_adequate():\n        \"\"\"Verify margin_status is ADEQUATE when unrealized PnL equals or exceeds initial margin.\"\"\"\n        with tempfile.TemporaryDirectory() as tmpdir:\n            positions_path = os.path.join(tmpdir, \"positions.csv\")\n            market_data_path = os.path.join(tmpdir, \"market_data.csv\")\n            specs_path = os.path.join(tmpdir, \"specs.csv\")\n            out_path = os.path.join(tmpdir, \"output.csv\")\n    \n            with open(positions_path, 'w') as f:\n                f.write(\"account_id,contract_code,position_qty,entry_price\\n\")\n                f.write(\"ACC001,CONTRACT_Y,5,80.00\\n\")\n    \n            with open(market_data_path, 'w') as f:\n                f.write(\"contract_code,settlement_price,scanning_range,intra_spread_charge\\n\")\n                f.write(\"CONTRACT_Y,150.00,2.0,10.00\\n\")\n    \n            with open(specs_path, 'w') as f:\n                f.write(\"contract_code,multiplier,expiry_month,underlying\\n\")\n                f.write(\"CONTRACT_Y,100,202603,COMMODITY\\n\")\n    \n            env = os.environ.copy()\n            env[\"JAVA_HOME\"] = JAVA_HOME\n            env[\"PATH\"] = JAVA_HOME + \"/bin:\" + env.get(\"PATH\", \"\")\n    \n            result = subprocess.run(\n                [\"java\", \"-cp\", BIN_DIR, \"Main\", positions_path, market_data_path, specs_path, out_path],\n                capture_output=True, text=True, env=env\n            )\n>           assert result.returncode == 0\nE           AssertionError: assert 1 == 0\nE            +  where 1 = CompletedProcess(args=['java', '-cp', '/app/bin', 'Main', '/tmp/tmpdo26wbqa/positions.csv', '/tmp/tmpdo26wbqa/market_d...sv', '/tmp/tmpdo26wbqa/output.csv'], returncode=1, stdout='', stderr='Error: Could not find or load main class Main\\n').returncode\n\n/tests/test_outputs.py:424: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_margin_status_call",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.0874484172090888,
+                "start": 1769162694.1869292,
+                "stop": 1769162694.293719,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_margin_status_call():\n        \"\"\"Verify margin_status is CALL when unrealized PnL is below initial margin.\"\"\"\n        with tempfile.TemporaryDirectory() as tmpdir:\n            positions_path = os.path.join(tmpdir, \"positions.csv\")\n            market_data_path = os.path.join(tmpdir, \"market_data.csv\")\n            specs_path = os.path.join(tmpdir, \"specs.csv\")\n            out_path = os.path.join(tmpdir, \"output.csv\")\n    \n            with open(positions_path, 'w') as f:\n                f.write(\"account_id,contract_code,position_qty,entry_price\\n\")\n                f.write(\"ACC001,CONTRACT_Z,-10,100.00\\n\")\n    \n            with open(market_data_path, 'w') as f:\n                f.write(\"contract_code,settlement_price,scanning_range,intra_spread_charge\\n\")\n                f.write(\"CONTRACT_Z,120.00,15.0,200.00\\n\")\n    \n            with open(specs_path, 'w') as f:\n                f.write(\"contract_code,multiplier,expiry_month,underlying\\n\")\n                f.write(\"CONTRACT_Z,50,202603,RISKY\\n\")\n    \n            env = os.environ.copy()\n            env[\"JAVA_HOME\"] = JAVA_HOME\n            env[\"PATH\"] = JAVA_HOME + \"/bin:\" + env.get(\"PATH\", \"\")\n    \n            result = subprocess.run(\n                [\"java\", \"-cp\", BIN_DIR, \"Main\", positions_path, market_data_path, specs_path, out_path],\n                capture_output=True, text=True, env=env\n            )\n>           assert result.returncode == 0\nE           AssertionError: assert 1 == 0\nE            +  where 1 = CompletedProcess(args=['java', '-cp', '/app/bin', 'Main', '/tmp/tmpp1w6tzfh/positions.csv', '/tmp/tmpp1w6tzfh/market_d...sv', '/tmp/tmpp1w6tzfh/output.csv'], returncode=1, stdout='', stderr='Error: Could not find or load main class Main\\n').returncode\n\n/tests/test_outputs.py:468: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_initial_margin_is_sum_of_scanning_and_spread",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.08219734765589237,
+                "start": 1769162694.294145,
+                "stop": 1769162694.397141,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_initial_margin_is_sum_of_scanning_and_spread():\n        \"\"\"Verify initial margin equals scanning risk plus spread charge truncated to integer.\"\"\"\n        with tempfile.TemporaryDirectory() as tmpdir:\n            positions_path = os.path.join(tmpdir, \"positions.csv\")\n            market_data_path = os.path.join(tmpdir, \"market_data.csv\")\n            specs_path = os.path.join(tmpdir, \"specs.csv\")\n            out_path = os.path.join(tmpdir, \"output.csv\")\n    \n            with open(positions_path, 'w') as f:\n                f.write(\"account_id,contract_code,position_qty,entry_price\\n\")\n                f.write(\"ACC001,CONTRACT_M,8,500.00\\n\")\n    \n            with open(market_data_path, 'w') as f:\n                f.write(\"contract_code,settlement_price,scanning_range,intra_spread_charge\\n\")\n                f.write(\"CONTRACT_M,520.00,7.5,75.00\\n\")\n    \n            with open(specs_path, 'w') as f:\n                f.write(\"contract_code,multiplier,expiry_month,underlying\\n\")\n                f.write(\"CONTRACT_M,20,202603,METAL\\n\")\n    \n            env = os.environ.copy()\n            env[\"JAVA_HOME\"] = JAVA_HOME\n            env[\"PATH\"] = JAVA_HOME + \"/bin:\" + env.get(\"PATH\", \"\")\n    \n            result = subprocess.run(\n                [\"java\", \"-cp\", BIN_DIR, \"Main\", positions_path, market_data_path, specs_path, out_path],\n                capture_output=True, text=True, env=env\n            )\n>           assert result.returncode == 0\nE           AssertionError: assert 1 == 0\nE            +  where 1 = CompletedProcess(args=['java', '-cp', '/app/bin', 'Main', '/tmp/tmpnspod7jk/positions.csv', '/tmp/tmpnspod7jk/market_d...sv', '/tmp/tmpnspod7jk/output.csv'], returncode=1, stdout='', stderr='Error: Could not find or load main class Main\\n').returncode\n\n/tests/test_outputs.py:506: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_output_sorted_by_account_id",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.09420261438935995,
+                "start": 1769162694.3976486,
+                "stop": 1769162694.5135546,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_output_sorted_by_account_id():\n        \"\"\"Verify output is sorted by account_id in ascending alphabetical order.\"\"\"\n        with tempfile.TemporaryDirectory() as tmpdir:\n            positions_path = os.path.join(tmpdir, \"positions.csv\")\n            market_data_path = os.path.join(tmpdir, \"market_data.csv\")\n            specs_path = os.path.join(tmpdir, \"specs.csv\")\n            out_path = os.path.join(tmpdir, \"output.csv\")\n    \n            with open(positions_path, 'w') as f:\n                f.write(\"account_id,contract_code,position_qty,entry_price\\n\")\n                f.write(\"ACC_ZULU,CONTRACT_A,5,100.00\\n\")\n                f.write(\"ACC_ALPHA,CONTRACT_A,3,100.00\\n\")\n                f.write(\"ACC_MIKE,CONTRACT_A,7,100.00\\n\")\n    \n            with open(market_data_path, 'w') as f:\n                f.write(\"contract_code,settlement_price,scanning_range,intra_spread_charge\\n\")\n                f.write(\"CONTRACT_A,110.00,5.0,25.00\\n\")\n    \n            with open(specs_path, 'w') as f:\n                f.write(\"contract_code,multiplier,expiry_month,underlying\\n\")\n                f.write(\"CONTRACT_A,10,202603,ASSET\\n\")\n    \n            env = os.environ.copy()\n            env[\"JAVA_HOME\"] = JAVA_HOME\n            env[\"PATH\"] = JAVA_HOME + \"/bin:\" + env.get(\"PATH\", \"\")\n    \n            result = subprocess.run(\n                [\"java\", \"-cp\", BIN_DIR, \"Main\", positions_path, market_data_path, specs_path, out_path],\n                capture_output=True, text=True, env=env\n            )\n>           assert result.returncode == 0\nE           AssertionError: assert 1 == 0\nE            +  where 1 = CompletedProcess(args=['java', '-cp', '/app/bin', 'Main', '/tmp/tmpehgvebji/positions.csv', '/tmp/tmpehgvebji/market_d...sv', '/tmp/tmpehgvebji/output.csv'], returncode=1, stdout='', stderr='Error: Could not find or load main class Main\\n').returncode\n\n/tests/test_outputs.py:550: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_csv_header_format",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.07832666020840406,
+                "start": 1769162694.5140169,
+                "stop": 1769162694.6236866,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_csv_header_format():\n        \"\"\"Verify output CSV has correct header with all required columns in specified order.\"\"\"\n        with tempfile.TemporaryDirectory() as tmpdir:\n            positions_path = os.path.join(tmpdir, \"positions.csv\")\n            market_data_path = os.path.join(tmpdir, \"market_data.csv\")\n            specs_path = os.path.join(tmpdir, \"specs.csv\")\n            out_path = os.path.join(tmpdir, \"output.csv\")\n    \n            with open(positions_path, 'w') as f:\n                f.write(\"account_id,contract_code,position_qty,entry_price\\n\")\n                f.write(\"ACC001,CONTRACT_A,5,100.00\\n\")\n    \n            with open(market_data_path, 'w') as f:\n                f.write(\"contract_code,settlement_price,scanning_range,intra_spread_charge\\n\")\n                f.write(\"CONTRACT_A,110.00,5.0,25.00\\n\")\n    \n            with open(specs_path, 'w') as f:\n                f.write(\"contract_code,multiplier,expiry_month,underlying\\n\")\n                f.write(\"CONTRACT_A,10,202603,ASSET\\n\")\n    \n            env = os.environ.copy()\n            env[\"JAVA_HOME\"] = JAVA_HOME\n            env[\"PATH\"] = JAVA_HOME + \"/bin:\" + env.get(\"PATH\", \"\")\n    \n            result = subprocess.run(\n                [\"java\", \"-cp\", BIN_DIR, \"Main\", positions_path, market_data_path, specs_path, out_path],\n                capture_output=True, text=True, env=env\n            )\n>           assert result.returncode == 0\nE           AssertionError: assert 1 == 0\nE            +  where 1 = CompletedProcess(args=['java', '-cp', '/app/bin', 'Main', '/tmp/tmp8x6fm6hp/positions.csv', '/tmp/tmp8x6fm6hp/market_d...sv', '/tmp/tmp8x6fm6hp/output.csv'], returncode=1, stdout='', stderr='Error: Could not find or load main class Main\\n').returncode\n\n/tests/test_outputs.py:588: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_processes_actual_data_files",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.07747206650674343,
+                "start": 1769162694.6242356,
+                "stop": 1769162694.7266,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_processes_actual_data_files():\n        \"\"\"Verify program processes the actual data files and produces valid output for all accounts.\"\"\"\n        positions_path = \"/app/data/positions.csv\"\n        market_data_path = \"/app/data/market_data.csv\"\n        specs_path = \"/app/data/contract_specs.csv\"\n    \n        with tempfile.TemporaryDirectory() as tmpdir:\n            out_path = os.path.join(tmpdir, \"output.csv\")\n    \n            env = os.environ.copy()\n            env[\"JAVA_HOME\"] = JAVA_HOME\n            env[\"PATH\"] = JAVA_HOME + \"/bin:\" + env.get(\"PATH\", \"\")\n    \n            result = subprocess.run(\n                [\"java\", \"-cp\", BIN_DIR, \"Main\", positions_path, market_data_path, specs_path, out_path],\n                capture_output=True, text=True, env=env\n            )\n>           assert result.returncode == 0, \"Program failed on actual data: {}\".format(result.stderr)\nE           AssertionError: Program failed on actual data: Error: Could not find or load main class Main\nE             \nE           assert 1 == 0\nE            +  where 1 = CompletedProcess(args=['java', '-cp', '/app/bin', 'Main', '/app/data/positions.csv', '/app/data/market_data.csv', '/ap...sv', '/tmp/tmpyptjrqe_/output.csv'], returncode=1, stdout='', stderr='Error: Could not find or load main class Main\\n').returncode\n\n/tests/test_outputs.py:615: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_calculations_match_expected_on_actual_data",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.09580642823129892,
+                "start": 1769162694.7271235,
+                "stop": 1769162694.8419209,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_calculations_match_expected_on_actual_data():\n        \"\"\"Verify computed margin values match expected values for accounts in actual data.\"\"\"\n        positions_path = \"/app/data/positions.csv\"\n        market_data_path = \"/app/data/market_data.csv\"\n        specs_path = \"/app/data/contract_specs.csv\"\n    \n        positions = load_positions(positions_path)\n        market_data = load_market_data(market_data_path)\n        specs = load_contract_specs(specs_path)\n    \n        expected_results = compute_margin_for_test(positions, market_data, specs)\n    \n        with tempfile.TemporaryDirectory() as tmpdir:\n            out_path = os.path.join(tmpdir, \"output.csv\")\n    \n            env = os.environ.copy()\n            env[\"JAVA_HOME\"] = JAVA_HOME\n            env[\"PATH\"] = JAVA_HOME + \"/bin:\" + env.get(\"PATH\", \"\")\n    \n            result = subprocess.run(\n                [\"java\", \"-cp\", BIN_DIR, \"Main\", positions_path, market_data_path, specs_path, out_path],\n                capture_output=True, text=True, env=env\n            )\n>           assert result.returncode == 0\nE           AssertionError: assert 1 == 0\nE            +  where 1 = CompletedProcess(args=['java', '-cp', '/app/bin', 'Main', '/app/data/positions.csv', '/app/data/market_data.csv', '/ap...sv', '/tmp/tmpfqcqwk0m/output.csv'], returncode=1, stdout='', stderr='Error: Could not find or load main class Main\\n').returncode\n\n/tests/test_outputs.py:655: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

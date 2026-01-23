@@ -1,0 +1,226 @@
+New Terminal Output:
+
+root@4b8a5911d6b5:/app# ls -la /app/src
+total 48
+drwxr-xr-x 1 root root 4096 Jan 23 10:15 .
+drwxr-xr-x 1 root root 4096 Jan 23 10:15 ..
+-rw-r--r-- 1 root root 1411 Jan 23 10:15 AccountMargin.java
+-rw-r--r-- 1 root root 1219 Jan 23 10:15 ContractSpec.java
+-rw-r--r-- 1 root root 4299 Jan 23 10:15 Main.java
+-rw-r--r-- 1 root root 6714 Jan 23 10:15 MarginCalculator.java
+-rw-r--r-- 1 root root 1444 Jan 23 10:15 MarketData.java
+-rw-r--r-- 1 root root 1497 Jan 23 10:15 Position.java
+-rw-r--r-- 1 root root 2590 Jan 23 10:15 PositionAggregator.java
+root@4b8a5911d6b5:/app# cat > /app/src/PositionAggregator.java <<'EOF'
+> import java.util.HashMap;
+> import java.util.List;
+> import java.util.Map;
+>
+> public class PositionAggregator {
+>
+>     public static final class UnderlyingNet {
+>         private final String underlying;
+>         private long netDeltaExposure;
+>
+>         // Net qty per contract for this underlying (within an account)
+>         private final Map<String, Long> netQtyByContract = new HashMap<String, Long>();
+>
+>         private String representativeContractCode;
+>         private long maxOpenInterestEquivalent;
+>
+>         private UnderlyingNet(String underlying) {
+>             this.underlying = underlying;
+>         }
+>
+>         public String getUnderlying() {
+>             return underlying;
+>         }
+>
+>         public long getNetDeltaExposure() {
+>             return netDeltaExposure;
+>         }
+>
+>         public String getRepresentativeContractCode() {
+>             return representativeContractCode;
+>         }
+>
+>         private void addPosition(Position p, ContractSpec spec) {
+>             long deltaEq = (long) p.getPositionQty() * (long) spec.getMultiplier();
+>             netDeltaExposure += deltaEq;
+>
+>             Long cur = netQtyByContract.get(p.getContractCode());
+>             long next = (cur == null ? 0L : cur.longValue()) + (long) p.getPositionQty();
+>             netQtyByContract.put(p.getContractCode(), Long.valueOf(next));
+>         }
+>
+>         private void finalizeRepresentative(Map<String, ContractSpec> contractSpecs) {
+>             String best = null;
+>             long bestOi = -1L;
+>
+>             for (Map.Entry<String, Long> e : netQtyByContract.entrySet()) {
+>                 String contractCode = e.getKey();
+>                 long netQty = e.getValue().longValue();
+>                 ContractSpec spec = contractSpecs.get(contractCode);
+>                 if (spec == null) {
+>                     continue;
+>                 }
+>                 long oiEq = Math.abs(netQty) * (long) spec.getMultiplier();
+>                 if (best == null || oiEq > bestOi) {
+>                     best = contractCode;
+>                     bestOi = oiEq;
+>                 }
+>             }
+>
+>             representativeContractCode = best;
+>             maxOpenInterestEquivalent = (bestOi < 0L ? 0L : bestOi);
+>         }
+>     }
+>
+>     public Map<String, Map<String, UnderlyingNet>> aggregateByAccountAndUnderlying(List<Position> positions,
+>                                                                                    Map<String, ContractSpec> contractSpecs) {
+>         Map<String, Map<String, UnderlyingNet>> out = new HashMap<String, Map<String, UnderlyingNet>>();
+>
+>         for (int i = 0; i < positions.size(); i++) {
+>             Position p = positions.get(i);
+>             ContractSpec spec = contractSpecs.get(p.getContractCode());
+>             if (spec == null) {
+>                 throw new IllegalArgumentException("Missing contract spec for contract_code=" + p.getContractCode());
+>             }
+>
+>             String accountId = p.getAccountId();
+>             String underlying = spec.getUnderlying();
+>
+>             Map<String, UnderlyingNet> byUnderlying = out.get(accountId);
+>             if (byUnderlying == null) {
+>                 byUnderlying = new HashMap<String, UnderlyingNet>();
+>                 out.put(accountId, byUnderlying);
+>             }
+>
+>             UnderlyingNet net = byUnderlying.get(underlying);
+>             if (net == null) {
+>                 net = new UnderlyingNet(underlying);
+>                 byUnderlying.put(underlying, net);
+>             }
+>
+>             net.addPosition(p, spec);
+>         }
+>
+>         // Finalize representative contract selection using net quantities per contract.
+>         for (Map.Entry<String, Map<String, UnderlyingNet>> acct : out.entrySet()) {
+>             Map<String, UnderlyingNet> byUnd = acct.getValue();
+>             for (Map.Entry<String, UnderlyingNet> undEntry : byUnd.entrySet()) {
+>                 undEntry.getValue().finalizeRepresentative(contractSpecs);
+>             }
+>         }
+>
+>         return out;
+>     }
+> }
+> EOF
+root@4b8a5911d6b5:/app# cat > /app/src/MarginCalculator.java <<'EOF'
+> import java.math.BigDecimal;
+> import java.math.RoundingMode;
+> import java.util.ArrayList;
+> import java.util.Collections;
+> import java.util.Comparator;
+ns> import java.util.HashMap;
+>
+[... output limited to 10000 bytes; 70 interior bytes omitted ...]
+      BigDecimal absNetDeltaBd = new BigDecimal(Long.toString(Math.abs(netDelta)));
+>
+>                 BigDecimal scanRisk = absNetDeltaBd.multiply(rangeFrac).multiply(repSettle);
+>                 long scanRiskTrunc = truncateTowardZeroToLong(scanRisk);
+>                 scanningRiskTotal += scanRiskTrunc;
+>             }
+>
+>             List<Position> acctPositions = positionsByAccount.get(accountId);
+>             if (acctPositions == null) {
+>                 acctPositions = Collections.emptyList();
+>             }
+>
+>             // Spread charge: compute using net quantity per contract (not per lot)
+>             Map<String, Long> netQtyByContract = new HashMap<String, Long>();
+>             for (int i = 0; i < acctPositions.size(); i++) {
+>                 Position p = acctPositions.get(i);
+>                 Long cur = netQtyByContract.get(p.getContractCode());
+>                 long next = (cur == null ? 0L : cur.longValue()) + (long) p.getPositionQty();
+>                 netQtyByContract.put(p.getContractCode(), Long.valueOf(next));
+>             }
+>
+>             BigDecimal spreadCharge = BigDecimal.ZERO;
+>             for (Map.Entry<String, Long> e : netQtyByContract.entrySet()) {
+>                 String contractCode = e.getKey();
+>                 long netQty = e.getValue().longValue();
+>                 if (netQty == 0L) {
+>                     continue;
+>                 }
+>                 MarketData md = marketDataByContract.get(contractCode);
+>                 if (md == null) {
+>                     throw new IllegalArgumentException("Missing market data for contract_code=" + contractCode);
+>                 }
+>                 BigDecimal absQtyBd = new BigDecimal(Long.toString(Math.abs(netQty)));
+>                 spreadCharge = spreadCharge.add(md.getIntraSpreadCharge().multiply(absQtyBd));
+>             }
+>
+>             // PnL: sum per position lot (entry-price specific)
+>             BigDecimal unrealizedPnl = BigDecimal.ZERO;
+>             for (int i = 0; i < acctPositions.size(); i++) {
+>                 Position p = acctPositions.get(i);
+>                 ContractSpec spec = contractSpecsByContract.get(p.getContractCode());
+>                 if (spec == null) {
+>                     throw new IllegalArgumentException("Missing contract spec for contract_code=" + p.getContractCode());
+>                 }
+>                 MarketData md = marketDataByContract.get(p.getContractCode());
+>                 if (md == null) {
+>                     throw new IllegalArgumentException("Missing market data for contract_code=" + p.getContractCode());
+>                 }
+>
+>                 BigDecimal priceDiff = md.getSettlementPrice().subtract(p.getEntryPrice());
+>                 long qtyTimesMult = (long) p.getPositionQty() * (long) spec.getMultiplier();
+>                 BigDecimal qtyMultBd = new BigDecimal(Long.toString(qtyTimesMult));
+>                 unrealizedPnl = unrealizedPnl.add(qtyMultBd.multiply(priceDiff));
+>             }
+>
+>             long spreadChargeTrunc = truncateTowardZeroToLong(spreadCharge);
+>             long unrealizedPnlTrunc = truncateTowardZeroToLong(unrealizedPnl);
+>
+>             BigDecimal initialMarginBd = new BigDecimal(Long.toString(scanningRiskTotal)).add(new BigDecimal(Long.toString(spreadChargeTrunc)));
+>             long initialMarginTrunc = truncateTowardZeroToLong(initialMarginBd);
+>
+>             String status = (unrealizedPnlTrunc >= initialMarginTrunc) ? "ADEQUATE" : "CALL";
+>
+>             results.add(new AccountMargin(accountId,
+>                     sumAbsNetDelta,
+>                     scanningRiskTotal,
+>                     spreadChargeTrunc,
+>                     initialMarginTrunc,
+>                     unrealizedPnlTrunc,
+>                     status));
+>         }
+>
+>         Collections.sort(results, new Comparator<AccountMargin>() {
+>             public int compare(AccountMargin a, AccountMargin b) {
+>                 return a.getAccountId().compareTo(b.getAccountId());
+>             }
+>         });
+>
+>         return results;
+>     }
+>
+>     private static long truncateTowardZeroToLong(BigDecimal v) {
+>         BigDecimal scaled = v.setScale(0, RoundingMode.DOWN);
+>         return scaled.longValue();
+>     }
+> }
+> EOF
+root@4b8a5911d6b5:/app# rm -rf /app/bin/*
+root@4b8a5911d6b5:/app# javac -source 1.7 -target 1.7 -d /app/bin /app/src/*.java
+java -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /app/output.csv
+root@4b8a5911d6b5:/app# java -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /app/output.csv
+root@4b8a5911d6b5:/app# head -n 5 /app/output.csv
+account_id,net_delta_exposure,scanning_risk,spread_charge,initial_margin,unrealized_pnl,margin_status
+ACC001,15410,343305,10805,354110,31937,CALL
+ACC002,3100,528149,6725,534874,88900,CALL
+ACC003,19500,238031,27900,265931,51375,CALL
+ACC004,1150,84893,5200,90093,83825,CALL
+root@4b8a5911d6b5:/app#

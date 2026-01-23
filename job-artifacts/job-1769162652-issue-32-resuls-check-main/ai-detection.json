@@ -1,0 +1,20 @@
+[
+  {
+    "name": "AI Detection",
+    "passed": true,
+    "message": "Max AI probability: 64% (threshold: 70%) in instruction.md",
+    "is_warning": false,
+    "details": "instruction.md: 64%, solution/solve.sh: 33%",
+    "duration_seconds": null,
+    "result_type": "tb_positive",
+    "check_type": "ai_detection",
+    "raw_data": {
+      "max_probability": 0.6474023203711212,
+      "threshold": 0.7,
+      "results": {
+        "instruction.md": 0.6474023203711212,
+        "solution/solve.sh": 0.33260703461086116
+      }
+    }
+  }
+]
