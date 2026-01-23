@@ -1,0 +1,182 @@
+{
+  "success": false,
+  "results": [
+    {
+      "name": "Required Files",
+      "passed": true,
+      "message": "All required files present",
+      "is_warning": false,
+      "details": null,
+      "duration_seconds": null,
+      "result_type": "tb_positive",
+      "check_type": "required_files",
+      "raw_data": null
+    },
+    {
+      "name": "Test Script Format",
+      "passed": true,
+      "message": "Valid format",
+      "is_warning": false,
+      "details": null,
+      "duration_seconds": null,
+      "result_type": "tb_positive",
+      "check_type": "test_script_format",
+      "raw_data": null
+    },
+    {
+      "name": "Instruction Length",
+      "passed": true,
+      "message": "85 words (max: 500)",
+      "is_warning": true,
+      "details": null,
+      "duration_seconds": null,
+      "result_type": null,
+      "check_type": "instruction_length",
+      "raw_data": null
+    },
+    {
+      "name": "Solution Length",
+      "passed": true,
+      "message": "31 lines (max: 1000)",
+      "is_warning": true,
+      "details": null,
+      "duration_seconds": null,
+      "result_type": null,
+      "check_type": "solution_length",
+      "raw_data": null
+    },
+    {
+      "name": "Tests Length",
+      "passed": true,
+      "message": "166 lines (max: 1000)",
+      "is_warning": true,
+      "details": null,
+      "duration_seconds": null,
+      "result_type": null,
+      "check_type": "tests_length",
+      "raw_data": null
+    },
+    {
+      "name": "Task Size",
+      "passed": true,
+      "message": "0.01 MB (max: 10 MB)",
+      "is_warning": true,
+      "details": null,
+      "duration_seconds": null,
+      "result_type": null,
+      "check_type": "task_size",
+      "raw_data": null
+    },
+    {
+      "name": "AI Detection",
+      "passed": false,
+      "message": "Max AI probability: 99% (threshold: 70%) in instruction.md",
+      "is_warning": false,
+      "details": "instruction.md: 99%, solution/solve.sh: 70%",
+      "duration_seconds": null,
+      "result_type": "tb_negative",
+      "check_type": "ai_detection",
+      "raw_data": {
+        "max_probability": 0.9994443762998331,
+        "threshold": 0.7,
+        "results": {
+          "instruction.md": 0.9994443762998331,
+          "solution/solve.sh": 0.7066327954631687
+        }
+      }
+    },
+    {
+      "name": "Oracle Agent",
+      "passed": false,
+      "message": "Accuracy: 67%",
+      "is_warning": false,
+      "details": "Required: 100%",
+      "duration_seconds": 72.71884107589722,
+      "result_type": "tb_negative",
+      "check_type": "oracle_agent",
+      "raw_data": {
+        "accuracy": 0.6666666666666666,
+        "json_output": {
+          "id": "705a6b14-6b98-4457-823c-45c32e3a85d5",
+          "started_at": "2026-01-23T12:56:44.102053",
+          "finished_at": "2026-01-23T12:57:28.957427",
+          "n_total_trials": 3,
+          "stats": {
+            "n_trials": 3,
+            "n_errors": 1,
+            "evals": {
+              "oracle__tb-bot-job-1769172973-issue-6-resuls-check-add-75ff97-uv-pep732-83d18fde": {
+                "n_trials": 2,
+                "n_errors": 1,
+                "metrics": [
+                  {
+                    "mean": 0.6666666666666666
+                  }
+                ],
+                "reward_stats": {
+                  "reward": {
+                    "1.0": [
+                      "75ff97-uv-pep732-editable__eFMk7BU",
+                      "75ff97-uv-pep732-editable__tDfHuHh"
+                    ]
+                  }
+                },
+                "exception_stats": {
+                  "RuntimeError": [
+                    "75ff97-uv-pep732-editable__Ji3ha5N"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Nop Agent",
+      "passed": true,
+      "message": "Accuracy: 0%",
+      "is_warning": false,
+      "details": "Required: 0%",
+      "duration_seconds": 72.7168083190918,
+      "result_type": "tb_positive",
+      "check_type": "nop_agent",
+      "raw_data": {
+        "accuracy": 0.0,
+        "json_output": {
+          "id": "78b03d40-2e0b-4928-b8a0-6e8a77d5bf93",
+          "started_at": "2026-01-23T12:56:44.770027",
+          "finished_at": "2026-01-23T12:57:22.907701",
+          "n_total_trials": 1,
+          "stats": {
+            "n_trials": 1,
+            "n_errors": 0,
+            "evals": {
+              "nop__tb-bot-job-1769172973-issue-6-resuls-check-add-75ff97-uv-pep732-83d18fde": {
+                "n_trials": 1,
+                "n_errors": 0,
+                "metrics": [
+                  {
+                    "mean": 0.0
+                  }
+                ],
+                "reward_stats": {
+                  "reward": {
+                    "0.0": [
+                      "75ff97-uv-pep732-editable__w2L3yCf"
+                    ]
+                  }
+                },
+                "exception_stats": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "duration_seconds": 76.41623020172119,
+  "task_id": "75ff97-uv-pep732-editable",
+  "job_id": "job-1769172973-issue-6-resuls-check-add-75ff97-uv-pep732",
+  "artifacts_url": null
+}

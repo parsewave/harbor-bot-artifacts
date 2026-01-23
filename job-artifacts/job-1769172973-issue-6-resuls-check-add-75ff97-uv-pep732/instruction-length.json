@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Instruction Length",
+    "passed": true,
+    "message": "85 words (max: 500)",
+    "is_warning": true,
+    "details": null,
+    "duration_seconds": null,
+    "result_type": null,
+    "check_type": "instruction_length",
+    "raw_data": null
+  }
+]

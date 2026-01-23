@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Nop Agent",
+    "passed": true,
+    "message": "Accuracy: 0%",
+    "is_warning": false,
+    "details": "Required: 0%",
+    "duration_seconds": 72.7168083190918,
+    "result_type": "tb_positive",
+    "check_type": "nop_agent",
+    "raw_data": {
+      "accuracy": 0.0,
+      "json_output": {
+        "id": "78b03d40-2e0b-4928-b8a0-6e8a77d5bf93",
+        "started_at": "2026-01-23T12:56:44.770027",
+        "finished_at": "2026-01-23T12:57:22.907701",
+        "n_total_trials": 1,
+        "stats": {
+          "n_trials": 1,
+          "n_errors": 0,
+          "evals": {
+            "nop__tb-bot-job-1769172973-issue-6-resuls-check-add-75ff97-uv-pep732-83d18fde": {
+              "n_trials": 1,
+              "n_errors": 0,
+              "metrics": [
+                {
+                  "mean": 0.0
+                }
+              ],
+              "reward_stats": {
+                "reward": {
+                  "0.0": [
+                    "75ff97-uv-pep732-editable__w2L3yCf"
+                  ]
+                }
+              },
+              "exception_stats": {}
+            }
+          }
+        }
+      }
+    }
+  }
+]
