@@ -1,0 +1,35 @@
+no checksums to verify
+installing to /root/.local/bin
+  uv
+  uvx
+everything's installed!
+
+To add $HOME/.local/bin to your PATH, either restart your shell or run:
+
+    source $HOME/.local/bin/env (sh, bash, zsh)
+    source $HOME/.local/bin/env.fish (fish)
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-8.4.1, pluggy-1.6.0
+rootdir: /tests
+plugins: json-ctrf-0.3.5
+collected 14 items
+
+../tests/test_outputs.py ..............                                  [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_outputs.py::test_all_required_java_classes_exist
+PASSED ../tests/test_outputs.py::test_java_sources_exist
+PASSED ../tests/test_outputs.py::test_program_runs_with_simple_test_input
+PASSED ../tests/test_outputs.py::test_scanning_risk_calculation
+PASSED ../tests/test_outputs.py::test_spread_charge_calculation
+PASSED ../tests/test_outputs.py::test_position_netting_same_underlying
+PASSED ../tests/test_outputs.py::test_unrealized_pnl_calculation
+PASSED ../tests/test_outputs.py::test_margin_status_adequate
+PASSED ../tests/test_outputs.py::test_margin_status_call
+PASSED ../tests/test_outputs.py::test_initial_margin_is_sum_of_scanning_and_spread
+PASSED ../tests/test_outputs.py::test_output_sorted_by_account_id
+PASSED ../tests/test_outputs.py::test_csv_header_format
+PASSED ../tests/test_outputs.py::test_processes_actual_data_files
+PASSED ../tests/test_outputs.py::test_calculations_match_expected_on_actual_data
+============================== 14 passed in 1.34s ==============================

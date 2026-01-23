@@ -1,0 +1,175 @@
+New Terminal Output:
+
+root@3a616b755984:/app# grep -n "Spread charge" -n /app/src/MarginCalculator.java
+100:            // Spread charge based on net position per contract for the account
+root@3a616b755984:/app# cat > /app/src/MarginCalculator.java <<'EOF'
+> import java.math.BigDecimal;
+> import java.math.RoundingMode;
+> import java.util.ArrayList;
+> import java.util.Collections;
+> import java.util.Comparator;
+> import java.util.HashMap;
+> import java.util.List;
+> import java.util.Map;
+>
+ > public final class MarginCalculator {
+>
+>     public List<AccountMargin> computeMargins(List<Position> positions,
+>                                               Map<String, MarketData> marketByContract,
+>                                               Map<String, ContractSpec> specByContract) {
+>         // Precompute max scanning range factor per underlying
+>         Map<String, BigDecimal> maxScanFactorByUnderlying = new HashMap<String, BigDecimal>();
+>         for (Map.Entry<String, ContractSpec> e : specByContract.entrySet()) {
+>             String contract = e.getKey();
+>             ContractSpec spec = e.getValue();
+>             MarketData md = marketByContract.get(contract);
+>             if (md == null) {
+>                 throw new IllegalArgumentException("Missing market data for contract_code=" + contract);
+>             }
+>             BigDecimal factor = md.getScanningRangeFactor();
+>             BigDecimal prev = maxScanFactorByUnderlying.get(spec.getUnderlying());
+   >             if (prev == null || factor.compareTo(prev) > 0) {
+imal>                 maxScanFactorByUnderlying.put(spec.getUnderlying(), factor);
+>             }
+c>         }
+>
+>         // Aggregate by account/underlying (for directional risk)
+>         PositionAggregator aggregator = new PositionAggregator(positions, specByContract);
+>         List<PositionAggregator.AccountAggregation> aggs = aggregator.aggregate();
+>
+>         // Compute unrealized PnL per account from raw positions
+>         Map<String, BigDecimal> pnlByAccount = new HashMap<String, BigDecimal>();
+>         for (int i = 0; i < positions.size(); i++) {
+>             Position p = positions.get(i);
+dCha>             ContractSpec spec = specByContract.get(p.getContractCode());
+>             MarketData md = marketByContract.get(p.getContractCode());
+>             if (spec == null) {
+>                 throw new IllegalArgumentException("Missing contract spec for contract_code=" + p.getContractCode());
+>             }
+>             if (md == null) {
+>                 throw new IllegalArgumentException("Missing market data for contract_code=" + p.getContractCode());
+>             }
+statu>
+s>             BigDecimal qty = BigDecimal.valueOf((long) p.getPositionQty());
+>             BigDecimal mult = BigDecimal.valueOf((long) spec.getMultiplier());
+>             BigDecimal priceDiff = md.getSettlementPrice().subtract(p.getEntryPrice());
+>             BigDecimal pnl = qty.multiply(mult).multiply(priceDiff);
+>
+>             BigDecimal prev = pnlByAccount.get(p.getAccountId());
+>             if (prev == null) {
+>                 pnlByAccount.put(p.getAccountId(), pnl);
+>             } else {
+e();
+   >                 pnlByAccount.put(p.getAccountId(), prev.add(pnl));
+>             }
+>         }
+>
+>         // Compute spread charge per account from raw positions:
+>         // sum(intra_spread_charge(contract) * abs(position_qty)) over all position records.
+>         Map<String, BigDecimal> spreadChargeByAccount = new HashMap<String, BigDecimal>();
+>         for (int i = 0; i < positions.size(); i++) {
+>             Position p = positions.get(i);
+>             MarketData md = marketByContract.get(p.getContractCode());
+>             if (md == null) {
+>                 throw new IllegalArgumentException("Missing market data for contract_code=" + p.getContractCode());
+>             }
+>             BigDecimal absQty = BigDecimal.valueOf(absLong((long) p.getPositionQty()));
+>             BigDecimal charge = md.getIntraSpreadCharge().multiply(absQty);
+>
+>             BigDecimal prev = spreadChargeByAccount.get(p.getAccountId());
+>             if (prev == null) {
+>                 spreadChargeByAccount.put(p.getAccountId(), charge);
+>             } else {
+>                 spreadChargeByAccount.put(p.getAccountId(), prev.add(charge));
+>             }
+>         }
+>
+>         List<AccountMargin> results = new ArrayList<AccountMargin>();
+>
+>         for (int i = 0; i < aggs.size(); i++) {
+>             PositionAggregator.AccountAggregation acc = aggs.get(i);
+>
+>             long sumAbsNetDelta = 0L;
+>             long totalScanningRisk = 0L;
+>
+>             for (Map.Entry<String, PositionAggregator.UnderlyingNet> e : acc.getNetByUnderlying().entrySet()) {
+>                 String underlying = e.getKey();
+>                 PositionAggregator.UnderlyingNet net = e.getValue();
+>
+>                 long netDelta = net.getNetDeltaExposure();
+>                 sumAbsNetDelta += absLong(netDelta);
+>
+>                 if (netDelta == 0L) {
+>                     continue;
+>                 }
+>
+>                 BigDecimal scanFactor = maxScanFactorByUnderlying.get(underlying);
+>                 if (scanFactor == null) {
+>                     throw new IllegalArgumentException("Missing scanning range for underlying=" + underlying);
+>                 }
+>
+>                 String repContract = net.getRepresentativeContractCode();
+>                 if (repContract == null) {
+>                     continue;
+>                 }
+>                 MarketData md = marketByContract.get(repContract);
+>                 if (md == null) {
+>                     throw new IllegalArgumentException("Missing market data for representative contract_code=" + repContract);
+>                 }
+>
+>                 BigDecimal absExposure = BigDecimal.valueOf(absLong(netDelta));
+>                 BigDecimal risk = absExposure.multiply(scanFactor).multiply(md.getSettlementPrice());
+>                 long riskTrunc = truncateTowardZeroToLong(risk);
+>                 totalScanningRisk += riskTrunc;
+>             }
+>
+>             BigDecimal spreadCharge = spreadChargeByAccount.get(acc.getAccountId());
+>             if (spreadCharge == null) {
+>                 spreadCharge = BigDecimal.ZERO;
+>             }
+>             long spreadChargeTrunc = truncateTowardZeroToLong(spreadCharge);
+>
+>             long initialMargin = totalScanningRisk + spreadChargeTrunc;
+>
+>             BigDecimal pnl = pnlByAccount.get(acc.getAccountId());
+>             if (pnl == null) {
+>                 pnl = BigDecimal.ZERO;
+>             }
+>             long pnlTrunc = truncateTowardZeroToLong(pnl);
+>
+>             String status = (pnlTrunc >= initialMargin) ? "ADEQUATE" : "CALL";
+>
+>             results.add(new AccountMargin(acc.getAccountId(), sumAbsNetDelta, totalScanningRisk,
+>                     spreadChargeTrunc, initialMargin, pnlTrunc, status));
+>         }
+>
+>         Collections.sort(results, new Comparator<AccountMargin>() {
+>             public int compare(AccountMargin a, AccountMargin b) {
+>                 return a.getAccountId().compareTo(b.getAccountId());
+>             }
+>         });
+>
+>         return results;
+>     }
+>
+>     private static long truncateTowardZeroToLong(BigDecimal v) {
+>         // RoundingMode.DOWN is toward zero for both positive and negative values.
+>         return v.setScale(0, RoundingMode.DOWN).longValue();
+>     }
+>
+>     private static long absLong(long v) {
+>         return v < 0L ? -v : v;
+>     }
+> }
+> EOF
+root@3a616b755984:/app# rm -rf /app/bin/*
+root@3a616b755984:/app# javac -source 1.7 -target 1.7 -d /app/bin /app/src/*.java
+java -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /app/out.csv
+root@3a616b755984:/app# java -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /app/out.csv
+root@3a616b755984:/app# head -n 5 /app/out.csv
+account_id,net_delta_exposure,scanning_risk,spread_charge,initial_margin,unrealized_pnl,margin_status
+ACC001,15410,343305,10805,354110,31937,CALL
+ACC002,3100,528149,6725,534874,88900,CALL
+ACC003,19500,238031,27900,265931,51375,CALL
+ACC004,1150,84893,5200,90093,83825,CALL
+root@3a616b755984:/app#
