@@ -1,0 +1,55 @@
+{
+  "analysis": "uv-build is failing because it expects a `src/`-layout package (`src/mathutils/__init__.py`), but the package currently lives at `/app/mathutils/__init__.py`. Also, our import tests succeeded only because Python imported the local `/app/mathutils` package from the current working directory, not from an installed editable wheel. We need to move the package under `src/`, rebuild with `uv build`, then do `uv pip install --editable .`, and verify from a different directory (e.g. /tmp) that imports come from the editable install and reflect source changes without reinstalling.",
+  "plan": "1) Remove the top-level `mathutils/` package that is masking the installed import. 2) Create `src/mathutils/__init__.py` with the add() function. 3) Re-run `uv build` to confirm uv_build can build sdist/wheel. 4) Install editable with `uv pip install --editable .` (uninstall first if needed). 5) Verify from `/tmp` that `mathutils.__file__` points into `/app/src/...` (editable). 6) Edit the source under `src/` and re-run the `/tmp` import to confirm the change is reflected without reinstalling.",
+  "commands": [
+    {
+      "keystrokes": "cd /app\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "rm -rf mathutils\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "mkdir -p src/mathutils\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "cat > src/mathutils/__init__.py <<'EOF'\n\"\"\"mathutils package.\"\"\"\n\ndef add(a, b):\n    \"\"\"Add two numbers together.\"\"\"\n    return a + b\nEOF\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "find . -maxdepth 3 -type f -print\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "uv build\n",
+      "duration": 6.0
+    },
+    {
+      "keystrokes": "uv pip uninstall -y mathutils || true\n",
+      "duration": 2.0
+    },
+    {
+      "keystrokes": "uv pip install --editable .\n",
+      "duration": 6.0
+    },
+    {
+      "keystrokes": "cd /tmp\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "python -c \"import mathutils, os; print('add(1,2)=', mathutils.add(1,2)); print('mathutils file:', os.path.abspath(mathutils.__file__))\"\n",
+      "duration": 0.5
+    },
+    {
+      "keystrokes": "perl -0777 -i -pe 's/return a \\+ b/return a + b + 100/' /app/src/mathutils/__init__.py\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "python -c \"import mathutils; print('after edit add(1,2)=', mathutils.add(1,2))\"\n",
+      "duration": 0.5
+    }
+  ],
+  "task_complete": false
+}

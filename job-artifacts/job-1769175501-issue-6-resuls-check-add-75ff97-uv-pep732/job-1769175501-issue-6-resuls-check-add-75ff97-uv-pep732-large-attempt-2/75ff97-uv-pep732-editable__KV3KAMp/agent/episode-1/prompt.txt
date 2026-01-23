@@ -1,0 +1,60 @@
+New Terminal Output:
+
+root@f7e52fa32467:/app# cd /app
+root@f7e52fa32467:/app# uv --version
+uv 0.7.20
+root@f7e52fa32467:/app# rm -rf mathutils
+root@f7e52fa32467:/app# mkdir -p mathutils/src/mathutils
+root@f7e52fa32467:/app# cat > mathutils/src/mathutils/__init__.py <<'PY'
+> """mathutils: tiny math utilities."""
+>
+> from .core import add
+>
+> __all__ = ["add"]
+> PY
+root@f7e52fa32467:/app# cat > mathutils/src/mathutils/core.py <<'PY'
+> def add(a, b):
+>     """Add two numbers together."""
+>     return a + b
+> PY
+root@f7e52fa32467:/app# cat > mathutils/pyproject.toml <<'TOML'
+> [project]
+> name = "mathutils"
+> version = "0.1.0"
+> description = "Tiny math utilities"
+> readme = "README.md"
+> requires-python = ">=3.9"
+>
+> [build-system]
+> # Use uv's build backend (PEP 732 editable-build mechanism)
+> requires = ["uv-build"]
+> build-backend = "uv_build"
+> TOML
+root@f7e52fa32467:/app# cat > mathutils/README.md <<'MD'
+> # mathutils
+>
+> A tiny example package.
+> MD
+root@f7e52fa32467:/app# cd mathutils
+root@f7e52fa32467:/app/mathutils# uv venv
+Using CPython 3.13.11 interpreter at: /usr/local/bin/python3
+Creating virtual environment at: .venv
+Activate with: source .venv/bin/activate
+root@f7e52fa32467:/app/mathutils# source .venv/bin/activate
+(mathutils) root@f7e52fa32467:/app/mathutils# uv build
+Building source distribution...
+Building wheel from source distribution...
+Successfully built dist/mathutils-0.1.0.tar.gz
+Successfully built dist/mathutils-0.1.0-py3-none-any.whl
+(mathutils) root@f7e52fa32467:/app/mathutils# uv pip install --editable .
+Resolved 1 package in 3ms
+      Built mathutils @ file:///app/mathutils
+Prepared 1 package in 139ms
+Installed 1 package in 1ms
+ + mathutils==0.1.0 (from file:///app/mathutils)
+(mathutils) root@f7e52fa32467:/app/mathutils# python -c "import mathutils; print(mathutils.add(2, 3))"
+5
+(mathutils) root@f7e52fa32467:/app/mathutils# perl -0777 -i -pe 's/return a \+ b/return a + b + 100/' src/mathutils/core.py
+(mathutils) root@f7e52fa32467:/app/mathutils# python -c "import mathutils; print(mathutils.add(2, 3))"
+105
+(mathutils) root@f7e52fa32467:/app/mathutils#

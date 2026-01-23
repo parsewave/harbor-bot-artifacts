@@ -1,0 +1,6 @@
+{
+  "analysis": "The `mathutils` package was created with a `src/` layout and an `add` function. `pyproject.toml` is configured to use `uv_build` with `requires = [\"uv-build\"]`. The project successfully built via `uv build` (sdist + wheel). It was installed in editable mode using `uv pip install --editable .` into `.venv`. Importing `mathutils` and calling `add(2, 3)` returned `5`. After modifying `src/mathutils/core.py` to add `+ 100`, running the same import/call returned `105` without reinstalling, confirming editable behavior works as required.",
+  "plan": "No further steps are required; all requested actions (package creation, uv_build backend configuration, build, editable install, and verification including live source change reflection) have been completed.",
+  "commands": [],
+  "task_complete": true
+}

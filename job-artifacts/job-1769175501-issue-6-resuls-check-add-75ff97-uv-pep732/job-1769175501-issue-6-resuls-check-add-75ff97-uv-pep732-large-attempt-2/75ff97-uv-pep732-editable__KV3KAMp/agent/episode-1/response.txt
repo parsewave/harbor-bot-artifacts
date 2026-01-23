@@ -1,0 +1,19 @@
+{
+  "analysis": "The `mathutils` package was created with a `src/` layout and an `add` function. `pyproject.toml` is configured to use `uv_build` with `requires = [\"uv-build\"]`. A virtualenv was created, `uv build` successfully produced sdist and wheel, and `uv pip install --editable .` installed the package. Importing `mathutils` and calling `add(2,3)` returned 5, then after modifying the source to add 100, it returned 105 without reinstalling—confirming editable behavior works.",
+  "plan": "The task requirements are satisfied. Optionally, we can show the key files (`pyproject.toml` and source) and list the dist artifacts as evidence, but no further changes are necessary.",
+  "commands": [
+    {
+      "keystrokes": "ls -la dist\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "sed -n '1,120p' pyproject.toml\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "sed -n '1,80p' src/mathutils/core.py\n",
+      "duration": 0.1
+    }
+  ],
+  "task_complete": true
+}

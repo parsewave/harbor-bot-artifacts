@@ -1,0 +1,20 @@
+[
+  {
+    "name": "TB Debug Large",
+    "passed": true,
+    "message": "Analysis complete",
+    "is_warning": true,
+    "details": null,
+    "duration_seconds": 13.13338327407837,
+    "result_type": null,
+    "check_type": "tb_debug_large",
+    "raw_data": {
+      "analyzed_agent": "terminus-2",
+      "analyzed_model": "openrouter/openai/gpt-5.2",
+      "analysis_model": "openrouter/openai/gpt-5.2",
+      "outcome": "",
+      "explanation": "",
+      "json_output": null
+    }
+  }
+]

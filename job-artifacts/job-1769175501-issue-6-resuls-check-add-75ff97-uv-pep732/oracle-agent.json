@@ -1,0 +1,46 @@
+[
+  {
+    "name": "Oracle Agent",
+    "passed": true,
+    "message": "Accuracy: 100%",
+    "is_warning": false,
+    "details": "Required: 100%",
+    "duration_seconds": 56.983558177948,
+    "result_type": "tb_positive",
+    "check_type": "oracle_agent",
+    "raw_data": {
+      "accuracy": 1.0,
+      "json_output": {
+        "id": "46f31325-d872-40d2-861a-b1059a51248b",
+        "started_at": "2026-01-23T13:38:57.574514",
+        "finished_at": "2026-01-23T13:39:22.690609",
+        "n_total_trials": 3,
+        "stats": {
+          "n_trials": 3,
+          "n_errors": 0,
+          "evals": {
+            "oracle__tb-bot-job-1769175501-issue-6-resuls-check-add-75ff97-uv-pep732-e435d9ae": {
+              "n_trials": 3,
+              "n_errors": 0,
+              "metrics": [
+                {
+                  "mean": 1.0
+                }
+              ],
+              "reward_stats": {
+                "reward": {
+                  "1.0": [
+                    "75ff97-uv-pep732-editable__5566DFv",
+                    "75ff97-uv-pep732-editable__XnSFqjc",
+                    "75ff97-uv-pep732-editable__EQhSQpk"
+                  ]
+                }
+              },
+              "exception_stats": {}
+            }
+          }
+        }
+      }
+    }
+  }
+]

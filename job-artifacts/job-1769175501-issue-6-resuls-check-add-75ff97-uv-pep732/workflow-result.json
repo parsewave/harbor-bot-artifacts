@@ -1,0 +1,381 @@
+{
+  "success": false,
+  "results": [
+    {
+      "name": "Required Files",
+      "passed": true,
+      "message": "All required files present",
+      "is_warning": false,
+      "details": null,
+      "duration_seconds": null,
+      "result_type": "tb_positive",
+      "check_type": "required_files",
+      "raw_data": null
+    },
+    {
+      "name": "Test Script Format",
+      "passed": true,
+      "message": "Valid format",
+      "is_warning": false,
+      "details": null,
+      "duration_seconds": null,
+      "result_type": "tb_positive",
+      "check_type": "test_script_format",
+      "raw_data": null
+    },
+    {
+      "name": "Instruction Length",
+      "passed": true,
+      "message": "85 words (max: 500)",
+      "is_warning": true,
+      "details": null,
+      "duration_seconds": null,
+      "result_type": null,
+      "check_type": "instruction_length",
+      "raw_data": null
+    },
+    {
+      "name": "Solution Length",
+      "passed": true,
+      "message": "31 lines (max: 1000)",
+      "is_warning": true,
+      "details": null,
+      "duration_seconds": null,
+      "result_type": null,
+      "check_type": "solution_length",
+      "raw_data": null
+    },
+    {
+      "name": "Tests Length",
+      "passed": true,
+      "message": "166 lines (max: 1000)",
+      "is_warning": true,
+      "details": null,
+      "duration_seconds": null,
+      "result_type": null,
+      "check_type": "tests_length",
+      "raw_data": null
+    },
+    {
+      "name": "Task Size",
+      "passed": true,
+      "message": "0.01 MB (max: 10 MB)",
+      "is_warning": true,
+      "details": null,
+      "duration_seconds": null,
+      "result_type": null,
+      "check_type": "task_size",
+      "raw_data": null
+    },
+    {
+      "name": "AI Detection",
+      "passed": false,
+      "message": "Max AI probability: 99% (threshold: 70%) in instruction.md",
+      "is_warning": false,
+      "details": "instruction.md: 99%, solution/solve.sh: 70%",
+      "duration_seconds": null,
+      "result_type": "tb_negative",
+      "check_type": "ai_detection",
+      "raw_data": {
+        "max_probability": 0.9994551159300404,
+        "threshold": 0.7,
+        "results": {
+          "instruction.md": 0.9994551159300404,
+          "solution/solve.sh": 0.7066327954631687
+        }
+      }
+    },
+    {
+      "name": "Oracle Agent",
+      "passed": true,
+      "message": "Accuracy: 100%",
+      "is_warning": false,
+      "details": "Required: 100%",
+      "duration_seconds": 56.983558177948,
+      "result_type": "tb_positive",
+      "check_type": "oracle_agent",
+      "raw_data": {
+        "accuracy": 1.0,
+        "json_output": {
+          "id": "46f31325-d872-40d2-861a-b1059a51248b",
+          "started_at": "2026-01-23T13:38:57.574514",
+          "finished_at": "2026-01-23T13:39:22.690609",
+          "n_total_trials": 3,
+          "stats": {
+            "n_trials": 3,
+            "n_errors": 0,
+            "evals": {
+              "oracle__tb-bot-job-1769175501-issue-6-resuls-check-add-75ff97-uv-pep732-e435d9ae": {
+                "n_trials": 3,
+                "n_errors": 0,
+                "metrics": [
+                  {
+                    "mean": 1.0
+                  }
+                ],
+                "reward_stats": {
+                  "reward": {
+                    "1.0": [
+                      "75ff97-uv-pep732-editable__5566DFv",
+                      "75ff97-uv-pep732-editable__XnSFqjc",
+                      "75ff97-uv-pep732-editable__EQhSQpk"
+                    ]
+                  }
+                },
+                "exception_stats": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Nop Agent",
+      "passed": true,
+      "message": "Accuracy: 0%",
+      "is_warning": false,
+      "details": "Required: 0%",
+      "duration_seconds": 54.08529758453369,
+      "result_type": "tb_positive",
+      "check_type": "nop_agent",
+      "raw_data": {
+        "accuracy": 0.0,
+        "json_output": {
+          "id": "e53d2a50-3ccd-47bd-8b9a-e03bfd4849e3",
+          "started_at": "2026-01-23T13:39:56.211560",
+          "finished_at": "2026-01-23T13:40:16.070704",
+          "n_total_trials": 1,
+          "stats": {
+            "n_trials": 1,
+            "n_errors": 0,
+            "evals": {
+              "nop__tb-bot-job-1769175501-issue-6-resuls-check-add-75ff97-uv-pep732-e435d9ae": {
+                "n_trials": 1,
+                "n_errors": 0,
+                "metrics": [
+                  {
+                    "mean": 0.0
+                  }
+                ],
+                "reward_stats": {
+                  "reward": {
+                    "0.0": [
+                      "75ff97-uv-pep732-editable__ceFLJik"
+                    ]
+                  }
+                },
+                "exception_stats": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Similarity Check",
+      "passed": true,
+      "message": "Max similarity: 29% with 'pypi-server' (threshold: 80%)",
+      "is_warning": false,
+      "details": null,
+      "duration_seconds": null,
+      "result_type": "tb_positive",
+      "check_type": "similarity_check",
+      "raw_data": {
+        "max_similarity": 0.29695402497149026,
+        "most_similar_task": "pypi-server",
+        "threshold": 0.8
+      }
+    },
+    {
+      "name": "TB Check",
+      "passed": true,
+      "message": "All checks passed",
+      "is_warning": false,
+      "details": "\n\ud83d\udd0e Checking task quality...\nWarning: tasks check currently only supports Dockerfile environments.\n\u2713 Results written to \n/tmp/job-1769175501-issue-6-resuls-check-add-75ff97-uv-pep732-tb-check.json\n                              Task Quality Checks                               \n\u250f\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2513\n\u2503 Check                        \u2503 Outcome        \u2503 Explanation                  \u2503\n\u2521\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",
+      "duration_seconds": 42.39984488487244,
+      "result_type": "tb_positive",
+      "check_type": "tb_check",
+      "raw_data": {
+        "behavior_in_task_description": {
+          "explanation": "instruction.md covers creating a mathutils package, configuring pyproject.toml to use uv_build, running `uv build`, installing editable, and verifying changes reflect. However, tests additionally require specific artifacts/expectations not explicitly stated: creation of a `dist/` directory with build outputs, and that the `add` function exists specifically in `__init__.py` under either `/app/src/mathutils` or `/app/mathutils`.",
+          "outcome": "fail"
+        },
+        "behavior_in_tests": {
+          "explanation": "Tests cover the core requirements from instruction.md: presence of `pyproject.toml`, uv_build as build backend, successful `uv build`, editable installation via `uv pip install --editable .`, importing `mathutils` and calling `add`, and verifying editable changes are reflected by modifying the source and re-importing.",
+          "outcome": "pass"
+        },
+        "informative_test_structure": {
+          "explanation": "Tests are clearly organized as separate `test_*` functions with docstrings describing each check (pyproject config, build, editable install, function behavior, editable-change reflection).",
+          "outcome": "pass"
+        },
+        "anti_cheating_measures": {
+          "explanation": "No tests/solutions are visible to the agent at runtime, and checks rely on actually running `uv build`, installing editable, importing the package, and observing source-code changes without reinstalling\u2014difficult to fake without implementing the requested package/build configuration.",
+          "outcome": "pass"
+        },
+        "structured_data_schema": {
+          "explanation": "Task does not require producing structured data with a defined schema (JSON/CSV/API response format, etc.).",
+          "outcome": "not_applicable"
+        },
+        "pinned_dependencies": {
+          "explanation": "Dockerfile pins Python dependencies: `pytest==8.4.2`, `uv==0.7.20`, and `uv_build==0.7.20`.",
+          "outcome": "pass"
+        },
+        "typos": {
+          "explanation": "No obvious typos in filenames/paths/commands: `pyproject.toml`, `uv build`, `uv pip install --editable .`, and module paths used in tests appear consistent.",
+          "outcome": "pass"
+        },
+        "tests_or_solution_in_image": {
+          "explanation": "Dockerfile does not copy `tests/` or `solution/` into the image (it only sets WORKDIR and installs packages).",
+          "outcome": "pass"
+        },
+        "test_deps_in_image": {
+          "explanation": "Pytest is installed in the Docker image (`pip install pytest==8.4.2 ...`), but it is only needed to run tests and should be installed in `tests/test.sh` instead per guidance.",
+          "outcome": "fail"
+        },
+        "hardcoded_solution": {
+          "explanation": "The solution script creates source files and `pyproject.toml`, runs `uv build`, performs an editable install, and verifies behavior via Python import/assert; it does not merely print a final answer.",
+          "outcome": "pass"
+        },
+        "file_reference_mentioned": {
+          "explanation": "instruction.md explicitly references `pyproject.toml` and the `mathutils` package and uses the exact command `uv pip install --editable .`, matching what tests require (tests accept either `src/` or flat package layout).",
+          "outcome": "pass"
+        }
+      }
+    },
+    {
+      "name": "TB Run Small",
+      "passed": true,
+      "message": "Accuracy: 0%",
+      "is_warning": true,
+      "details": "Model: openrouter/openai/gpt-oss-120b:exacto, Attempts: 1",
+      "duration_seconds": 110.51217079162598,
+      "result_type": null,
+      "check_type": "tb_run_small",
+      "raw_data": {
+        "agent": "terminus-2",
+        "model": "openrouter/openai/gpt-oss-120b:exacto",
+        "accuracy": 0.0,
+        "n_attempts": 1,
+        "n_resolved": 0,
+        "n_unresolved": 1,
+        "json_output": {
+          "id": "5063158e-5b03-4bd4-a23e-14e9f4d85d2c",
+          "started_at": "2026-01-23T13:41:35.313898",
+          "finished_at": "2026-01-23T13:42:50.832695",
+          "n_total_trials": 1,
+          "stats": {
+            "n_trials": 1,
+            "n_errors": 0,
+            "evals": {
+              "terminus-2__openai-gpt-oss-120b:exacto__tb-bot-job-1769175501-issue-6-resuls-check-add-75ff97-uv-pep732-e435d9ae": {
+                "n_trials": 1,
+                "n_errors": 0,
+                "metrics": [
+                  {
+                    "mean": 0.0
+                  }
+                ],
+                "reward_stats": {
+                  "reward": {
+                    "0.0": [
+                      "75ff97-uv-pep732-editable__YnuCyfD"
+                    ]
+                  }
+                },
+                "exception_stats": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "TB Run Large",
+      "passed": true,
+      "message": "Accuracy: 0%",
+      "is_warning": false,
+      "details": "Model: openrouter/openai/gpt-5.2",
+      "duration_seconds": 464.2240240573883,
+      "result_type": "tb_positive",
+      "check_type": "tb_run_large",
+      "raw_data": {
+        "agent": "terminus-2",
+        "model": "openrouter/openai/gpt-5.2",
+        "accuracy": 0.0,
+        "n_attempts": 3,
+        "n_resolved": 0,
+        "n_unresolved": 3,
+        "json_output": {
+          "attempts": 3,
+          "successes": 0,
+          "stats": {
+            "n_trials": 3,
+            "evals": {
+              "terminus-2__openrouter/openai/gpt-5.2__aggregated": {
+                "n_trials": 3,
+                "metrics": [
+                  {
+                    "mean": 0.0
+                  }
+                ],
+                "reward_stats": {
+                  "reward": {
+                    "1.0": [],
+                    "0.0": [
+                      "75ff97-uv-pep732-editable__St5wRmA",
+                      "75ff97-uv-pep732-editable__KV3KAMp",
+                      "75ff97-uv-pep732-editable__GLQAZxz"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "TB Debug Small",
+      "passed": true,
+      "message": "Outcome: PASS",
+      "is_warning": true,
+      "details": "The instructions explicitly require a package `mathutils` with an `add` function that adds two numbers. The failing test asserts `add(2, 3) == 5`, which is directly specified by the task. Since all packaging/PEP 732/editable-install tests pass and only the arithmetic result is wrong, the failure is due to an implementation error (normal agent limitation), not missing or ambiguous task instructions.",
+      "duration_seconds": 18.348194122314453,
+      "result_type": null,
+      "check_type": "tb_debug_small",
+      "raw_data": {
+        "analyzed_agent": "terminus-2",
+        "analyzed_model": "openrouter/openai/gpt-oss-120b:exacto",
+        "analysis_model": "openrouter/openai/gpt-5.2",
+        "outcome": "PASS",
+        "explanation": "The instructions explicitly require a package `mathutils` with an `add` function that adds two numbers. The failing test asserts `add(2, 3) == 5`, which is directly specified by the task. Since all packaging/PEP 732/editable-install tests pass and only the arithmetic result is wrong, the failure is due to an implementation error (normal agent limitation), not missing or ambiguous task instructions.",
+        "json_output": {
+          "outcome": "PASS",
+          "explanation": "The instructions explicitly require a package `mathutils` with an `add` function that adds two numbers. The failing test asserts `add(2, 3) == 5`, which is directly specified by the task. Since all packaging/PEP 732/editable-install tests pass and only the arithmetic result is wrong, the failure is due to an implementation error (normal agent limitation), not missing or ambiguous task instructions."
+        }
+      }
+    },
+    {
+      "name": "TB Debug Large",
+      "passed": true,
+      "message": "Analysis complete",
+      "is_warning": true,
+      "details": null,
+      "duration_seconds": 13.13338327407837,
+      "result_type": null,
+      "check_type": "tb_debug_large",
+      "raw_data": {
+        "analyzed_agent": "terminus-2",
+        "analyzed_model": "openrouter/openai/gpt-5.2",
+        "analysis_model": "openrouter/openai/gpt-5.2",
+        "outcome": "",
+        "explanation": "",
+        "json_output": null
+      }
+    }
+  ],
+  "duration_seconds": 765.435332775116,
+  "task_id": "75ff97-uv-pep732-editable",
+  "job_id": "job-1769175501-issue-6-resuls-check-add-75ff97-uv-pep732",
+  "artifacts_url": null
+}

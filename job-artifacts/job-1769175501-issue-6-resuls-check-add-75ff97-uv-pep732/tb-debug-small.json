@@ -1,0 +1,23 @@
+[
+  {
+    "name": "TB Debug Small",
+    "passed": true,
+    "message": "Outcome: PASS",
+    "is_warning": true,
+    "details": "The instructions explicitly require a package `mathutils` with an `add` function that adds two numbers. The failing test asserts `add(2, 3) == 5`, which is directly specified by the task. Since all packaging/PEP 732/editable-install tests pass and only the arithmetic result is wrong, the failure is due to an implementation error (normal agent limitation), not missing or ambiguous task instructions.",
+    "duration_seconds": 18.348194122314453,
+    "result_type": null,
+    "check_type": "tb_debug_small",
+    "raw_data": {
+      "analyzed_agent": "terminus-2",
+      "analyzed_model": "openrouter/openai/gpt-oss-120b:exacto",
+      "analysis_model": "openrouter/openai/gpt-5.2",
+      "outcome": "PASS",
+      "explanation": "The instructions explicitly require a package `mathutils` with an `add` function that adds two numbers. The failing test asserts `add(2, 3) == 5`, which is directly specified by the task. Since all packaging/PEP 732/editable-install tests pass and only the arithmetic result is wrong, the failure is due to an implementation error (normal agent limitation), not missing or ambiguous task instructions.",
+      "json_output": {
+        "outcome": "PASS",
+        "explanation": "The instructions explicitly require a package `mathutils` with an `add` function that adds two numbers. The failing test asserts `add(2, 3) == 5`, which is directly specified by the task. Since all packaging/PEP 732/editable-install tests pass and only the arithmetic result is wrong, the failure is due to an implementation error (normal agent limitation), not missing or ambiguous task instructions."
+      }
+    }
+  }
+]

@@ -1,0 +1,11 @@
+Current terminal state:
+New Terminal Output:
+
+(app) root@eb39b3e9e1f8:/tmp# cd /tmp
+(app) root@eb39b3e9e1f8:/tmp# python -c "import mathutils, os; print(os.path.abspath(mathutils.__file__)); print(mathutils.add(10, 5))"
+/app/src/mathutils/__init__.py
+115
+(app) root@eb39b3e9e1f8:/tmp#
+
+
+Are you sure you want to mark the task as complete? This will trigger your solution to be graded and you won't be able to make any further corrections. If so, include "task_complete": true in your JSON response again.

@@ -1,0 +1,86 @@
+[?2004hroot@f7e52fa32467:/app# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@f7e52fa32467:/app# clear
+[?2004l[H[J[3J[?2004hroot@f7e52fa32467:/app# cd /app
+[?2004l[?2004hroot@f7e52fa32467:/app# uv --version
+[?2004luv 0.7.20
+[?2004hroot@f7e52fa32467:/app# rm -rf mathutils
+[?2004l[?2004hroot@f7e52fa32467:/app# mkdir -p mathutils/src/mathutils
+[?2004l[?2004hroot@f7e52fa32467:/app# cat > mathutils/src/mathutils/__init__.py <<'PY'
+[?2004l[?2004h> """mathutils: tiny math utilities."""
+[?2004l[?2004h> 
+[?2004l[?2004h> from .core import add
+[?2004l[?2004h> 
+[?2004l[?2004h> __all__ = ["add"]
+[?2004l[?2004h> PY
+[?2004l[?2004hroot@f7e52fa32467:/app# cat > mathutils/src/mathutils/core.py <<'PY'
+[?2004l[?2004h> def add(a, b):
+[?2004l[?2004h>     """Add two numbers together."""
+[?2004l[?2004h>     return a + b
+[?2004l[?2004h> PY
+[?2004l[?2004hroot@f7e52fa32467:/app# cat > mathutils/pyproject.toml <<'TOML'
+[?2004l[?2004h> [project]
+[?2004l[?2004h> name = "mathutils"
+[?2004l[?2004h> version = "0.1.0"
+[?2004l[?2004h> description = "Tiny math utilities"
+[?2004l[?2004h> readme = "README.md"
+[?2004l[?2004h> requires-python = ">=3.9"
+[?2004l[?2004h> 
+[?2004l[?2004h> [build-system]
+[?2004l[?2004h> # Use uv's build backend (PEP 732 editable-build mechanism)
+[?2004l[?2004h> requires = ["uv-build"]
+[?2004l[?2004h> build-backend = "uv_build"
+[?2004l[?2004h> TOML
+[?2004l[?2004hroot@f7e52fa32467:/app# cat > mathutils/README.md <<'MD'
+[?2004l[?2004h> # mathutils
+[?2004l[?2004h> 
+[?2004l[?2004h> A tiny example package.
+[?2004l[?2004h> MD
+[?2004l[?2004hroot@f7e52fa32467:/app# cd mathutils
+[?2004l[?2004hroot@f7e52fa32467:/app/mathutils# uv venv
+[?2004lUsing CPython 3.13.11 interpreter at: [36m/usr/local/bin/python3[39m
+Creating virtual environment at: [36m.venv[39m
+Activate with: [32msource .venv/bin/activate[39m
+[?2004hroot@f7e52fa32467:/app/mathutils# source .venv/bin/activate
+[?2004l[?2004h(mathutils) root@f7e52fa32467:/app/mathutils# uv build
+[?2004l[1mBuilding source distribution...[0m
+[1mBuilding wheel from source distribution...[0m
+Successfully built [36m[1mdist/mathutils-0.1.0.tar.gz[0m[39m
+Successfully built [36m[1mdist/mathutils-0.1.0-py3-none-any.whl[0m[39m
+[?2004h(mathutils) root@f7e52fa32467:/app/mathutils# uv pip install --editable .
+[?2004l[37m⠋[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠋[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠋[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mResolving dependencies...                                                                                                                                     [0m[2K[37m⠙[0m [2mmathutils==0.1.0                                                                                                                                              [0m[2K[37m⠙[0m [2m                                                                                                                                                              [0m[2K[2mResolved [1m1 package[0m [2min 3ms[0m[0m
+[37m⠋[0m [2mPreparing packages...[0m (0/0)                                                                                                                                   [2K[37m⠋[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [2K[37m⠙[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [2K   [36m[1mBuilding[0m[39m mathutils[2m @ file:///app/mathutils[0m
+[37m⠙[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [1A[2K[1B[2K[1A      [32m[1mBuilt[0m[39m mathutils[2m @ file:///app/mathutils[0m
+[37m⠙[0m [2mPreparing packages...[0m (0/1)                                                                                                                                   [2K[37m⠙[0m [2m[0m (1/1)                                                                                                                                                        [2K[2mPrepared [1m1 package[0m [2min 139ms[0m[0m
+░░░░░░░░░░░░░░░░░░░░ [0/0] [2mInstalling wheels...                                                                                                                 [0m[2K░░░░░░░░░░░░░░░░░░░░ [0/1] [2mInstalling wheels...                                                                                                                 [0m[2K░░░░░░░░░░░░░░░░░░░░ [0/1] [2mmathutils==0.1.0 (from file:///app/mathutils)                                                                                        [0m[2K████████████████████ [1/1] [2mmathutils==0.1.0 (from file:///app/mathutils)                                                                                        [0m[2K[2mInstalled [1m1 package[0m [2min 1ms[0m[0m
+ [32m+[39m [1mmathutils[0m[2m==0.1.0 (from file:///app/mathutils)[0m
+[?2004h(mathutils) root@f7e52fa32467:/app/mathutils# python -c "import mathutils; print(mathutils.add(2, 3))"
+[?2004l5
+[?2004h(mathutils) root@f7e52fa32467:/app/mathutils# perl -0777 -i -pe 's/return a \+ b/return a + b + 100/' src/mathutils/core.py
+[?2004l[?2004h(mathutils) root@f7e52fa32467:/app/mathutils# python -c "import mathutils; print(mathutils.add(2, 3))"
+[?2004l105
+[?2004h(mathutils) root@f7e52fa32467:/app/mathutils# ls -la dist
+[?2004ltotal 20
+drwxr-xr-x 2 root root 4096 Jan 23 13:46 .
+drwxr-xr-x 5 root root 4096 Jan 23 13:46 ..
+-rw-r--r-- 1 root root    1 Jan 23 13:46 .gitignore
+-rw------- 1 root root 1524 Jan 23 13:46 mathutils-0.1.0-py3-none-any.whl
+-rw------- 1 root root  633 Jan 23 13:46 mathutils-0.1.0.tar.gz
+[?2004h(mathutils) root@f7e52fa32467:/app/mathutils# sed -n '1,120p' pyproject.toml
+[?2004l[project]
+name = "mathutils"
+version = "0.1.0"
+description = "Tiny math utilities"
+readme = "README.md"
+requires-python = ">=3.9"
+
+[build-system]
+# Use uv's build backend (PEP 732 editable-build mechanism)
+requires = ["uv-build"]
+build-backend = "uv_build"
+[?2004h(mathutils) root@f7e52fa32467:/app/mathutils# sed -n '1,80p' src/mathutils/core.py
+[?2004ldef add(a, b):
+    """Add two numbers together."""
+    return a + b + 100
+[?2004h(mathutils) root@f7e52fa32467:/app/mathutils# 

@@ -1,0 +1,58 @@
+New Terminal Output:
+
+(app) root@eb39b3e9e1f8:/app# cd /app
+(app) root@eb39b3e9e1f8:/app# rm -rf mathutils
+(app) root@eb39b3e9e1f8:/app# mkdir -p src/mathutils
+(app) root@eb39b3e9e1f8:/app# cat > src/mathutils/__init__.py <<'EOF'
+> """mathutils package."""
+>
+> def add(a, b):
+>     """Add two numbers together."""
+>     return a + b
+> EOF
+(app) root@eb39b3e9e1f8:/app# find . -maxdepth 3 -type f -print
+./pyproject.toml
+./README.md
+./.venv/bin/activate.ps1
+./.venv/bin/activate_this.py
+./.venv/bin/deactivate.bat
+./.venv/bin/activate.bat
+./.venv/bin/activate.fish
+./.venv/bin/activate
+./.venv/bin/activate.nu
+./.venv/bin/activate.csh
+./.venv/bin/pydoc.bat
+./.venv/.lock
+./.venv/CACHEDIR.TAG
+./.venv/pyvenv.cfg
+./.venv/.gitignore
+./src/mathutils/__init__.py
+./dist/.gitignore
+(app) root@eb39b3e9e1f8:/app# uv build
+Building source distribution...
+Building wheel from source distribution...
+Successfully built dist/mathutils-0.1.0.tar.gz
+Successfully built dist/mathutils-0.1.0-py3-none-any.whl
+(app) root@eb39b3e9e1f8:/app# uv pip uninstall -y mathutils || true
+error: unexpected argument '-y' found
+
+  tip: to pass '-y' as a value, use '-- -y'
+
+Usage: uv pip uninstall [OPTIONS] <PACKAGE|--requirements <REQUIREMENTS>>
+
+For more information, try '--help'.
+(app) root@eb39b3e9e1f8:/app# uv pip install --editable .
+Resolved 1 package in 4ms
+      Built mathutils @ file:///app
+Prepared 1 package in 143ms
+Installed 1 package in 1ms
+ + mathutils==0.1.0 (from file:///app)
+(app) root@eb39b3e9e1f8:/app# cd /tmp
+(app) root@eb39b3e9e1f8:/tmp# python -c "import mathutils, os; print('add(1,2)=', mathutils.add(1,2)); print('mathutils file:', os.path.abspath(mathutils.__file
+__))"
+add(1,2)= 3
+mathutils file: /app/src/mathutils/__init__.py
+(app) root@eb39b3e9e1f8:/tmp# perl -0777 -i -pe 's/return a \+ b/return a + b + 100/' /app/src/mathutils/__init__.py
+(app) root@eb39b3e9e1f8:/tmp# python -c "import mathutils; print('after edit add(1,2)=', mathutils.add(1,2))"
+after edit add(1,2)= 103
+(app) root@eb39b3e9e1f8:/tmp#
