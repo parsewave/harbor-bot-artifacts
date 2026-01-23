@@ -1,0 +1,29 @@
+{
+    "id": "332e3d37-a9fa-443e-b64e-d11fb784d4b1",
+    "started_at": "2026-01-23T08:54:52.425176",
+    "finished_at": "2026-01-23T08:58:26.612948",
+    "n_total_trials": 1,
+    "stats": {
+        "n_trials": 1,
+        "n_errors": 0,
+        "evals": {
+            "terminus-2__openai-gpt-5.2__tb-bot-job-1769157784-issue-32-resuls-check-main-efe2fb8b": {
+                "n_trials": 1,
+                "n_errors": 0,
+                "metrics": [
+                    {
+                        "mean": 0.0
+                    }
+                ],
+                "reward_stats": {
+                    "reward": {
+                        "0.0": [
+                            "java7-span-margin-engine__9RJcTJS"
+                        ]
+                    }
+                },
+                "exception_stats": {}
+            }
+        }
+    }
+}

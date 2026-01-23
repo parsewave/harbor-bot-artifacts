@@ -1,0 +1,146 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 14,
+            "passed": 14,
+            "failed": 0,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1769157822.5619662,
+            "stop": 1769157823.921893
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_all_required_java_classes_exist",
+                "status": "passed",
+                "duration": 0.0007712859660387039,
+                "start": 1769157822.608764,
+                "stop": 1769157822.6098952,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_java_sources_exist",
+                "status": "passed",
+                "duration": 0.0005175014957785606,
+                "start": 1769157822.6102285,
+                "stop": 1769157822.610922,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_program_runs_with_simple_test_input",
+                "status": "passed",
+                "duration": 0.0978225851431489,
+                "start": 1769157822.6112082,
+                "stop": 1769157822.7093673,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_scanning_risk_calculation",
+                "status": "passed",
+                "duration": 0.100332235917449,
+                "start": 1769157822.7097335,
+                "stop": 1769157822.8105247,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_spread_charge_calculation",
+                "status": "passed",
+                "duration": 0.0963865164667368,
+                "start": 1769157822.8109417,
+                "stop": 1769157822.9077096,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_position_netting_same_underlying",
+                "status": "passed",
+                "duration": 0.10547724273055792,
+                "start": 1769157822.9081566,
+                "stop": 1769157823.0140073,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_unrealized_pnl_calculation",
+                "status": "passed",
+                "duration": 0.113907964900136,
+                "start": 1769157823.0145192,
+                "stop": 1769157823.1288464,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_margin_status_adequate",
+                "status": "passed",
+                "duration": 0.10789549630135298,
+                "start": 1769157823.129359,
+                "stop": 1769157823.2377017,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_margin_status_call",
+                "status": "passed",
+                "duration": 0.11574149876832962,
+                "start": 1769157823.238258,
+                "stop": 1769157823.3544445,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_initial_margin_is_sum_of_scanning_and_spread",
+                "status": "passed",
+                "duration": 0.11298527009785175,
+                "start": 1769157823.3548732,
+                "stop": 1769157823.4682157,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_output_sorted_by_account_id",
+                "status": "passed",
+                "duration": 0.10939245671033859,
+                "start": 1769157823.4686852,
+                "stop": 1769157823.5785341,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_csv_header_format",
+                "status": "passed",
+                "duration": 0.10421131085604429,
+                "start": 1769157823.579033,
+                "stop": 1769157823.6836457,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_processes_actual_data_files",
+                "status": "passed",
+                "duration": 0.10411787126213312,
+                "start": 1769157823.6840212,
+                "stop": 1769157823.7886271,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_calculations_match_expected_on_actual_data",
+                "status": "passed",
+                "duration": 0.1318105747923255,
+                "start": 1769157823.7892478,
+                "stop": 1769157823.9215188,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            }
+        ]
+    }
+}

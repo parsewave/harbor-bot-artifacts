@@ -1,0 +1,115 @@
+New Terminal Output:
+
+root@9d574547543a:/app# cat > /app/src/Main.java <<'EOF'
+> package src;
+>
+> import java.io.*;
+> import java.util.*;
+>
+> public class Main {
+>     public static void main(String[] args) throws Exception {
+>         if (args.length != 4) {
+>             System.err.println("Usage: java Main <positions_path> <market_data_path> <contract_specs_path> <output_path>");
+>             System.exit(1);
+>         }
+>         String positionsPath = args[0];
+>         String marketDataPath = args[1];
+>         String contractSpecsPath = args[2];
+>         String outputPath = args[3];
+>
+>         // Load contract specs (skip header)
+>         Map<String, ContractSpec> specMap = new HashMap<String, ContractSpec>();
+>         BufferedReader brSpec = new BufferedReader(new FileReader(contractSpecsPath));
+>         String line;
+>         boolean firstSpecLine = true;
+>         while ((line = brSpec.readLine()) != null) {
+>             line = line.trim();
+>             if (line.isEmpty()) continue;
+>             if (firstSpecLine) {
+>                 // Detect header by checking for non-numeric multiplier token
+>                 String[] parts = line.split(",");
+>                 if (parts.length > 1 && parts[1].trim().equalsIgnoreCase("multiplier")) {
+>                     firstSpecLine = false;
+>                     continue; // skip header
+>                 }
+>                 firstSpecLine = false;
+>             }
+>             ContractSpec spec = ContractSpec.parse(line);
+>             specMap.put(spec.contractCode, spec);
+>         }
+>         brSpec.close();
+>
+>         // Load market data (skip header)
+>         Map<String, MarketData> marketMap = new HashMap<String, MarketData>();
+>         BufferedReader brMkt = new BufferedReader(new FileReader(marketDataPath));
+>         boolean firstMktLine = true;
+>         while ((line = brMkt.readLine()) != null) {
+>             line = line.trim();
+>             if (line.isEmpty()) continue;
+>             if (firstMktLine) {
+>                 String[] parts = line.split(",");
+>                 if (parts.length > 1 && parts[1].trim().equalsIgnoreCase("settlement_price")) {
+>                     firstMktLine = false;
+>                     continue; // skip header
+>                 }
+>                 firstMktLine = false;
+>             }
+>             MarketData md = MarketData.parse(line);
+>             marketMap.put(md.contractCode, md);
+>         }
+>         brMkt.close();
+>
+>         // Load positions (skip header)
+>         List<Position> positions = new ArrayList<Position>();
+>         BufferedReader brPos = new BufferedReader(new FileReader(positionsPath));
+>         boolean firstPosLine = true;
+>         while ((line = brPos.readLine()) != null) {
+>             line = line.trim();
+>             if (line.isEmpty()) continue;
+>             if (firstPosLine) {
+>                 String[] parts = line.split(",");
+>                 if (parts.length > 1 && parts[1].trim().equalsIgnoreCase("contract_code")) {
+>                     firstPosLine = false;
+>                     continue; // skip header
+>                 }
+>                 firstPosLine = false;
+>             }
+>             Position p = Position.parse(line);
+>             positions.add(p);
+>         }
+>         brPos.close();
+>
+>         // Aggregate positions by account and underlying
+>         Map<String, Map<String, List<Position>>> agg = PositionAggregator.aggregate(positions, specMap);
+>
+>         // Calculate margins
+>         List<AccountMargin> margins = MarginCalculator.calculate(agg, specMap, marketMap);
+>
+>         // Sort by account_id ascending
+>         Collections.sort(margins, new Comparator<AccountMargin>() {
+>             public int compare(AccountMargin a1, AccountMargin a2) {
+>                 return a1.accountId.compareTo(a2.accountId);
+>             }
+>         });
+>
+>         // Write output CSV
+>         File outFile = new File(outputPath);
+>         outFile.getParentFile().mkdirs();
+>         BufferedWriter bw = new BufferedWriter(new FileWriter(outFile));
+>         bw.write("account_id,net_delta_exposure,scanning_risk,spread_charge,initial_margin,unrealized_pnl,margin_status\n");
+>         for (AccountMargin am : margins) {
+>             bw.write(am.toCsvLine());
+>             bw.write('\n');
+>         }
+>         bw.flush();
+>         bw.close();
+>     }
+> }
+> EOF
+root@9d574547543a:/app# javac -source 1.7 -target 1.7 -d /app/bin /app/src/*.java
+java -cp /app/bin src.Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /app/output/report.csv
+root@9d574547543a:/app# java -cp /app/bin src.Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /app/output/report.csv
+root@9d574547543a:/app# ls -l /app/output
+total 4
+-rw-r--r-- 1 root root 612 Jan 23 08:46 report.csv
+root@9d574547543a:/app#

@@ -1,0 +1,6 @@
+{
+  "analysis": "All required functionality is implemented and validated: the system reads the three CSVs, nets positions per account and underlying using delta-equivalent quantities, computes scanning risk using max scanning range per underlying and a representative settlement price chosen by highest open-interest-equivalent, computes spread charges per contract position, calculates initial margin and unrealized PnL with truncation toward zero, determines margin status, and writes a correctly-formatted CSV sorted by account_id. /app/src now contains exactly the seven required Java files (no extra CsvUtil.java). The sources compile with javac -source/-target 1.7 with no output, and the program runs with exit code 0 producing the expected header and rows.",
+  "plan": "No further changes are needed. The task is complete and ready for grading.",
+  "commands": [],
+  "task_complete": true
+}

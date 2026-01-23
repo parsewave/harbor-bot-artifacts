@@ -1,0 +1,267 @@
+New Terminal Output:
+
+root@34c1d0319d36:/app# ls -la /app
+total 20
+drwxr-xr-x 1 root root 4096 Jan 20 17:21 .
+drwxr-xr-x 1 root root 4096 Jan 23 08:50 ..
+drwxr-xr-x 2 root root 4096 Jan 20 17:21 bin
+drwxr-xr-x 2 root root 4096 Jan 20 17:19 data
+drwxr-xr-x 2 root root 4096 Jan 20 17:21 src
+root@34c1d0319d36:/app# ls -la /app/data
+total 20
+drwxr-xr-x 2 root root 4096 Jan 20 17:19 .
+drwxr-xr-x 1 root root 4096 Jan 20 17:21 ..
+-rw-r--r-- 1 root root  593 Jan 20 16:54 contract_specs.csv
+-rw-r--r-- 1 root root  642 Jan 20 16:54 market_data.csv
+-rw-r--r-- 1 root root 1201 Jan 20 16:54 positions.csv
+root@34c1d0319d36:/app# sed -n '1,5p' /app/data/positions.csv
+account_id,contract_code,position_qty,entry_price
+ACC001,ESH26,10,5100.00
+ACC001,ESM26,-5,5130.00
+ACC001,NQH26,8,18200.00
+ACC001,CLH26,15,71.50
+root@34c1d0319d36:/app# sed -n '1,5p' /app/data/market_data.csv
+contract_code,settlement_price,scanning_range,intra_spread_charge
+ESH26,5125.50,4.5,125.00
+ESM26,5142.25,4.8,125.00
+ESU26,5158.75,5.0,125.00
+ESZ26,5175.00,5.2,125.00
+root@34c1d0319d36:/app# sed -n '1,5p' /app/data/contract_specs.csv
+contract_code,multiplier,expiry_month,underlying
+ESH26,50,202603,SP500
+ESM26,50,202606,SP500
+ESU26,50,202609,SP500
+ESZ26,50,202612,SP500
+root@34c1d0319d36:/app# mkdir -p /app/src /app/bin
+root@34c1d0319d36:/app# cat > /app/src/Position.java <<'EOF'
+> import java.math.BigDecimal;
+>
+> public final class Position {
+>     private final String accountId;
+>     private final String contractCode;
+>     private final int positionQty;
+>     private final BigDecimal entryPrice;
+>
+>     public Position(String accountId, String contractCode, int positionQty, BigDecimal entryPrice) {
+>         this.accountId = accountId;
+>         this.contractCode = contractCode;
+>         this.positionQty = positionQty;
+>         this.entryPrice = entryPrice;
+>     }
+>
+>     public String getAccountId() {
+>         return accountId;
+>     }
+>
+>     public String getContractCode() {
+>         return contractCode;
+>     }
+>
+>     public int getPositionQty() {
+>         return positionQty;
+>     }
+>
+>     public BigDecimal getEntryPrice() {
+>         return entryPrice;
+>     }
+>
+>     public static Position parseCsv(String line) {
+>         // account_id, contract_code, position_qty, entry_price
+>         String[] parts = CsvUtil.split(line);
+>         if (parts.length != 4) {
+>             throw new IllegalArgumentException("Invalid positions row: " + line);
+>         }
+>         String accountId = parts[0];
+>         String contractCode = parts[1];
+>         int qty = Integer.parseInt(parts[2]);
+>         BigDecimal entry = new BigDecimal(parts[3]);
+>         return new Position(accountId, contractCode, qty, entry);
+>     }
+> }
+> EOF
+root@34c1d0319d36:/app# cat > /app/src/MarketData.java <<'EOF'
+> import java.math.BigDecimal;
+>
+> public final class MarketData {
+>     private final String contractCode;
+>     private final BigDecimal settlementPrice;
+>     private final BigDecimal scanningRangePct;
+>     private final BigDecimal intraSpreadCharge;
+>
+>     public MarketData(String contractCode, BigDecimal settlementPrice, BigDecimal scanningRangePct, BigDecimal intraSpreadCharge) {
+>         this.contractCode = contractCode;
+>         this.settlementPrice = settlementPrice;
+>         this.scanningRangePct = scanningRangePct;
+>         this.intraSpreadCharge = intraSpreadCharge;
+>     }
+>
+>     public String getContractCode() {
+>         return contractCode;
+>     }
+>
+>     public BigDecimal getSettlementPrice() {
+>         return settlementPrice;
+>     }
+>
+>     public BigDecimal getScanningRangePct() {
+>         return scanningRangePct;
+>     }
+>
+>     public BigDecimal getIntraSpreadCharge() {
+>         return intraSpreadCharge;
+>     }
+>
+>     public static MarketData parseCsv(String line) {
+>         // contract_code, settlement_price, scanning_range, intra_spread_charge
+>         String[] parts = CsvUtil.split(line);
+>         if (parts.length != 4) {
+>             throw new IllegalArgumentException("Invalid market_data row: " + line);
+>         }
+>         String contractCode = parts[0];
+>         BigDecimal settlement = new BigDecimal(parts[1]);
+>         BigDecimal scanningRange = new BigDecimal(parts[2]);
+>         BigDecimal intra = new BigDecimal(parts[3]);
+>         return new MarketData(contractCode, settlement, scanningRange, intra);
+>     }
+> }
+> EOF
+root@34c1d0319d36:/app# cat > /app/src/ContractSpec.java <<'EOF'
+> public final class ContractSpec {
+>     private final String contractCode;
+>     private final int multiplier;
+>     private final String expiryMonth;
+>     private final String underlying;
+>
+>     public ContractSpec(String contractCode, int multiplier, String expiryMonth, String underlying) {
+>         this.contractCode = contractCode;
+>         this.multiplier = multiplier;
+>         this.expiryMonth = expiryMonth;
+>         this.underlying = underlying;
+>     }
+>
+>     public String getContractCode() {
+>         return contract
+[... output limited to 10000 bytes; 71 interior bytes omitted ...]
+(already integers) + total spread charge, then truncate
+>             BigDecimal initialMarginBD = BigDecimal.valueOf(scanningRiskSum).add(spreadChargeBD);
+>             long initialMarginTrunc = calc.truncateTowardZero(initialMarginBD);
+>
+>             String status = (unrealizedPnlTrunc >= initialMarginTrunc) ? "ADEQUATE" : "CALL";
+>
+>             results.add(new AccountMargin(accountId,
+>                     netDeltaExposureSumAbs,
+>                     scanningRiskSum,
+>                     spreadChargeTrunc,
+>                     initialMarginTrunc,
+>                     unrealizedPnlTrunc,
+>                     status));
+>         }
+>
+>         writeReport(outputPath, results);
+>     }
+>
+>     private static List<Position> loadPositions(String path) throws Exception {
+>         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+>         try {
+>             List<Position> out = new ArrayList<Position>();
+>             String line;
+>             boolean first = true;
+>             while ((line = br.readLine()) != null) {
+>                 line = line.trim();
+>                 if (line.length() == 0) {
+>                     continue;
+>                 }
+>                 if (first) {
+>                     first = false;
+>                     // header
+>                     continue;
+>                 }
+>                 out.add(Position.parseCsv(line));
+>             }
+>             return out;
+>         } finally {
+>             br.close();
+>         }
+>     }
+>
+>     private static Map<String, MarketData> loadMarketData(String path) throws Exception {
+>         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+>         try {
+>             Map<String, MarketData> out = new HashMap<String, MarketData>();
+>             String line;
+>             boolean first = true;
+>             while ((line = br.readLine()) != null) {
+>                 line = line.trim();
+>                 if (line.length() == 0) {
+>                     continue;
+>                 }
+>                 if (first) {
+>                     first = false;
+>                     continue;
+>                 }
+>                 MarketData md = MarketData.parseCsv(line);
+>                 out.put(md.getContractCode(), md);
+>             }
+>             return out;
+>         } finally {
+>             br.close();
+>         }
+>     }
+>
+>     private static Map<String, ContractSpec> loadContractSpecs(String path) throws Exception {
+>         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));
+>         try {
+>             Map<String, ContractSpec> out = new HashMap<String, ContractSpec>();
+>             String line;
+>             boolean first = true;
+>             while ((line = br.readLine()) != null) {
+>                 line = line.trim();
+>                 if (line.length() == 0) {
+>                     continue;
+>                 }
+>                 if (first) {
+>                     first = false;
+>                     continue;
+>                 }
+>                 ContractSpec cs = ContractSpec.parseCsv(line);
+>                 out.put(cs.getContractCode(), cs);
+>             }
+>             return out;
+>         } finally {
+>             br.close();
+>         }
+>     }
+>
+>     private static void writeReport(String outputPath, List<AccountMargin> rows) throws Exception {
+>         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputPath), "UTF-8"));
+>         try {
+>             bw.write("account_id,net_delta_exposure,scanning_risk,spread_charge,initial_margin,unrealized_pnl,margin_status");
+>             bw.newLine();
+>             for (AccountMargin am : rows) {
+>                 bw.write(am.toCsvRow());
+>                 bw.newLine();
+>             }
+>         } finally {
+>             bw.close();
+>         }
+>     }
+> }
+> EOF
+root@34c1d0319d36:/app# javac -source 1.7 -target 1.7 -d /app/bin /app/src/*.java
+java -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /tmp/margin_report.csv
+root@34c1d0319d36:/app# java -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /tmp/margin_report.csv
+root@34c1d0319d36:/app# head -n 20 /tmp/margin_report.csv
+account_id,net_delta_exposure,scanning_risk,spread_charge,initial_margin,unrealized_pnl,margin_status
+ACC001,15410,343305,10805,354110,31937,CALL
+ACC002,3100,528149,6725,534874,88900,CALL
+ACC003,19500,238031,27900,265931,51375,CALL
+ACC004,1150,84893,5200,90093,83825,CALL
+ACC005,270,176145,3155,179300,13605,CALL
+ACC006,8500,161211,27025,188236,83500,CALL
+ACC007,2250,112238,6125,118363,37125,CALL
+ACC008,20390,355305,14720,370025,30062,CALL
+ACC009,4400,265113,7045,272158,89125,CALL
+ACC010,16650,1007270,12800,1020070,74775,CALL
+ACC011,1650,88552,6445,94997,54275,CALL
+ACC012,25550,978877,18000,996877,56975,CALL
+root@34c1d0319d36:/app#

@@ -1,0 +1,88 @@
+no checksums to verify
+installing to /root/.local/bin
+  uv
+  uvx
+everything's installed!
+
+To add $HOME/.local/bin to your PATH, either restart your shell or run:
+
+    source $HOME/.local/bin/env (sh, bash, zsh)
+    source $HOME/.local/bin/env.fish (fish)
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-8.4.1, pluggy-1.6.0
+rootdir: /tests
+plugins: json-ctrf-0.3.5
+collected 14 items
+
+../tests/test_outputs.py .............F                                  [100%]
+
+=================================== FAILURES ===================================
+_______________ test_calculations_match_expected_on_actual_data ________________
+
+    def test_calculations_match_expected_on_actual_data():
+        """Verify computed margin values match expected values for accounts in actual data."""
+        positions_path = "/app/data/positions.csv"
+        market_data_path = "/app/data/market_data.csv"
+        specs_path = "/app/data/contract_specs.csv"
+    
+        positions = load_positions(positions_path)
+        market_data = load_market_data(market_data_path)
+        specs = load_contract_specs(specs_path)
+    
+        expected_results = compute_margin_for_test(positions, market_data, specs)
+    
+        with tempfile.TemporaryDirectory() as tmpdir:
+            out_path = os.path.join(tmpdir, "output.csv")
+    
+            env = os.environ.copy()
+            env["JAVA_HOME"] = JAVA_HOME
+            env["PATH"] = JAVA_HOME + "/bin:" + env.get("PATH", "")
+    
+            result = subprocess.run(
+                ["java", "-cp", BIN_DIR, "Main", positions_path, market_data_path, specs_path, out_path],
+                capture_output=True, text=True, env=env
+            )
+            assert result.returncode == 0
+    
+            with open(out_path, 'r') as f:
+                reader = csv.DictReader(f)
+                output_rows = {r['account_id']: r for r in reader}
+    
+            checked = 0
+            for account_id, expected in expected_results.items():
+                if account_id not in output_rows:
+                    continue
+    
+                row = output_rows[account_id]
+                actual_net_delta = int(row['net_delta_exposure'])
+                actual_scanning = int(row['scanning_risk'])
+                actual_spread = int(row['spread_charge'])
+                actual_margin = int(row['initial_margin'])
+                actual_pnl = int(row['unrealized_pnl'])
+                actual_status = row['margin_status']
+    
+                assert actual_net_delta == expected['net_delta_exposure'], \
+                    "Net delta exposure mismatch for {}: expected {}, got {}".format(account_id, expected['net_delta_exposure'], actual_net_delta)
+>               assert actual_scanning == expected['scanning_risk'], \
+                    "Scanning risk mismatch for {}: expected {}, got {}".format(account_id, expected['scanning_risk'], actual_scanning)
+E               AssertionError: Scanning risk mismatch for ACC002: expected 528150, got 528149
+E               assert 528149 == 528150
+
+/tests/test_outputs.py:676: AssertionError
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_outputs.py::test_all_required_java_classes_exist
+PASSED ../tests/test_outputs.py::test_java_sources_exist
+PASSED ../tests/test_outputs.py::test_program_runs_with_simple_test_input
+PASSED ../tests/test_outputs.py::test_scanning_risk_calculation
+PASSED ../tests/test_outputs.py::test_spread_charge_calculation
+PASSED ../tests/test_outputs.py::test_position_netting_same_underlying
+PASSED ../tests/test_outputs.py::test_unrealized_pnl_calculation
+PASSED ../tests/test_outputs.py::test_margin_status_adequate
+PASSED ../tests/test_outputs.py::test_margin_status_call
+PASSED ../tests/test_outputs.py::test_initial_margin_is_sum_of_scanning_and_spread
+PASSED ../tests/test_outputs.py::test_output_sorted_by_account_id
+PASSED ../tests/test_outputs.py::test_csv_header_format
+PASSED ../tests/test_outputs.py::test_processes_actual_data_files
+FAILED ../tests/test_outputs.py::test_calculations_match_expected_on_actual_data
+========================= 1 failed, 13 passed in 1.25s =========================

@@ -1,0 +1,149 @@
+{
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "8.4.1"
+        },
+        "summary": {
+            "tests": 14,
+            "passed": 13,
+            "failed": 1,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1769158453.734265,
+            "stop": 1769158454.9783762
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_all_required_java_classes_exist",
+                "status": "passed",
+                "duration": 0.000653599388897419,
+                "start": 1769158453.77644,
+                "stop": 1769158453.7773738,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_java_sources_exist",
+                "status": "passed",
+                "duration": 0.0005035204812884331,
+                "start": 1769158453.777615,
+                "stop": 1769158453.7782896,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_program_runs_with_simple_test_input",
+                "status": "passed",
+                "duration": 0.10800772625952959,
+                "start": 1769158453.7784925,
+                "stop": 1769158453.886821,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_scanning_risk_calculation",
+                "status": "passed",
+                "duration": 0.0962020494043827,
+                "start": 1769158453.8873165,
+                "stop": 1769158453.9839246,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_spread_charge_calculation",
+                "status": "passed",
+                "duration": 0.10423288308084011,
+                "start": 1769158453.984551,
+                "stop": 1769158454.0892186,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_position_netting_same_underlying",
+                "status": "passed",
+                "duration": 0.07941120024770498,
+                "start": 1769158454.0895934,
+                "stop": 1769158454.1693985,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_unrealized_pnl_calculation",
+                "status": "passed",
+                "duration": 0.0820744838565588,
+                "start": 1769158454.169836,
+                "stop": 1769158454.2522688,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_margin_status_adequate",
+                "status": "passed",
+                "duration": 0.07954639289528131,
+                "start": 1769158454.2527187,
+                "stop": 1769158454.33269,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_margin_status_call",
+                "status": "passed",
+                "duration": 0.09495192300528288,
+                "start": 1769158454.3331096,
+                "stop": 1769158454.4285142,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_initial_margin_is_sum_of_scanning_and_spread",
+                "status": "passed",
+                "duration": 0.09389215428382158,
+                "start": 1769158454.4289649,
+                "stop": 1769158454.5232139,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_output_sorted_by_account_id",
+                "status": "passed",
+                "duration": 0.10380208771675825,
+                "start": 1769158454.5235898,
+                "stop": 1769158454.6277895,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_csv_header_format",
+                "status": "passed",
+                "duration": 0.10527601558715105,
+                "start": 1769158454.6282096,
+                "stop": 1769158454.7339551,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_processes_actual_data_files",
+                "status": "passed",
+                "duration": 0.09819386340677738,
+                "start": 1769158454.734685,
+                "stop": 1769158454.8333824,
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_calculations_match_expected_on_actual_data",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 0.1031265975907445,
+                "start": 1769158454.8337886,
+                "stop": 1769158454.9778492,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "trace": "def test_calculations_match_expected_on_actual_data():\n        \"\"\"Verify computed margin values match expected values for accounts in actual data.\"\"\"\n        positions_path = \"/app/data/positions.csv\"\n        market_data_path = \"/app/data/market_data.csv\"\n        specs_path = \"/app/data/contract_specs.csv\"\n    \n        positions = load_positions(positions_path)\n        market_data = load_market_data(market_data_path)\n        specs = load_contract_specs(specs_path)\n    \n        expected_results = compute_margin_for_test(positions, market_data, specs)\n    \n        with tempfile.TemporaryDirectory() as tmpdir:\n            out_path = os.path.join(tmpdir, \"output.csv\")\n    \n            env = os.environ.copy()\n            env[\"JAVA_HOME\"] = JAVA_HOME\n            env[\"PATH\"] = JAVA_HOME + \"/bin:\" + env.get(\"PATH\", \"\")\n    \n            result = subprocess.run(\n                [\"java\", \"-cp\", BIN_DIR, \"Main\", positions_path, market_data_path, specs_path, out_path],\n                capture_output=True, text=True, env=env\n            )\n            assert result.returncode == 0\n    \n            with open(out_path, 'r') as f:\n                reader = csv.DictReader(f)\n                output_rows = {r['account_id']: r for r in reader}\n    \n            checked = 0\n            for account_id, expected in expected_results.items():\n                if account_id not in output_rows:\n                    continue\n    \n                row = output_rows[account_id]\n                actual_net_delta = int(row['net_delta_exposure'])\n                actual_scanning = int(row['scanning_risk'])\n                actual_spread = int(row['spread_charge'])\n                actual_margin = int(row['initial_margin'])\n                actual_pnl = int(row['unrealized_pnl'])\n                actual_status = row['margin_status']\n    \n                assert actual_net_delta == expected['net_delta_exposure'], \\\n                    \"Net delta exposure mismatch for {}: expected {}, got {}\".format(account_id, expected['net_delta_exposure'], actual_net_delta)\n>               assert actual_scanning == expected['scanning_risk'], \\\n                    \"Scanning risk mismatch for {}: expected {}, got {}\".format(account_id, expected['scanning_risk'], actual_scanning)\nE               AssertionError: Scanning risk mismatch for ACC002: expected 528150, got 528149\nE               assert 528149 == 528150\n\n/tests/test_outputs.py:676: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

@@ -1,0 +1,193 @@
+New Terminal Output:
+
+root@34c1d0319d36:/app# ls -1 /app/src
+AccountMargin.java
+ContractSpec.java
+CsvUtil.java
+Main.java
+MarginCalculator.java
+MarketData.java
+Position.java
+PositionAggregator.java
+root@34c1d0319d36:/app# rm -f /app/src/CsvUtil.java
+root@34c1d0319d36:/app# cat > /app/src/Position.java <<'EOF'
+> import java.math.BigDecimal;
+>
+> public final class Position {
+>     private final String accountId;
+>     private final String contractCode;
+>     private final int positionQty;
+>     private final BigDecimal entryPrice;
+>
+>     public Position(String accountId, String contractCode, int positionQty, BigDecimal entryPrice) {
+>         this.accountId = accountId;
+>         this.contractCode = contractCode;
+>         this.positionQty = positionQty;
+>         this.entryPrice = entryPrice;
+>     }
+>
+>     public String getAccountId() {
+>         return accountId;
+>     }
+>
+>     public String getContractCode() {
+>         return contractCode;
+>     }
+>
+>     public int getPositionQty() {
+>         return positionQty;
+>     }
+>
+>     public BigDecimal getEntryPrice() {
+>         return entryPrice;
+>     }
+>
+>     public static Position parseCsv(String line) {
+>         // account_id, contract_code, position_qty, entry_price
+>         String[] parts = split(line);
+>         if (parts.length != 4) {
+>             throw new IllegalArgumentException("Invalid positions row: " + line);
+>         }
+>         String accountId = parts[0];
+>         String contractCode = parts[1];
+>         int qty = Integer.parseInt(parts[2]);
+>         BigDecimal entry = new BigDecimal(parts[3]);
+>         return new Position(accountId, contractCode, qty, entry);
+>     }
+>
+>     private static String[] split(String line) {
+>         String[] raw = line.split(",", -1);
+>         for (int i = 0; i < raw.length; i++) {
+>             raw[i] = raw[i].trim();
+>         }
+>         return raw;
+>     }
+> }
+> EOF
+root@34c1d0319d36:/app# cat > /app/src/MarketData.java <<'EOF'
+> import java.math.BigDecimal;
+>
+> public final class MarketData {
+>     private final String contractCode;
+>     private final BigDecimal settlementPrice;
+>     private final BigDecimal scanningRangePct;
+>     private final BigDecimal intraSpreadCharge;
+>
+>     public MarketData(String contractCode, BigDecimal settlementPrice, BigDecimal scanningRangePct, BigDecimal intraSpreadCharge) {
+>         this.contractCode = contractCode;
+>         this.settlementPrice = settlementPrice;
+>         this.scanningRangePct = scanningRangePct;
+>         this.intraSpreadCharge = intraSpreadCharge;
+>     }
+>
+>     public String getContractCode() {
+>         return contractCode;
+>     }
+>
+>     public BigDecimal getSettlementPrice() {
+>         return settlementPrice;
+>     }
+>
+>     public BigDecimal getScanningRangePct() {
+>         return scanningRangePct;
+>     }
+>
+>     public BigDecimal getIntraSpreadCharge() {
+>         return intraSpreadCharge;
+>     }
+>
+>     public static MarketData parseCsv(String line) {
+>         // contract_code, settlement_price, scanning_range, intra_spread_charge
+>         String[] parts = split(line);
+>         if (parts.length != 4) {
+>             throw new IllegalArgumentException("Invalid market_data row: " + line);
+>         }
+>         String contractCode = parts[0];
+>         BigDecimal settlement = new BigDecimal(parts[1]);
+>         BigDecimal scanningRange = new BigDecimal(parts[2]);
+>         BigDecimal intra = new BigDecimal(parts[3]);
+>         return new MarketData(contractCode, settlement, scanningRange, intra);
+>     }
+>
+>     private static String[] split(String line) {
+>         String[] raw = line.split(",", -1);
+>         for (int i = 0; i < raw.length; i++) {
+>             raw[i] = raw[i].trim();
+>         }
+>         return raw;
+>     }
+> }
+> EOF
+root@34c1d0319d36:/app# cat > /app/src/ContractSpec.java <<'EOF'
+> public final class ContractSpec {
+>     private final String contractCode;
+>     private final int multiplier;
+>     private final String expiryMonth;
+>     private final String underlying;
+>
+>     public ContractSpec(String contractCode, int multiplier, String expiryMonth, String underlying) {
+>         this.contractCode = contractCode;
+>         this.multiplier = multiplier;
+>         this.expiryMonth = expiryMonth;
+>         this.underlying = underlying;
+>     }
+>
+>     public String getContractCode() {
+>         return contractCode;
+>     }
+>
+>     public int getMultiplier() {
+>         return multiplier;
+>     }
+>
+>     public String getExpiryMonth() {
+>         return expiryMonth;
+>     }
+>
+>     public String getUnderlying() {
+>         return underlying;
+>     }
+>
+>     public static ContractSpec parseCsv(String line) {
+>         // contract_code, multiplier, expiry_month, underlying
+>         String[] parts = split(line);
+>         if (parts.length != 4) {
+>             throw new IllegalArgumentException("Invalid contract_specs row: " + line);
+>         }
+>         String contractCode = parts[0];
+>         int multiplier = Integer.parseInt(parts[1]);
+>         String expiryMonth = parts[2];
+>         String underlying = parts[3];
+>         return new ContractSpec(contractCode, multiplier, expiryMonth, underlying);
+>     }
+>
+>     private static String[] split(String line) {
+>         String[] raw = line.split(",", -1);
+>         for (int i = 0; i < raw.length; i++) {
+>             raw[i] = raw[i].trim();
+>         }
+>         return raw;
+>     }
+> }
+> EOF
+root@34c1d0319d36:/app# rm -rf /app/bin/*
+root@34c1d0319d36:/app# javac -source 1.7 -target 1.7 -Xlint:-options -d /app/bin /app/src/*.java
+java -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /tmp/margin_report.csv
+root@34c1d0319d36:/app# java -cp /app/bin Main /app/data/positions.csv /app/data/market_data.csv /app/data/contract_specs.csv /tmp/margin_report.csv
+root@34c1d0319d36:/app# head -n 5 /tmp/margin_report.csv
+account_id,net_delta_exposure,scanning_risk,spread_charge,initial_margin,unrealized_pnl,margin_status
+ACC001,15410,343305,10805,354110,31937,CALL
+ACC002,3100,528149,6725,534874,88900,CALL
+ACC003,19500,238031,27900,265931,51375,CALL
+ACC004,1150,84893,5200,90093,83825,CALL
+root@34c1d0319d36:/app# ls -1 /app/src | sort
+AccountMargin.java
+ContractSpec.java
+Main.java
+MarginCalculator.java
+MarketData.java
+Position.java
+PositionAggregator.java
+root@34c1d0319d36:/app# test "$(ls -1 /app/src/*.java | wc -l)" -eq 7 && echo OK
+OK
+root@34c1d0319d36:/app#
