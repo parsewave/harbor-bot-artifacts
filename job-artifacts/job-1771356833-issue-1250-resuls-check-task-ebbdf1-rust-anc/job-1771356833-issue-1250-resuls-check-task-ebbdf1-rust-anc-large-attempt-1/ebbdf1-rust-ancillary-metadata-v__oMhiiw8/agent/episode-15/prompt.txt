@@ -1,0 +1,15 @@
+Current terminal state:
+New Terminal Output:
+
+root@830ef13b33a0:/app# cd /app
+root@830ef13b33a0:/app# grep -n "unwrap\\(|expect\\(" -n src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs || true
+grep: Unmatched ( or \(
+root@830ef13b33a0:/app# grep -n "\\.clone\\(" -n src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs || true
+grep: Unmatched ( or \(
+root@830ef13b33a0:/app# grep -n "if let" -n src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs || true
+root@830ef13b33a0:/app# grep -n "|.*|" -n src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs || true
+root@830ef13b33a0:/app# awk 'length($0)>100{print FNR ":" length($0) ":" $0}' src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs || true
+root@830ef13b33a0:/app#
+
+
+Are you sure you want to mark the task as complete? This will trigger your solution to be graded and you won't be able to make any further corrections. If so, include "task_complete": true in your JSON response again.

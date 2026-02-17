@@ -1,0 +1,43 @@
+Current Terminal Screen:
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert (line 1008) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert (line 991) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert_bin (line 1028) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert_bin (line 1038) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert_bin (line 1045) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::into_headers (line 252) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::is_empty (line 354) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::iter (line 709) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::iter_mut (line 740) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::keys (line 771) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::keys_len (line 331) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::len (line 305) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::new (line 232) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::remove (line 1163) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::remove_bin (line 1197) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::reserve (line 422) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::values (line 802) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::values_mut (line 833) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::with_capacity (line 283) ... ok
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::append (line 1775) ... ok
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::get (line 1646) ... ok
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::get_mut (line 1673) ... ok
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::insert (line 1722) ... ok
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::insert_mult (line 1746) ... ok
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::into_mut (line 1699) ... ok
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::iter (line 1867) ... ok
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::iter_mut (line 1894) ... ok
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::key (line 1623) ... ok
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::remove (line 1800) ... ok
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::remove_entry (line 1825) ... ok
+test tonic/src/metadata/map.rs - metadata::map::VacantEntry<'a,VE>::insert (line 1576) ... ok
+test tonic/src/metadata/map.rs - metadata::map::VacantEntry<'a,VE>::insert_entry (line 1597) ... ok
+test tonic/src/metadata/map.rs - metadata::map::VacantEntry<'a,VE>::into_key (line 1557) ... ok
+test tonic/src/metadata/map.rs - metadata::map::VacantEntry<'a,VE>::key (line 1543) ... ok
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<Ascii>::as_bytes (line 441) ... ok
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<Ascii>::from_key (line 390) ... ok
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<Ascii>::len (line 409) ... ok
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<Ascii>::to_str (line 427) ... ok
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<Binary>::from_bytes (line 457) ... ok
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE> (line 238) ...

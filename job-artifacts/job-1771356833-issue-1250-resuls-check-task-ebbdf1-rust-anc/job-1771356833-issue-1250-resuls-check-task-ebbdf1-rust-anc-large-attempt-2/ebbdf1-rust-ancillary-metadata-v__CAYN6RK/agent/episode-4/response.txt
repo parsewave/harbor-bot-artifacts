@@ -1,0 +1,31 @@
+Need edit file; use cat >. Ensure no lines >100. No closures. We'll use match; no if let. We'll avoid unwrap in module.
+
+Also include in mod.rs: `pub mod metadata_validator; pub use self::metadata_validator::{...};` etc.
+
+Let's inspect MetadataValue API to get string slice; maybe implements AsRef<str> or Deref. We'll check quickly via sed/grep.{
+  "analysis": "We confirmed MetadataMap supports from_headers, into_headers, len/keys_len, get/get_bin, contains_key, and iter. ripgrep is unavailable, so we must use grep/sed. Next we must inspect MetadataValue to obtain a &str for prefix checks without cloning, then implement the new metadata_validator module and wire it into service/mod.rs while respecting constraints (no unwrap/expect/clone/if let/closures/unsafe, <=100 char lines, <=3 files changed).",
+  "plan": "1) Inspect MetadataValue implementation to find a method to access values as &str or &[u8].\n2) Implement src/tonic/src/service/metadata_validator.rs:\n   - Define MetadataValidator trait.\n   - Define ValidatorBuilder and an internal RulesValidator with Vec<Rule>.\n   - Implement validate logic using MetadataMap::contains_key/get and iterating raw http headers.\n   - Implement MetadataValidatorLayer<'a, V> holding a shared reference to a validator.\n   - Implement MetadataValidatorService<S, V> that validates request metadata before calling S.\n   - Implement ResponseFuture and ResponseBody to short-circuit with Status converted to HTTP.\n   Avoid closures and if-let by using explicit Future types and match.\n3) Update src/tonic/src/service/mod.rs to `pub mod metadata_validator;` and re-export types.\n4) Run `cargo test -p tonic` (or from tonic crate directory) to ensure all tests pass.",
+  "commands": [
+    {
+      "keystrokes": "grep -n \"pub struct MetadataValue\" -n src/tonic/src/metadata/value.rs | head\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "sed -n '1,220p' src/tonic/src/metadata/value.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "grep -n \"impl<.*MetadataValue\" src/tonic/src/metadata/value.rs | head -n 80\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "grep -n \"fn to_str\\|as_str\\|as_bytes\\|decode\" src/tonic/src/metadata/value.rs | head -n 80\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "sed -n '220,420p' src/tonic/src/metadata/value.rs\n",
+      "duration": 0.1
+    }
+  ],
+  "task_complete": false
+}

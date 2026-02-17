@@ -1,0 +1,29 @@
+{
+    "id": "74ce2cca-7774-4858-b2d5-7449962dd523",
+    "started_at": "2026-02-17T20:48:05.791701",
+    "finished_at": "2026-02-17T21:07:08.001226",
+    "n_total_trials": 1,
+    "stats": {
+        "n_trials": 1,
+        "n_errors": 0,
+        "evals": {
+            "terminus-2__openai-gpt-5.2__contributor_tasks": {
+                "n_trials": 1,
+                "n_errors": 0,
+                "metrics": [
+                    {
+                        "mean": 0.0
+                    }
+                ],
+                "reward_stats": {
+                    "reward": {
+                        "0.0": [
+                            "ebbdf1-rust-ancillary-metadata-v__CAYN6RK"
+                        ]
+                    }
+                },
+                "exception_stats": {}
+            }
+        }
+    }
+}

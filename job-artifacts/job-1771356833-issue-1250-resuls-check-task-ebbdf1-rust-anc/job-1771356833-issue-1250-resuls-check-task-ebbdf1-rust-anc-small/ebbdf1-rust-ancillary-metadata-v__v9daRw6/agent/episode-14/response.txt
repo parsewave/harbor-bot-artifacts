@@ -1,0 +1,19 @@
+{
+  "analysis": "We need to verify the file was correctly written and then run the tests for the `tonic` crate. We'll inspect the file and then run `cargo test` inside `src/tonic`.",
+  "plan": "1. Display the contents of `src/tonic/src/service/metadata_validator.rs` to ensure it is correct.\n2. Change directory to `src/tonic`.\n3. Run `cargo test` for that crate.\n4. If compilation succeeds, the task is complete.",
+  "commands": [
+    {
+      "keystrokes": "sed -n '1,200p' src/tonic/src/service/metadata_validator.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "cd src/tonic\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "cargo test\n",
+      "duration": 300000
+    }
+  ],
+  "task_complete": false
+}

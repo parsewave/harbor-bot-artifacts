@@ -1,0 +1,41 @@
+New Terminal Output:
+
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE>::to_bytes (line 123) ... ok
+test tonic/src/request.rs - request::IntoRequest (line 41) ... ok
+test tonic/src/request.rs - request::IntoStreamingRequest (line 75) ... ok
+test tonic/src/request.rs - request::Request<T>::extensions_mut (line 310) - compile ... ok
+test tonic/src/request.rs - request::Request<T>::extensions_mut (line 329) - compile ... ok
+test tonic/src/request.rs - request::Request<T>::new (line 104) ... ok
+test tonic/src/request.rs - request::Request<T>::set_timeout (line 275) ... ok
+test tonic/src/response.rs - response::Response<T>::new (line 16) ... ok
+test tonic/src/server/grpc.rs - server::grpc::Grpc<T>::accept_compressed (line 70) ... ok
+test tonic/src/server/grpc.rs - server::grpc::Grpc<T>::max_decoding_message_size (line 130) ... ok
+test tonic/src/server/grpc.rs - server::grpc::Grpc<T>::max_encoding_message_size (line 160) ... ok
+test tonic/src/server/grpc.rs - server::grpc::Grpc<T>::send_compressed (line 101) ... ok
+test tonic/src/status.rs - status::Code::description (line 124) ... ok
+test tonic/src/status.rs - status::Status (line 29) ... ok
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::concurrency_limit (line 301) ... ok
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::connect_timeout (line 247) ... ok
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::from_shared (line 157) ... ok
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::from_static (line 138) ... ok
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::origin (line 207) ... ok
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::rate_limit (line 315) ... ok
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::timeout (line 222) ... ok
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::uri (line 546) ... ok
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::user_agent (line 182) ... ok
+test tonic/src/transport/channel/mod.rs - transport::channel::Channel::from_shared (line 97) ... ok
+test tonic/src/transport/channel/mod.rs - transport::channel::Channel::from_static (line 86) ... ok
+test tonic/src/transport/mod.rs - transport (line 20) - compile ... ok
+test tonic/src/transport/mod.rs - transport (line 47) - compile ... ok
+test tonic/src/transport/server/conn.rs - transport::server::conn::Connected (line 21) ... ok
+test tonic/src/transport/server/incoming.rs - transport::server::incoming::TcpIncoming::bind (line 33) - compile ... ok
+test tonic/src/transport/server/mod.rs - transport::server::Server<L>::concurrency_limit_per_connection (line 175) ... ok
+test tonic/src/transport/server/mod.rs - transport::server::Server<L>::layer (line 537) ... ok
+test tonic/src/transport/server/mod.rs - transport::server::Server<L>::layer (line 553) ... ok
+test tonic/src/transport/server/mod.rs - transport::server::Server<L>::load_shed (line 199) ... ok
+test tonic/src/transport/server/mod.rs - transport::server::Server<L>::max_connection_age (line 274) ... ok
+test tonic/src/transport/server/mod.rs - transport::server::Server<L>::timeout (line 214) ... ok
+
+test result: ok. 123 passed; 0 failed; 7 ignored; 0 measured; 0 filtered out; finished in 88.73s
+
+root@830ef13b33a0:/app#

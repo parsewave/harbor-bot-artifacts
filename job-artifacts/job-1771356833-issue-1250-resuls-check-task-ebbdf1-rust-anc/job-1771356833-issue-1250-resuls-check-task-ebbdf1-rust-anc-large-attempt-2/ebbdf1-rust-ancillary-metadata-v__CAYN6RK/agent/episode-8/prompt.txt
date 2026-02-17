@@ -1,0 +1,43 @@
+Current Terminal Screen:
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+            .body(())
+            .unwrap();
+
+        svc.oneshot(request).await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn handles_intercepted_status_as_response() {
+        let message = "Blocked by the interceptor";
+        let expected = Status::permission_denied(message).into_http::<()>();
+
+        let svc = tower::service_fn(|_: http::Request<()>| async {
+            Ok::<_, Status>(http::Response::new(()))
+        });
+
+        let svc = InterceptedService::new(svc, |_: crate::Request<()>| {
+            Err(Status::permission_denied(message))
+        });
+
+        let request = http::Request::builder().body(()).unwrap();
+        let response = svc.oneshot(request).await.unwrap();
+
+        assert_eq!(expected.status(), response.status());
+        assert_eq!(expected.version(), response.version());
+        assert_eq!(expected.headers(), response.headers());
+    }
+
+    #[tokio::test]
+    async fn doesnt_change_http_method() {
+        let svc = tower::service_fn(|request: http::Request<()>| async move {
+            assert_eq!(request.method(), http::Method::OPTIONS);
+
+            Ok::<_, hyper::Error>(hyper::Response::new(()))
+        });
+
+        let svc = InterceptedService::new(svc, Ok);
+
+        let request = http::Request::builder()
+            .method(http::Method::OPTIONS)
+root@b1aac3828518:/app#

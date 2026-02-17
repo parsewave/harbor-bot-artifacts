@@ -1,0 +1,428 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-8.4.2, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests
+collecting ... collected 27 items
+
+../tests/test_outputs.py::test_crate_builds PASSED                       [  3%]
+../tests/test_outputs.py::test_metadata_validator_module_exists FAILED   [  7%]
+../tests/test_outputs.py::test_metadata_validator_exported FAILED        [ 11%]
+../tests/test_outputs.py::test_validator_builder_api FAILED              [ 14%]
+../tests/test_outputs.py::test_validator_layer_api FAILED                [ 18%]
+../tests/test_outputs.py::test_validator_integration_compiles PASSED     [ 22%]
+../tests/test_outputs.py::test_layer_applies_validation_before_service FAILED [ 25%]
+../tests/test_outputs.py::test_functional_require_header FAILED          [ 29%]
+../tests/test_outputs.py::test_functional_max_header_size FAILED         [ 33%]
+../tests/test_outputs.py::test_functional_header_prefix FAILED           [ 37%]
+../tests/test_outputs.py::test_functional_max_total_headers FAILED       [ 40%]
+../tests/test_outputs.py::test_validator_trait_signature FAILED          [ 44%]
+../tests/test_outputs.py::test_validator_layer_implements_layer_trait FAILED [ 48%]
+../tests/test_outputs.py::test_builder_returns_validator FAILED          [ 51%]
+../tests/test_outputs.py::test_validation_actually_returns_errors FAILED [ 55%]
+../tests/test_outputs.py::test_validation_logic_uses_metadata FAILED     [ 59%]
+../tests/test_outputs.py::test_existing_tests_pass PASSED                [ 62%]
+../tests/test_outputs.py::test_ancillary_constraint_max_files_3 PASSED   [ 66%]
+../tests/test_outputs.py::test_ancillary_constraint_no_new_deps PASSED   [ 70%]
+../tests/test_outputs.py::test_ancillary_constraint_no_unwrap PASSED     [ 74%]
+../tests/test_outputs.py::test_ancillary_constraint_no_unsafe PASSED     [ 77%]
+../tests/test_outputs.py::test_ancillary_constraint_no_clone PASSED      [ 81%]
+../tests/test_outputs.py::test_ancillary_constraint_no_if_let PASSED     [ 85%]
+../tests/test_outputs.py::test_ancillary_constraint_no_closures PASSED   [ 88%]
+../tests/test_outputs.py::test_ancillary_constraint_max_line_100 PASSED  [ 92%]
+../tests/test_outputs.py::test_ancillary_constraint_backward_compat PASSED [ 96%]
+../tests/test_outputs.py::test_ancillary_constraint_miri_clean PASSED    [100%]
+
+=================================== FAILURES ===================================
+____________________ test_metadata_validator_module_exists _____________________
+
+    def test_metadata_validator_module_exists():
+        """Verify the metadata_validator.rs module exists."""
+        validator_file = SOURCES / "service" / "metadata_validator.rs"
+>       assert validator_file.exists(), (
+            f"Expected metadata_validator.rs at {validator_file}"
+        )
+E       AssertionError: Expected metadata_validator.rs at /app/src/tonic/src/service/metadata_validator.rs
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('/app/src/tonic/src/service/metadata_validator.rs').exists
+
+/tests/test_outputs.py:165: AssertionError
+_______________________ test_metadata_validator_exported _______________________
+
+    def test_metadata_validator_exported():
+        """Verify MetadataValidator types are exported from service mod."""
+        mod_file = SOURCES / "service" / "mod.rs"
+        content = mod_file.read_text()
+>       assert "metadata_validator" in content, (
+            "metadata_validator module not declared in service/mod.rs"
+        )
+E       AssertionError: metadata_validator module not declared in service/mod.rs
+E       assert 'metadata_validator' in '//! Utilities for using Tower services with Tonic.\n\npub mod interceptor;\npub(crate) mod layered;\n#[cfg(feature = "router")]\npub(crate) mod router;\n\n#[doc(inline)]\npub use self::interceptor::{Interceptor, InterceptorLayer};\npub use self::layered::{LayerExt, Layered};\n#[doc(inline)]\n#[cfg(feature = "router")]\npub use self::router::{Routes, RoutesBuilder};\n#[cfg(feature = "router")]\npub use axum::{body::Body as AxumBody, Router as AxumRouter};\n\npub mod recover_error;\npub use self::recover_error::{RecoverError, RecoverErrorLayer};\n'
+
+/tests/test_outputs.py:174: AssertionError
+__________________________ test_validator_builder_api __________________________
+
+    def test_validator_builder_api():
+        """Verify ValidatorBuilder has the required methods by checking AST."""
+        validator_file = SOURCES / "service" / "metadata_validator.rs"
+>       assert validator_file.exists(), "metadata_validator.rs not found"
+E       AssertionError: metadata_validator.rs not found
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('/app/src/tonic/src/service/metadata_validator.rs').exists
+
+/tests/test_outputs.py:185: AssertionError
+___________________________ test_validator_layer_api ___________________________
+
+    def test_validator_layer_api():
+        """Verify MetadataValidatorLayer exists and implements Layer."""
+        validator_file = SOURCES / "service" / "metadata_validator.rs"
+>       assert validator_file.exists(), "metadata_validator.rs not found"
+E       AssertionError: metadata_validator.rs not found
+E       assert False
+E        +  where False = exists()
+E        +    where exists = PosixPath('/app/src/tonic/src/service/metadata_validator.rs').exists
+
+/tests/test_outputs.py:201: AssertionError
+_________________ test_layer_applies_validation_before_service _________________
+
+    def test_layer_applies_validation_before_service():
+        """Verify MetadataValidatorService calls validate before inner service."""
+        validator_file = SOURCES / "service" / "metadata_validator.rs"
+>       content = validator_file.read_text()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/app/src/tonic/src/service/metadata_validator.rs'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/app/src/tonic/src/service/metadata_validator.rs'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+________________________ test_functional_require_header ________________________
+
+    def test_functional_require_header():
+        """Verify require_header validation returns FailedPrecondition for missing headers."""
+        _build_crate()
+    
+        validator_file = SOURCES / "service" / "metadata_validator.rs"
+>       content = validator_file.read_text()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:241: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/app/src/tonic/src/service/metadata_validator.rs'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/app/src/tonic/src/service/metadata_validator.rs'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+_______________________ test_functional_max_header_size ________________________
+
+    def test_functional_max_header_size():
+        """Verify max_header_size validation rejects oversized headers with InvalidArgument."""
+        validator_file = SOURCES / "service" / "metadata_validator.rs"
+>       content = validator_file.read_text()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:262: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/app/src/tonic/src/service/metadata_validator.rs'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/app/src/tonic/src/service/metadata_validator.rs'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+________________________ test_functional_header_prefix _________________________
+
+    def test_functional_header_prefix():
+        """Verify header_prefix validation checks prefix with starts_with and returns InvalidArgument."""
+        validator_file = SOURCES / "service" / "metadata_validator.rs"
+>       content = validator_file.read_text()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:281: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/app/src/tonic/src/service/metadata_validator.rs'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/app/src/tonic/src/service/metadata_validator.rs'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+______________________ test_functional_max_total_headers _______________________
+
+    def test_functional_max_total_headers():
+        """Verify max_total_headers validation counts headers and returns ResourceExhausted."""
+        validator_file = SOURCES / "service" / "metadata_validator.rs"
+>       content = validator_file.read_text()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:297: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/app/src/tonic/src/service/metadata_validator.rs'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/app/src/tonic/src/service/metadata_validator.rs'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+________________________ test_validator_trait_signature ________________________
+
+    def test_validator_trait_signature():
+        """Verify MetadataValidator trait has validate method with correct signature."""
+        validator_file = SOURCES / "service" / "metadata_validator.rs"
+>       content = validator_file.read_text()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:312: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/app/src/tonic/src/service/metadata_validator.rs'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/app/src/tonic/src/service/metadata_validator.rs'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+_________________ test_validator_layer_implements_layer_trait __________________
+
+    def test_validator_layer_implements_layer_trait():
+        """Verify MetadataValidatorLayer implements tower Layer trait properly."""
+        validator_file = SOURCES / "service" / "metadata_validator.rs"
+>       content = validator_file.read_text()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:329: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/app/src/tonic/src/service/metadata_validator.rs'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/app/src/tonic/src/service/metadata_validator.rs'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+________________________ test_builder_returns_validator ________________________
+
+    def test_builder_returns_validator():
+        """Verify ValidatorBuilder has build method that returns a validator."""
+        validator_file = SOURCES / "service" / "metadata_validator.rs"
+>       content = validator_file.read_text()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:352: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/app/src/tonic/src/service/metadata_validator.rs'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/app/src/tonic/src/service/metadata_validator.rs'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___________________ test_validation_actually_returns_errors ____________________
+
+    def test_validation_actually_returns_errors():
+        """Verify validate method actually returns Status errors, not just Ok."""
+        validator_file = SOURCES / "service" / "metadata_validator.rs"
+>       content = validator_file.read_text()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:366: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/app/src/tonic/src/service/metadata_validator.rs'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/app/src/tonic/src/service/metadata_validator.rs'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+_____________________ test_validation_logic_uses_metadata ______________________
+
+    def test_validation_logic_uses_metadata():
+        """Verify validate method actually inspects the MetadataMap."""
+        validator_file = SOURCES / "service" / "metadata_validator.rs"
+>       content = validator_file.read_text()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/test_outputs.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/app/src/tonic/src/service/metadata_validator.rs'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/app/src/tonic/src/service/metadata_validator.rs'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_outputs.py::test_crate_builds
+PASSED ../tests/test_outputs.py::test_validator_integration_compiles
+PASSED ../tests/test_outputs.py::test_existing_tests_pass
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_max_files_3
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_no_new_deps
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_no_unwrap
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_no_unsafe
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_no_clone
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_no_if_let
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_no_closures
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_max_line_100
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_backward_compat
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_miri_clean
+FAILED ../tests/test_outputs.py::test_metadata_validator_module_exists - Asse...
+FAILED ../tests/test_outputs.py::test_metadata_validator_exported - Assertion...
+FAILED ../tests/test_outputs.py::test_validator_builder_api - AssertionError:...
+FAILED ../tests/test_outputs.py::test_validator_layer_api - AssertionError: m...
+FAILED ../tests/test_outputs.py::test_layer_applies_validation_before_service
+FAILED ../tests/test_outputs.py::test_functional_require_header - FileNotFoun...
+FAILED ../tests/test_outputs.py::test_functional_max_header_size - FileNotFou...
+FAILED ../tests/test_outputs.py::test_functional_header_prefix - FileNotFound...
+FAILED ../tests/test_outputs.py::test_functional_max_total_headers - FileNotF...
+FAILED ../tests/test_outputs.py::test_validator_trait_signature - FileNotFoun...
+FAILED ../tests/test_outputs.py::test_validator_layer_implements_layer_trait
+FAILED ../tests/test_outputs.py::test_builder_returns_validator - FileNotFoun...
+FAILED ../tests/test_outputs.py::test_validation_actually_returns_errors - Fi...
+FAILED ../tests/test_outputs.py::test_validation_logic_uses_metadata - FileNo...
+================== 14 failed, 13 passed in 389.84s (0:06:29) ===================

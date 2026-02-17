@@ -1,0 +1,19 @@
+{
+  "analysis": "We still need to implement the new metadata validator middleware and wire it into tonic’s service module. Key constraints require avoiding any new uses of unwrap/expect/clone/if let/closures/unsafe. A design choice is needed for the Layer’s clonability: many tower stacks expect Clone layers, but implementing Clone would require calling clone() unless we store a Copy type (e.g., reference). Next step is to inspect how InterceptorLayer is defined and used, to match tonic’s patterns without violating constraints.",
+  "plan": "1) Locate InterceptorLayer definition in interceptor.rs to see its structure and trait bounds.\n2) Based on that, implement MetadataValidatorLayer in a way that doesn’t require clone() calls (likely by holding a shared reference to a validator).\n3) Then proceed to create metadata_validator.rs and update service/mod.rs.",
+  "commands": [
+    {
+      "keystrokes": "grep -n \"struct InterceptorLayer\" -n src/tonic/src/service/interceptor.rs\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "sed -n '1,120p' src/tonic/src/service/interceptor.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "sed -n '120,220p' src/tonic/src/service/interceptor.rs\n",
+      "duration": 0.1
+    }
+  ],
+  "task_complete": false
+}

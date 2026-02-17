@@ -1,0 +1,340 @@
+New Terminal Output:
+
+root@5238af6e374d:/app# sed -n '200,520p' src/tonic/src/service/interceptor.rs
+        match self.project().kind.project() {
+            KindProj::Future(future) => future.poll(cx).map_ok(|res| res.map(ResponseBody::wrap)),
+            KindProj::Status(status) => {
+                let (parts, ()) = status.take().unwrap().into_http::<()>().into_parts();
+                let response = http::Response::from_parts(parts, ResponseBody::<B>::empty());
+                Poll::Ready(Ok(response))
+            }
+        }
+    }
+}
+
+/// Response body for [`InterceptedService`].
+#[pin_project]
+#[derive(Debug)]
+pub struct ResponseBody<B> {
+    #[pin]
+    kind: ResponseBodyKind<B>,
+}
+
+#[pin_project(project = ResponseBodyKindProj)]
+#[derive(Debug)]
+enum ResponseBodyKind<B> {
+    Empty,
+    Wrap(#[pin] B),
+}
+
+impl<B> ResponseBody<B> {
+    fn new(kind: ResponseBodyKind<B>) -> Self {
+        Self { kind }
+    }
+
+    fn empty() -> Self {
+        Self::new(ResponseBodyKind::Empty)
+    }
+
+    fn wrap(body: B) -> Self {
+        Self::new(ResponseBodyKind::Wrap(body))
+    }
+}
+
+impl<B: http_body::Body> http_body::Body for ResponseBody<B> {
+    type Data = B::Data;
+    type Error = B::Error;
+
+    fn poll_frame(
+        self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+    ) -> Poll<Option<Result<http_body::Frame<Self::Data>, Self::Error>>> {
+        match self.project().kind.project() {
+            ResponseBodyKindProj::Empty => Poll::Ready(None),
+            ResponseBodyKindProj::Wrap(body) => body.poll_frame(cx),
+        }
+    }
+
+    fn size_hint(&self) -> http_body::SizeHint {
+        match &self.kind {
+            ResponseBodyKind::Empty => http_body::SizeHint::with_exact(0),
+            ResponseBodyKind::Wrap(body) => body.size_hint(),
+        }
+    }
+
+    fn is_end_stream(&self) -> bool {
+        match &self.kind {
+            ResponseBodyKind::Empty => true,
+            ResponseBodyKind::Wrap(body) => body.is_end_stream(),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn doesnt_remove_headers_from_requests() {
+        let svc = tower::service_fn(|request: http::Request<()>| async move {
+            assert_eq!(
+                request
+                    .headers()
+                    .get("user-agent")
+                    .expect("missing in leaf service"),
+                "test-tonic"
+            );
+
+            Ok::<_, Status>(http::Response::new(()))
+        });
+
+        let svc = InterceptedService::new(svc, |request: crate::Request<()>| {
+            assert_eq!(
+                request
+                    .metadata()
+                    .get("user-agent")
+                    .expect("missing in interceptor"),
+                "test-tonic"
+            );
+
+            Ok(request)
+        });
+
+        let request = http::Request::builder()
+            .header("user-agent", "test-tonic")
+            .body(())
+            .unwrap();
+
+        svc.oneshot(request).await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn handles_intercepted_status_as_response() {
+        let message = "Blocked by the interceptor";
+        let expected = Status::permission_denied(message).into_http::<()>();
+
+        let svc = tower::service_fn(|_: http::Request<()>| async {
+            Ok::<_, Status>(http::Response::new(()))
+        });
+
+        let svc = InterceptedService::new(svc, |_: crate::Request<()>| {
+            Err(Status::permission_denied(message))
+        });
+
+        let request = http::Request::builder().body(()).unwrap();
+        let response = svc.oneshot(request).await.unwrap();
+
+        assert_eq!(expected.status(), response.status());
+        assert_eq!(expected.version(), response.version());
+        assert_eq!(expected.headers(), response.headers());
+    }
+
+    #[tokio::test]
+    async fn doesnt_change_http_method() {
+        let svc = tower::service_fn(|request: http::Request<()>| async move {
+            assert_eq!(request.method(), http::Method::OPTIONS);
+
+            Ok::<_, hyper::Error>(hyper::Response::new(()))
+        });
+
+        let svc = InterceptedService::new(svc, Ok);
+
+        let request = http::Request::builder()
+            .method(http::Method::OPTIONS)
+            .body(())
+            .unwrap();
+
+        svc.oneshot(request).await.unwrap();
+    }
+}
+root@5238af6e374d:/app# sed -n '520,900p' src/tonic/src/service/interceptor.rs
+root@5238af6e374d:/app# sed -n '1,260p' src/tonic/src/service/layered.rs
+use std::{
+    marker::PhantomData,
+    task::{Context, Poll},
+};
+
+use tower_layer::Layer;
+use tower_service::Service;
+
+use crate::server::NamedService;
+
+/// A layered service to propagate [`NamedService`] implementation.
+#[derive(Debug, Clone)]
+pub struct Layered<S, T> {
+    inner: S,
+    _ty: PhantomData<T>,
+}
+
+impl<S, T: NamedService> NamedService for Layered<S, T> {
+    const NAME: &'static str = T::NAME;
+}
+
+impl<Req, S, T> Service<Req> for Layered<S, T>
+where
+    S: Service<Req>,
+{
+    type Response = S::Response;
+  
+[... output limited to 10000 bytes; 71 interior bytes omitted ...]
+  ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// assert_eq!(0, map.len());
+    ///
+    /// map.insert("x-host-ip", "127.0.0.1".parse().unwrap());
+    /// map.insert_bin("x-host-name-bin", MetadataValue::from_bytes(b"localhost"));
+    ///
+    /// assert_eq!(2, map.len());
+    ///
+    /// map.append("x-host-ip", "text/html".parse().unwrap());
+    ///
+    /// assert_eq!(3, map.len());
+    /// ```
+    pub fn len(&self) -> usize {
+        self.headers.len()
+    }
+
+    /// Returns the number of keys (ascii and binary) stored in the map.
+    ///
+    /// This number will be less than or equal to `len()` as each key may have
+    /// more than one associated value.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// assert_eq!(0, map.keys_len());
+    ///
+    /// map.insert("x-host-ip", "127.0.0.1".parse().unwrap());
+    /// map.insert_bin("x-host-name-bin", MetadataValue::from_bytes(b"localhost"));
+    ///
+    /// assert_eq!(2, map.keys_len());
+    ///
+    /// map.append("x-host-ip", "text/html".parse().unwrap());
+    ///
+    /// assert_eq!(2, map.keys_len());
+    /// ```
+    pub fn keys_len(&self) -> usize {
+        self.headers.keys_len()
+    }
+
+    /// Returns true if the map contains no elements.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// assert!(map.is_empty());
+    ///
+    /// map.insert("x-host", "hello.world".parse().unwrap());
+    ///
+    /// assert!(!map.is_empty());
+    /// ```
+    pub fn is_empty(&self) -> bool {
+        self.headers.is_empty()
+    }
+
+    /// Clears the map, removing all key-value pairs. Keeps the allocated memory
+    /// for reuse.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    /// map.insert("x-host", "hello.world".parse().unwrap());
+    ///
+    /// map.clear();
+    /// assert!(map.is_empty());
+    /// assert!(map.capacity() > 0);
+    /// ```
+    pub fn clear(&mut self) {
+        self.headers.clear();
+    }
+
+    /// Returns the number of custom metadata entries the map can hold without
+    /// reallocating.
+    ///
+    /// This number is an approximation as certain usage patterns could cause
+    /// additional allocations before the returned capacity is filled.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// assert_eq!(0, map.capacity());
+    ///
+    /// map.insert("x-host", "hello.world".parse().unwrap());
+    /// assert_eq!(6, map.capacity());
+    /// ```
+    pub fn capacity(&self) -> usize {
+        self.headers.capacity()
+    }
+
+    /// Reserves capacity for at least `additional` more custom metadata to be
+    /// inserted into the `MetadataMap`.
+    ///
+    /// The metadata map may reserve more space to avoid frequent reallocations.
+    /// Like with `with_capacity`, this will be a "best effort" to avoid
+    /// allocations until `additional` more custom metadata is inserted. Certain
+    /// usage patterns could cause additional allocations before the number is
+    /// reached.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the new allocation size overflows `usize`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    /// map.reserve(10);
+    /// # map.insert("x-host", "bar".parse().unwrap());
+    /// ```
+    pub fn reserve(&mut self, additional: usize) {
+        self.headers.reserve(additional);
+    }
+
+    /// Returns a reference to the value associated with the key. This method
+    /// is for ascii metadata entries (those whose names don't end with
+    /// "-bin"). For binary entries, use get_bin.
+    ///
+    /// If there are multiple values associated with the key, then the first one
+    /// is returned. Use `get_all` to get all values associated with a given
+    /// key. Returns `None` if there are no values associated with the key.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    /// assert!(map.get("x-host").is_none());
+    ///
+    /// map.insert("x-host", "hello".parse().unwrap());
+    /// assert_eq!(map.get("x-host").unwrap(), &"hello");
+    /// assert_eq!(map.get("x-host").unwrap(), &"hello");
+    ///
+    /// map.append("x-host", "world".parse().unwrap());
+    /// assert_eq!(map.get("x-host").unwrap(), &"hello");
+    ///
+    /// // Attempting to read a key of the wrong type fails by not
+    /// // finding anything.
+    /// map.append_bin("host-bin", MetadataValue::from_bytes(b"world"));
+    /// assert!(map.get("host-bin").is_none());
+    /// assert!(map.get("host-bin".to_string()).is_none());
+    /// assert!(map.get(&("host-bin".to_string())).is_none());
+    ///
+root@5238af6e374d:/app#

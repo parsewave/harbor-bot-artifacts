@@ -1,0 +1,15 @@
+{
+  "analysis": "We have enough MetadataMap/MetadataValue APIs: MetadataMap::from_headers/into_headers/len/contains_key and value to_str/as_bytes. ripgrep is unavailable, so we use grep/sed. Next step is to implement the metadata validator middleware with a tower Layer/Service wrapper, ensuring no unwrap/expect/clone/if let/closures/unsafe and keeping edits within 3 files. We should inspect how InterceptedService wraps an http::Request and how it handles early Status responses to match tonic’s patterns.",
+  "plan": "1) Inspect the beginning of interceptor.rs to copy the tower Service wrapping structure (Layer, Service, ResponseFuture, ResponseBody).\n2) Implement the new module file metadata_validator.rs using the same pattern but validate headers before calling inner.\n3) Update service/mod.rs to include and re-export the new module.\n4) Run cargo tests for tonic crate.",
+  "commands": [
+    {
+      "keystrokes": "sed -n '1,220p' src/tonic/src/service/interceptor.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "sed -n '220,340p' src/tonic/src/service/interceptor.rs\n",
+      "duration": 0.1
+    }
+  ],
+  "task_complete": false
+}

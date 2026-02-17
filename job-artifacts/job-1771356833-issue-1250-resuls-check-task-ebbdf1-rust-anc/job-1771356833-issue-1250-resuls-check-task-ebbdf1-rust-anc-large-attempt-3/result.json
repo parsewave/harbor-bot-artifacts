@@ -1,0 +1,33 @@
+{
+    "id": "958d3dfb-0f13-4e3e-bd4e-8581f831a6dd",
+    "started_at": "2026-02-17T21:07:42.476775",
+    "finished_at": "2026-02-17T21:28:17.317153",
+    "n_total_trials": 1,
+    "stats": {
+        "n_trials": 1,
+        "n_errors": 1,
+        "evals": {
+            "terminus-2__openai-gpt-5.2__contributor_tasks": {
+                "n_trials": 1,
+                "n_errors": 1,
+                "metrics": [
+                    {
+                        "mean": 0.0
+                    }
+                ],
+                "reward_stats": {
+                    "reward": {
+                        "0.0": [
+                            "ebbdf1-rust-ancillary-metadata-v__FWh7c4N"
+                        ]
+                    }
+                },
+                "exception_stats": {
+                    "AgentTimeoutError": [
+                        "ebbdf1-rust-ancillary-metadata-v__FWh7c4N"
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,64 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-8.4.2, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests
+collecting ... collected 27 items
+
+../tests/test_outputs.py::test_crate_builds PASSED                       [  3%]
+../tests/test_outputs.py::test_metadata_validator_module_exists PASSED   [  7%]
+../tests/test_outputs.py::test_metadata_validator_exported PASSED        [ 11%]
+../tests/test_outputs.py::test_validator_builder_api PASSED              [ 14%]
+../tests/test_outputs.py::test_validator_layer_api PASSED                [ 18%]
+../tests/test_outputs.py::test_validator_integration_compiles PASSED     [ 22%]
+../tests/test_outputs.py::test_layer_applies_validation_before_service PASSED [ 25%]
+../tests/test_outputs.py::test_functional_require_header PASSED          [ 29%]
+../tests/test_outputs.py::test_functional_max_header_size PASSED         [ 33%]
+../tests/test_outputs.py::test_functional_header_prefix PASSED           [ 37%]
+../tests/test_outputs.py::test_functional_max_total_headers PASSED       [ 40%]
+../tests/test_outputs.py::test_validator_trait_signature PASSED          [ 44%]
+../tests/test_outputs.py::test_validator_layer_implements_layer_trait PASSED [ 48%]
+../tests/test_outputs.py::test_builder_returns_validator PASSED          [ 51%]
+../tests/test_outputs.py::test_validation_actually_returns_errors PASSED [ 55%]
+../tests/test_outputs.py::test_validation_logic_uses_metadata PASSED     [ 59%]
+../tests/test_outputs.py::test_existing_tests_pass PASSED                [ 62%]
+../tests/test_outputs.py::test_ancillary_constraint_max_files_3 PASSED   [ 66%]
+../tests/test_outputs.py::test_ancillary_constraint_no_new_deps PASSED   [ 70%]
+../tests/test_outputs.py::test_ancillary_constraint_no_unwrap PASSED     [ 74%]
+../tests/test_outputs.py::test_ancillary_constraint_no_unsafe PASSED     [ 77%]
+../tests/test_outputs.py::test_ancillary_constraint_no_clone PASSED      [ 81%]
+../tests/test_outputs.py::test_ancillary_constraint_no_if_let PASSED     [ 85%]
+../tests/test_outputs.py::test_ancillary_constraint_no_closures PASSED   [ 88%]
+../tests/test_outputs.py::test_ancillary_constraint_max_line_100 PASSED  [ 92%]
+../tests/test_outputs.py::test_ancillary_constraint_backward_compat PASSED [ 96%]
+../tests/test_outputs.py::test_ancillary_constraint_miri_clean PASSED    [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_outputs.py::test_crate_builds
+PASSED ../tests/test_outputs.py::test_metadata_validator_module_exists
+PASSED ../tests/test_outputs.py::test_metadata_validator_exported
+PASSED ../tests/test_outputs.py::test_validator_builder_api
+PASSED ../tests/test_outputs.py::test_validator_layer_api
+PASSED ../tests/test_outputs.py::test_validator_integration_compiles
+PASSED ../tests/test_outputs.py::test_layer_applies_validation_before_service
+PASSED ../tests/test_outputs.py::test_functional_require_header
+PASSED ../tests/test_outputs.py::test_functional_max_header_size
+PASSED ../tests/test_outputs.py::test_functional_header_prefix
+PASSED ../tests/test_outputs.py::test_functional_max_total_headers
+PASSED ../tests/test_outputs.py::test_validator_trait_signature
+PASSED ../tests/test_outputs.py::test_validator_layer_implements_layer_trait
+PASSED ../tests/test_outputs.py::test_builder_returns_validator
+PASSED ../tests/test_outputs.py::test_validation_actually_returns_errors
+PASSED ../tests/test_outputs.py::test_validation_logic_uses_metadata
+PASSED ../tests/test_outputs.py::test_existing_tests_pass
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_max_files_3
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_no_new_deps
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_no_unwrap
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_no_unsafe
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_no_clone
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_no_if_let
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_no_closures
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_max_line_100
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_backward_compat
+PASSED ../tests/test_outputs.py::test_ancillary_constraint_miri_clean
+======================== 27 passed in 416.48s (0:06:56) ========================

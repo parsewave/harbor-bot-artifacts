@@ -1,0 +1,58 @@
+[
+  {
+    "name": "TB Check",
+    "passed": true,
+    "message": "All checks passed",
+    "is_warning": false,
+    "details": "\n\ud83d\udd0e Checking task quality...\nWarning: tasks check currently only supports Dockerfile environments.\n\u2713 Results written to \n/tmp/job-1771356833-issue-1250-resuls-check-task-ebbdf1-rust-anc-tb-check.json\n                              Task Quality Checks                               \n\u250f\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2513\n\u2503 Check                        \u2503 Outcome        \u2503 Explanation                  \u2503\n\u2521\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",
+    "duration_seconds": 43.96451807022095,
+    "result_type": "tb_positive",
+    "check_type": "tb_check",
+    "raw_data": {
+      "behavior_in_task_description": {
+        "explanation": "instruction.md specifies creating tonic/src/service/metadata_validator.rs, wiring it into tonic/src/service/mod.rs with public re-export, implementing ValidatorBuilder APIs, enforcing specific Status codes, applying validation before forwarding in a tower Layer/Service, and meeting constraints (<=3 files, no unwrap/expect/clone/unsafe/if let/closures, <=100 chars/line, Miri-clean, existing tests pass). These align with what test_outputs.py checks (file existence, exports, method names, status-code strings, Layer/Service shape, build/tests/Miri, and ancillary constraints).",
+        "outcome": "pass"
+      },
+      "behavior_in_tests": {
+        "explanation": "Key required behaviors are not actually validated: tests mostly do substring/AST presence checks (e.g., 'starts_with', 'Status::invalid_argument') and do not exercise the middleware on real requests/metadata to confirm semantics (header missing/oversize/prefix mismatch/count exceeded). Also, instruction forbids introducing any new crate dependencies, but tests only parse [dependencies] in Cargo.toml and do not check dev-dependencies/build-dependencies/features changes, so that requirement is not fully covered.",
+        "outcome": "fail"
+      },
+      "informative_test_structure": {
+        "explanation": "tests/test_outputs.py is clearly organized with labeled sections (Feature tests, Backward compatibility, Constraint tests) and docstrings describing intent for each test; helper functions (_build_crate, _get_changed_files, AST scanning) are separated and readable.",
+        "outcome": "pass"
+      },
+      "anti_cheating_measures": {
+        "explanation": "Because many checks are string/AST-based (e.g., presence of method names, status-code strings, 'starts_with') and there are no strong behavioral/runtime tests for actual validation outcomes, an agent could implement superficial logic that compiles and includes required strings but does not enforce constraints correctly, while still passing most tests.",
+        "outcome": "fail"
+      },
+      "structured_data_schema": {
+        "explanation": "Task does not require producing structured output data (JSON/CSV/DB schema).",
+        "outcome": "not_applicable"
+      },
+      "pinned_dependencies": {
+        "explanation": "Python deps are pinned (pytest==8.4.2, tree-sitter==0.24.0, tree-sitter-rust==0.23.2) and tonic is checked out at a fixed git commit. However, Rust toolchains are not pinned: Dockerfile installs 'stable' and 'nightly' via rustup without version/date pinning, which can break reproducibility.",
+        "outcome": "fail"
+      },
+      "typos": {
+        "explanation": "No clear typos in referenced paths/filenames: instruction.md and tests consistently reference /app/src/tonic/src/service/metadata_validator.rs and tonic/src/service/mod.rs; commands in test.sh and cargo invocations appear coherent.",
+        "outcome": "pass"
+      },
+      "tests_or_solution_in_image": {
+        "explanation": "Dockerfile clones the tonic repo into /app/src and does not copy any /tests or /solution directories into the image.",
+        "outcome": "pass"
+      },
+      "test_deps_in_image": {
+        "explanation": "Test-only Python dependencies are installed in the image build (Dockerfile runs pip3 install pytest/tree-sitter/tree-sitter-rust). Per guidance, these should be installed in tests/test.sh instead of being baked into the runtime image.",
+        "outcome": "fail"
+      },
+      "hardcoded_solution": {
+        "explanation": "solution/solve.sh writes source files implementing the required middleware and re-exports; it is not merely echoing a final numeric/text answer. This is appropriate for a coding task.",
+        "outcome": "pass"
+      },
+      "file_reference_mentioned": {
+        "explanation": "instruction.md explicitly names the required output file tonic/src/service/metadata_validator.rs and the wiring file tonic/src/service/mod.rs, matching what tests check.",
+        "outcome": "pass"
+      }
+    }
+  }
+]

@@ -1,0 +1,43 @@
+Current Terminal Screen:
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+    ///
+    /// The iteration order is arbitrary, but consistent across platforms for
+    /// the same crate version. Each key will be yielded once per associated
+    /// value. So, if a key has 3 associated values, it will be yielded 3 times.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// map.insert("x-word", "hello".parse().unwrap());
+    /// map.append("x-word", "goodbye".parse().unwrap());
+    /// map.insert("x-number", "123".parse().unwrap());
+    ///
+    /// for key_and_value in map.iter() {
+    ///     match key_and_value {
+    ///         KeyAndValueRef::Ascii(ref key, ref value) =>
+    ///             println!("Ascii: {:?}: {:?}", key, value),
+    ///         KeyAndValueRef::Binary(ref key, ref value) =>
+    ///             println!("Binary: {:?}: {:?}", key, value),
+    ///     }
+    /// }
+    /// ```
+    pub fn iter(&self) -> Iter<'_> {
+        Iter {
+            inner: self.headers.iter(),
+        }
+    }
+
+    /// An iterator visiting all key-value pairs, with mutable value references.
+    ///
+    /// The iterator order is arbitrary, but consistent across platforms for the
+    /// same crate version. Each key will be yielded once per associated value,
+    /// so if a key has 3 associated values, it will be yielded 3 times.
+    ///
+    /// # Examples
+    ///
+    /// ```
+root@5238af6e374d:/app#

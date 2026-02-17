@@ -1,0 +1,43 @@
+Current Terminal Screen:
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+
+root@5238af6e374d:/app# grep -n "pub fn get_bin" src/tonic/src/metadata/map.rs | head -n 50
+503:    pub fn get_bin<K>(&self, key: K) -> Option<&MetadataValue<Binary>>
+573:    pub fn get_bin_mut<K>(&mut self, key: K) -> Option<&mut MetadataValue<Binary>>
+root@5238af6e374d:/app# grep -n "pub fn contains" src/tonic/src/metadata/map.rs | head -n 80
+694:    pub fn contains_key<K>(&self, key: K) -> bool
+root@5238af6e374d:/app# grep -n "pub fn iter\(" src/tonic/src/metadata/map.rs | head -n 50
+grep: Unmatched ( or \(
+root@5238af6e374d:/app# grep -n "pub fn values\(" src/tonic/src/metadata/map.rs | head -n 50
+grep: Unmatched ( or \(
+root@5238af6e374d:/app# grep -n "pub fn to_str" src/tonic/src/metadata/value.rs | head -n 50
+432:    pub fn to_str(&self) -> Result<&str, ToStrError> {
+root@5238af6e374d:/app# grep -n "as_bytes" src/tonic/src/metadata/value.rs | head -n 80
+108:        VE::is_empty(self.inner.as_bytes())
+112:    /// fail for Ascii values. For Ascii values, `as_bytes` is more convenient
+130:        VE::decode(self.inner.as_bytes())
+196:        self.inner.as_bytes()
+444:    /// assert_eq!(val.as_bytes(), b"hello");
+447:    pub fn as_bytes(&self) -> &[u8] {
+448:        self.inner.as_bytes()
+585:        Bytes::copy_from_slice(value.inner.as_bytes())
+659:        VE::equals(&self.inner, other.as_bytes())
+673:        self.inner.partial_cmp(other.as_bytes())
+701:        self.as_bytes().partial_cmp(other.inner.as_bytes())
+708:        self.partial_cmp(other.inner.as_bytes())
+722:        self.inner.partial_cmp(other.as_bytes())
+736:        self.as_bytes().partial_cmp(other.inner.as_bytes())
+784:        self.as_bytes().partial_cmp(other.inner.as_bytes())
+797:        let val = AsciiMetadataValue::try_from(value.as_bytes()).unwrap();
+881:    assert_eq!(Amv::from_static("abc"), "abc".as_bytes());
+882:    assert_ne!(Amv::from_static("abc"), "ABC".as_bytes());
+883:    assert_eq!(*"abc".as_bytes(), Amv::from_static("abc"));
+884:    assert_ne!(*"ABC".as_bytes(), Amv::from_static("abc"));
+886:    assert_eq!(*"abc".as_bytes(), Bmv::from_bytes(b"abc"));
+887:    assert_ne!(*"ABC".as_bytes(), Bmv::from_bytes(b"abc"));
+890:    assert_eq!(Bmv::from_static("SGVsbG8hIQ=="), "Hello!!".as_bytes());
+891:    assert_eq!(*"Hello!!".as_bytes(), Bmv::from_static("SGVsbG8hIQ=="));
+root@5238af6e374d:/app# grep -n "fn len\(" src/tonic/src/metadata/value.rs | head -n 80
+grep: Unmatched ( or \(
+root@5238af6e374d:/app#

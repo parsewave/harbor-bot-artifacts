@@ -1,0 +1,190 @@
+New Terminal Output:
+
+root@b1aac3828518:/app# grep -n "from_headers" -n src/tonic/src/metadata/map.rs | head
+244:    pub fn from_headers(headers: http::HeaderMap) -> Self {
+2502:    fn test_from_headers_takes_http_headers() {
+2506:        let map = MetadataMap::from_headers(http_map);
+root@b1aac3828518:/app# grep -n "pub fn get" src/tonic/src/metadata/map.rs | head -n 40
+467:    pub fn get<K>(&self, key: K) -> Option<&MetadataValue<Ascii>>
+503:    pub fn get_bin<K>(&self, key: K) -> Option<&MetadataValue<Binary>>
+541:    pub fn get_mut<K>(&mut self, key: K) -> Option<&mut MetadataValue<Ascii>>
+573:    pub fn get_bin_mut<K>(&mut self, key: K) -> Option<&mut MetadataValue<Binary>>
+621:    pub fn get_all<K>(&self, key: K) -> GetAll<'_, Ascii>
+664:    pub fn get_all_bin<K>(&self, key: K) -> GetAll<'_, Binary>
+1659:    pub fn get(&self) -> &MetadataValue<VE> {
+1684:    pub fn get_mut(&mut self) -> &mut MetadataValue<VE> {
+root@b1aac3828518:/app# grep -n "contains_key" src/tonic/src/metadata/map.rs | head -n 40
+27:/// assert!(map.contains_key("x-host"));
+28:/// assert!(!map.contains_key("x-location"));
+34:/// assert!(!map.contains_key("x-host"));
+682:    /// assert!(!map.contains_key("x-host"));
+687:    /// // contains_key works for both Binary and Ascii keys:
+688:    /// assert!(map.contains_key("x-host"));
+689:    /// assert!(map.contains_key("host-bin"));
+691:    /// // contains_key returns false for invalid keys:
+692:    /// assert!(!map.contains_key("x{}host"));
+694:    pub fn contains_key<K>(&self, key: K) -> bool
+698:        key.contains_key(self)
+1810:    /// assert!(!map.contains_key("host"));
+1836:    /// assert!(!map.contains_key("host"));
+2435:    // call `"host".contains_key(&map)`.
+2441:        fn contains_key(&self, map: &MetadataMap) -> bool;
+2449:        fn contains_key(&self, map: &MetadataMap) -> bool {
+2450:            map.headers.contains_key(&self.inner)
+2459:        fn contains_key(&self, map: &MetadataMap) -> bool {
+2460:            map.headers.contains_key(&self.inner)
+2469:        fn contains_key(&self, map: &MetadataMap) -> bool {
+2470:            map.headers.contains_key(*self)
+2479:        fn contains_key(&self, map: &MetadataMap) -> bool {
+2480:            map.headers.contains_key(self.as_str())
+2489:        fn contains_key(&self, map: &MetadataMap) -> bool {
+2490:            map.headers.contains_key(self.as_str())
+root@b1aac3828518:/app# grep -n "pub fn iter" src/tonic/src/metadata/map.rs | head -n 40
+726:    pub fn iter(&self) -> Iter<'_> {
+757:    pub fn iter_mut(&mut self) -> IterMut<'_> {
+1880:    pub fn iter(&self) -> ValueIter<'_, VE> {
+1911:    pub fn iter_mut(&mut self) -> ValueIterMut<'_, VE> {
+1973:    pub fn iter(&self) -> ValueIter<'a, VE> {
+root@b1aac3828518:/app# sed -n '420,560p' src/tonic/src/metadata/map.rs
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    /// map.reserve(10);
+    /// # map.insert("x-host", "bar".parse().unwrap());
+    /// ```
+    pub fn reserve(&mut self, additional: usize) {
+        self.headers.reserve(additional);
+    }
+
+    /// Returns a reference to the value associated with the key. This method
+    /// is for ascii metadata entries (those whose names don't end with
+    /// "-bin"). For binary entries, use get_bin.
+    ///
+    /// If there are multiple values associated with the key, then the first one
+    /// is returned. Use `get_all` to get all values associated with a given
+    /// key. Returns `None` if there are no values associated with the key.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    /// assert!(map.get("x-host").is_none());
+    ///
+    /// map.insert("x-host", "hello".parse().unwrap());
+    /// assert_eq!(map.get("x-host").unwrap(), &"hello");
+    /// assert_eq!(map.get("x-host").unwrap(), &"hello");
+    ///
+    /// map.append("x-host", "world".parse().unwrap());
+    /// assert_eq!(map.get("x-host").unwrap(), &"hello");
+    ///
+    /// // Attempting to read a key of the wrong type fails by not
+    /// // finding anything.
+    /// map.append_bin("host-bin", MetadataValue::from_bytes(b"world"));
+    /// assert!(map.get("host-bin").is_none());
+    /// assert!(map.get("host-bin".to_string()).is_none());
+    /// assert!(map.get(&("host-bin".to_string())).is_none());
+    ///
+    /// // Attempting to read an invalid key string fails by not
+    /// // finding anything.
+    /// assert!(map.get("host{}bin").is_none());
+    /// assert!(map.get("host{}bin".to_string()).is_none());
+    /// assert!(map.get(&("host{}bin".to_string())).is_none());
+    /// ```
+    pub fn get<K>(&self, key: K) -> Option<&MetadataValue<Ascii>>
+    where
+        K: AsMetadataKey<Ascii>,
+    {
+        key.get(self)
+    }
+
+    /// Like get, but for Binary keys (for example "trace-proto-bin").
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    /// assert!(map.get_bin("trace-proto-bin").is_none());
+    ///
+    /// map.insert_bin("trace-proto-bin", MetadataValue::from_bytes(b"hello"));
+    /// assert_eq!(map.get_bin("trace-proto-bin").unwrap(), &"hello");
+    /// assert_eq!(map.get_bin("trace-proto-bin").unwrap(), &"hello");
+    ///
+    /// map.append_bin("trace-proto-bin", MetadataValue::from_bytes(b"world"));
+    /// assert_eq!(map.get_bin("trace-proto-bin").unwrap(), &"hello");
+    ///
+    /// // Attempting to read a key of the wrong type fails by not
+    /// // finding anything.
+    /// map.append("host", "world".parse().unwrap());
+    /// assert!(map.get_bin("host").is_none());
+    /// assert!(map.get_bin("host".to_string()).is_none());
+    /// assert!(map.get_bin(&("host".to_string())).is_none());
+    ///
+    /// // Attempting to read an invalid key string fails by not
+    /// // finding anything.
+    /// assert!(map.get_bin("host{}-bin").is_none());
+    /// assert!(map.get_bin("host{}-bin".to_string()).is_none());
+    /// assert!(map.get_bin(&("host{}-bin".to_string())).is_none());
+    /// ```
+    pub fn get_bin<K>(&self, key: K) -> Option<&MetadataValue<Binary>>
+    where
+        K: AsMetadataKey<Binary>,
+    {
+        key.get(self)
+    }
+
+    /// Returns a mutable reference to the value associated with the key. This
+    /// method is for ascii metadata entries (those whose names don't end with
+    /// "-bin"). For binary entries, use get_mut_bin.
+    ///
+    /// If there are multiple values associated with the key, then the first one
+    /// is returned. Use `entry` to get all values associated with a given
+    /// key. Returns `None` if there are no values associated with the key.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::default();
+    /// map.insert("x-host", "hello".parse().unwrap());
+    /// map.get_mut("x-host").unwrap().set_sensitive(true);
+    ///
+    /// assert!(map.get("x-host").unwrap().is_sensitive());
+    ///
+    /// // Attempting to read a key of the wrong type fails by not
+    /// // finding anything.
+    /// map.append_bin("host-bin", MetadataValue::from_bytes(b"world"));
+    /// assert!(map.get_mut("host-bin").is_none());
+    /// assert!(map.get_mut("host-bin".to_string()).is_none());
+    /// assert!(map.get_mut(&("host-bin".to_string())).is_none());
+    ///
+    /// // Attempting to read an invalid key string fails by not
+    /// // finding anything.
+    /// assert!(map.get_mut("host{}").is_none());
+    /// assert!(map.get_mut("host{}".to_string()).is_none());
+    /// assert!(map.get_mut(&("host{}".to_string())).is_none());
+    /// ```
+    pub fn get_mut<K>(&mut self, key: K) -> Option<&mut MetadataValue<Ascii>>
+    where
+        K: AsMetadataKey<Ascii>,
+    {
+        key.get_mut(self)
+    }
+
+    /// Like get_mut, but for Binary keys (for example "trace-proto-bin").
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::default();
+    /// map.insert_bin("trace-proto-bin", MetadataValue::from_bytes(b"hello"));
+    /// map.get_bin_mut("trace-proto-bin").unwrap().set_sensitive(true);
+    ///
+    /// assert!(map.get_bin("trace-proto-bin").unwrap().is_sensitive());
+    ///
+    /// // Attempting to read a key of the wrong type fails by not
+root@b1aac3828518:/app#

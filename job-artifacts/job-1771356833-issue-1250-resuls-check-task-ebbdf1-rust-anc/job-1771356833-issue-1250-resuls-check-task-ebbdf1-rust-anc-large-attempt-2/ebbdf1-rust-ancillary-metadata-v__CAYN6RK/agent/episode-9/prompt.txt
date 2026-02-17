@@ -1,0 +1,43 @@
+Current Terminal Screen:
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+        }
+    }
+}
+
+#[pin_project(project = KindProj)]
+#[derive(Debug)]
+enum Kind<F> {
+    Future(#[pin] F),
+    Status(Option<Status>),
+}
+
+impl<F, E, B> Future for ResponseFuture<F>
+where
+    F: Future<Output = Result<http::Response<B>, E>>,
+{
+    type Output = Result<http::Response<ResponseBody<B>>, E>;
+
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        match self.project().kind.project() {
+            KindProj::Future(future) => future.poll(cx).map_ok(|res| res.map(ResponseBody::wrap)),
+            KindProj::Status(status) => {
+                let (parts, ()) = status.take().unwrap().into_http::<()>().into_parts();
+                let response = http::Response::from_parts(parts, ResponseBody::<B>::empty());
+                Poll::Ready(Ok(response))
+            }
+        }
+    }
+}
+
+/// Response body for [`InterceptedService`].
+#[pin_project]
+#[derive(Debug)]
+pub struct ResponseBody<B> {
+    #[pin]
+    kind: ResponseBodyKind<B>,
+}
+
+#[pin_project(project = ResponseBodyKindProj)]
+#[derive(Debug)]
+root@b1aac3828518:/app#

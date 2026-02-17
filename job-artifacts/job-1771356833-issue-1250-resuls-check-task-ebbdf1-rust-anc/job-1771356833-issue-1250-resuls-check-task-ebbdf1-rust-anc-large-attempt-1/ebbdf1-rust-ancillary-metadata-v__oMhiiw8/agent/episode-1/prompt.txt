@@ -1,0 +1,82 @@
+Previous response had warnings:
+WARNINGS: - Extra text detected after JSON object
+
+New Terminal Output:
+
+root@830ef13b33a0:/app# ls -la
+total 12
+drwxr-xr-x  1 root root 4096 Feb 17 20:09 .
+drwxr-xr-x  1 root root 4096 Feb 17 20:33 ..
+drwxr-xr-x 21 root root 4096 Feb 17 20:09 src
+root@830ef13b33a0:/app# ls -la src
+total 216
+drwxr-xr-x 21 root root  4096 Feb 17 20:09 .
+drwxr-xr-x  1 root root  4096 Feb 17 20:09 ..
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 .github
+-rw-r--r--  1 root root    35 Feb 17 20:09 .gitignore
+-rw-r--r--  1 root root 61554 Feb 17 20:09 CHANGELOG.md
+-rw-r--r--  1 root root 17932 Feb 17 20:09 CONTRIBUTING.md
+-rw-r--r--  1 root root   889 Feb 17 20:09 Cargo.toml
+-rw-r--r--  1 root root  1056 Feb 17 20:09 LICENSE
+-rw-r--r--  1 root root  4931 Feb 17 20:09 README.md
+-rw-r--r--  1 root root   370 Feb 17 20:09 SECURITY.md
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 codegen
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 examples
+-rw-r--r--  1 root root  4163 Feb 17 20:09 flake.lock
+-rw-r--r--  1 root root  4216 Feb 17 20:09 flake.nix
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 grpc
+drwxr-xr-x  6 root root  4096 Feb 17 20:09 interop
+-rwxr-xr-x  1 root root  1123 Feb 17 20:09 prepare-release.sh
+drwxr-xr-x  4 root root  4096 Feb 17 20:09 protoc-gen-rust-grpc
+-rwxr-xr-x  1 root root   510 Feb 17 20:09 publish-release.sh
+drwxr-xr-x 12 root root  4096 Feb 17 20:09 tests
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 tonic
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 tonic-build
+drwxr-xr-x  4 root root  4096 Feb 17 20:09 tonic-health
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 tonic-prost
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 tonic-prost-build
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 tonic-protobuf
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 tonic-protobuf-build
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 tonic-reflection
+drwxr-xr-x  4 root root  4096 Feb 17 20:09 tonic-types
+drwxr-xr-x  4 root root  4096 Feb 17 20:09 tonic-web
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 tonic-xds
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 xds-client
+root@830ef13b33a0:/app# ls -la src/tonic/src/service
+total 40
+drwxr-xr-x 2 root root  4096 Feb 17 20:09 .
+drwxr-xr-x 8 root root  4096 Feb 17 20:09 ..
+-rw-r--r-- 1 root root 10494 Feb 17 20:09 interceptor.rs
+-rw-r--r-- 1 root root  2369 Feb 17 20:09 layered.rs
+-rw-r--r-- 1 root root   533 Feb 17 20:09 mod.rs
+-rw-r--r-- 1 root root  4008 Feb 17 20:09 recover_error.rs
+-rw-r--r-- 1 root root  4663 Feb 17 20:09 router.rs
+root@830ef13b33a0:/app# sed -n '1,200p' src/tonic/src/service/mod.rs
+//! Utilities for using Tower services with Tonic.
+
+pub mod interceptor;
+pub(crate) mod layered;
+#[cfg(feature = "router")]
+pub(crate) mod router;
+
+#[doc(inline)]
+pub use self::interceptor::{Interceptor, InterceptorLayer};
+pub use self::layered::{LayerExt, Layered};
+#[doc(inline)]
+#[cfg(feature = "router")]
+pub use self::router::{Routes, RoutesBuilder};
+#[cfg(feature = "router")]
+pub use axum::{body::Body as AxumBody, Router as AxumRouter};
+
+pub mod recover_error;
+pub use self::recover_error::{RecoverError, RecoverErrorLayer};
+root@830ef13b33a0:/app# ls -la src/tonic/src/service
+total 40
+drwxr-xr-x 2 root root  4096 Feb 17 20:09 .
+drwxr-xr-x 8 root root  4096 Feb 17 20:09 ..
+-rw-r--r-- 1 root root 10494 Feb 17 20:09 interceptor.rs
+-rw-r--r-- 1 root root  2369 Feb 17 20:09 layered.rs
+-rw-r--r-- 1 root root   533 Feb 17 20:09 mod.rs
+-rw-r--r-- 1 root root  4008 Feb 17 20:09 recover_error.rs
+-rw-r--r-- 1 root root  4663 Feb 17 20:09 router.rs
+root@830ef13b33a0:/app#

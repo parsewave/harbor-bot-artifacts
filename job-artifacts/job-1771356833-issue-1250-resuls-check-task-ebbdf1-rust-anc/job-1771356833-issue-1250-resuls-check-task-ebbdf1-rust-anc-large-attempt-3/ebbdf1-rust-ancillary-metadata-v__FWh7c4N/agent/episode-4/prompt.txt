@@ -1,0 +1,43 @@
+Current Terminal Screen:
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+    /// binary entries, use get_all_bin.
+    ///
+    /// The returned view does not incur any allocations and allows iterating
+    /// the values associated with the key.  See [`GetAll`] for more details.
+    /// Returns `None` if there are no values associated with the key.
+    ///
+    /// [`GetAll`]: struct.GetAll.html
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// map.insert("x-host", "hello".parse().unwrap());
+    /// map.append("x-host", "goodbye".parse().unwrap());
+    ///
+    /// {
+    ///     let view = map.get_all("x-host");
+    ///
+    ///     let mut iter = view.iter();
+    ///     assert_eq!(&"hello", iter.next().unwrap());
+    ///     assert_eq!(&"goodbye", iter.next().unwrap());
+    ///     assert!(iter.next().is_none());
+    /// }
+    ///
+    /// // Attempting to read a key of the wrong type fails by not
+    /// // finding anything.
+    /// map.append_bin("host-bin", MetadataValue::from_bytes(b"world"));
+    /// assert!(map.get_all("host-bin").iter().next().is_none());
+    /// assert!(map.get_all("host-bin".to_string()).iter().next().is_none());
+    /// assert!(map.get_all(&("host-bin".to_string())).iter().next().is_none());
+    ///
+    /// // Attempting to read an invalid key string fails by not
+    /// // finding anything.
+    /// assert!(map.get_all("host{}").iter().next().is_none());
+    /// assert!(map.get_all("host{}".to_string()).iter().next().is_none());
+    /// assert!(map.get_all(&("host{}".to_string())).iter().next().is_none());
+    /// ```
+root@5238af6e374d:/app#

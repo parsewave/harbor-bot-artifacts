@@ -1,0 +1,5 @@
+New Terminal Output:
+
+root@b1aac3828518:/app/src# cd /app/src
+root@b1aac3828518:/app/src# awk 'length($0)>100{print FNR ":" length($0) ":" $0}' tonic/src/service/metadata_validator.rs tonic/src/service/mod.rs
+root@b1aac3828518:/app/src#

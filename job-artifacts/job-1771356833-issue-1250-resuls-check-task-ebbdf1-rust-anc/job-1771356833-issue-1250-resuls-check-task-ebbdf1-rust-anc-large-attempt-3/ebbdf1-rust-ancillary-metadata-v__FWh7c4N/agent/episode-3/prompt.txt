@@ -1,0 +1,43 @@
+Current Terminal Screen:
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+
+    #[test]
+    fn duration_to_grpc_timeout_less_than_second() {
+        let timeout = Duration::from_millis(500);
+        let value = duration_to_grpc_timeout(timeout);
+        assert_eq!(value, format!("{}u", timeout.as_micros()));
+    }
+
+    #[test]
+    fn duration_to_grpc_timeout_more_than_second() {
+        let timeout = Duration::from_secs(30);
+        let value = duration_to_grpc_timeout(timeout);
+        assert_eq!(value, format!("{}u", timeout.as_micros()));
+    }
+
+    #[test]
+    fn duration_to_grpc_timeout_a_very_long_time() {
+        let one_hour = Duration::from_secs(60 * 60);
+        let value = duration_to_grpc_timeout(one_hour);
+        assert_eq!(value, format!("{}m", one_hour.as_millis()));
+    }
+}
+root@5238af6e374d:/app# grep -RIn "pub fn metadata" src/tonic/src/request.rs src/tonic/src | head -n 50
+src/tonic/src/request.rs:132:    pub fn metadata(&self) -> &MetadataMap {
+src/tonic/src/request.rs:137:    pub fn metadata_mut(&mut self) -> &mut MetadataMap {
+src/tonic/src/request.rs:132:    pub fn metadata(&self) -> &MetadataMap {
+src/tonic/src/request.rs:137:    pub fn metadata_mut(&mut self) -> &mut MetadataMap {
+src/tonic/src/status.rs:527:    pub fn metadata(&self) -> &MetadataMap {
+src/tonic/src/status.rs:532:    pub fn metadata_mut(&mut self) -> &mut MetadataMap {
+src/tonic/src/response.rs:45:    pub fn metadata(&self) -> &MetadataMap {
+src/tonic/src/response.rs:50:    pub fn metadata_mut(&mut self) -> &mut MetadataMap {
+root@5238af6e374d:/app# grep -RIn "metadata\(\)" src/tonic/src/service | head -n 50
+src/tonic/src/service/interceptor.rs:132:        // here, allow the interceptor to modify the metadata and extensions, and then recreate the
+src/tonic/src/service/interceptor.rs:139:        let (metadata, extensions, msg) = req.into_parts();
+src/tonic/src/service/interceptor.rs:143:            .call(crate::Request::from_parts(metadata, extensions, ()))
+src/tonic/src/service/interceptor.rs:146:                let (metadata, extensions, _) = req.into_parts();
+src/tonic/src/service/interceptor.rs:147:                let req = crate::Request::from_parts(metadata, extensions, msg);
+src/tonic/src/service/interceptor.rs:291:                    .metadata()
+root@5238af6e374d:/app# grep -RIn "type Request" src/tonic/src | head -n 50
+root@5238af6e374d:/app#

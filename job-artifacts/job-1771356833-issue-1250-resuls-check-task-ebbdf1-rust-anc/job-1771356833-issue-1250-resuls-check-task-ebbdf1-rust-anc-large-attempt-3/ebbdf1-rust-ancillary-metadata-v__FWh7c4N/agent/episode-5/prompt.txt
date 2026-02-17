@@ -1,0 +1,43 @@
+Current Terminal Screen:
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+    ///             println!("Ascii key: {:?}", key),
+    ///         KeyRef::Binary(ref key) =>
+    ///             println!("Binary key: {:?}", key),
+    ///     }
+    ///     println!("{:?}", key);
+    /// }
+    /// ```
+    pub fn keys(&self) -> Keys<'_> {
+        Keys {
+            inner: self.headers.keys(),
+        }
+    }
+
+    /// An iterator visiting all values (both ascii and binary).
+    ///
+    /// The iteration order is arbitrary, but consistent across platforms for
+    /// the same crate version.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// map.insert("x-word", "hello".parse().unwrap());
+    /// map.append("x-word", "goodbye".parse().unwrap());
+    /// map.insert_bin("x-number-bin", MetadataValue::from_bytes(b"123"));
+    ///
+    /// for value in map.values() {
+    ///     match value {
+    ///         ValueRef::Ascii(ref value) =>
+    ///             println!("Ascii value: {:?}", value),
+    ///         ValueRef::Binary(ref value) =>
+    ///             println!("Binary value: {:?}", value),
+    ///     }
+    ///     println!("{:?}", value);
+    /// }
+    /// ```
+    pub fn values(&self) -> Values<'_> {
+root@5238af6e374d:/app#

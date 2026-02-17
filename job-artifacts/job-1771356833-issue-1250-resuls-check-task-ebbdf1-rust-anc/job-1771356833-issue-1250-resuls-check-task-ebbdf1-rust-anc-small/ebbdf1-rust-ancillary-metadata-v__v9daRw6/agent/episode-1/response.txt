@@ -1,0 +1,18 @@
+{
+  "analysis": "We listed the repository. The target files are under src/tonic/src/service. We need to inspect that directory to see existing modules and patterns for layers. We'll list src/tonic/src/service to understand current code and where to add the new metadata validator.",
+  "plan": "1. List the contents of src/tonic/src/service.\n2. Open src/tonic/src/service/mod.rs to see current re-exports and structure.\n3. Open src/tonic/src/service/interceptor.rs to see how a layer is implemented, for reference.\n4. Create src/tonic/src/service/metadata_validator.rs with the required trait, builder, and layer implementation, adhering to constraints (no closures, no if let, no unwrap, no clone, line length <=100, no new dependencies). We'll use struct SimpleValidator to hold configuration fields and implement MetadataValidator for it. The builder will produce SimpleValidator.\n5. Modify src/tonic/src/service/mod.rs to add `pub mod metadata_validator;` and re-export `pub use metadata_validator::{MetadataValidator, ValidatorBuilder, MetadataValidatorLayer};`.\n6. Ensure imports of tower::Service, tower::Layer, tonic::metadata::MetadataMap, tonic::Status, tonic::Code.\n7. The layer will be generic over inner service S, where S: Service<Request = tonic::Request<T>, Response = tonic::Response<U>, Error = tonic::Status>. The layer's call will validate request.metadata() using the validator and forward if ok, otherwise return Err(Status).\n8. Implement call method without if let, using match on validator.validate(md).\n9. Ensure no panic, no unwrap, no clone, no closures. Use simple structs and methods.\n10. After creating the file and updating mod.rs, run `cargo test --workspace` to ensure all tests pass.\nWe will now execute the commands to list the service directory and view existing files.",
+  "commands": [
+    {
+      "keystrokes": "ls src/tonic/src/service\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "sed -n '1,200p' src/tonic/src/service/mod.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "sed -n '1,200p' src/tonic/src/service/interceptor.rs\n",
+      "duration": 0.1
+    }
+  ]
+}

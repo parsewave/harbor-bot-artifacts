@@ -1,0 +1,10 @@
+New Terminal Output:
+
+root@0b8bb3e48be3:/app# apply_patch <<'PATCH'
+> *** Begin Patch
+> *** Add File: src/tonic/src/service/_placeholder.txt
+> +placeholder
+> *** End Patch
+> PATCH
+bash: apply_patch: command not found
+root@0b8bb3e48be3:/app#

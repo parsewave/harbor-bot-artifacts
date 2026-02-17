@@ -1,0 +1,33 @@
+{
+    "id": "d63272d6-dc37-412e-8615-2bb3239a5581",
+    "started_at": "2026-02-17T20:07:20.472039",
+    "finished_at": "2026-02-17T20:32:13.193697",
+    "n_total_trials": 1,
+    "stats": {
+        "n_trials": 1,
+        "n_errors": 1,
+        "evals": {
+            "terminus-2__openai-gpt-oss-120b:exacto__contributor_tasks": {
+                "n_trials": 1,
+                "n_errors": 1,
+                "metrics": [
+                    {
+                        "mean": 0.0
+                    }
+                ],
+                "reward_stats": {
+                    "reward": {
+                        "0.0": [
+                            "ebbdf1-rust-ancillary-metadata-v__v9daRw6"
+                        ]
+                    }
+                },
+                "exception_stats": {
+                    "AgentTimeoutError": [
+                        "ebbdf1-rust-ancillary-metadata-v__v9daRw6"
+                    ]
+                }
+            }
+        }
+    }
+}

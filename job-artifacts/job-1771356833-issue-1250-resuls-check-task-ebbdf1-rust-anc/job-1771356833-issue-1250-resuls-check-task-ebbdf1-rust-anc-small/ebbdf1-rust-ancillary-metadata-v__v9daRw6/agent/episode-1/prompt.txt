@@ -1,0 +1,436 @@
+New Terminal Output:
+
+root@0b8bb3e48be3:/app# ls -R .
+.:
+src
+
+./src:
+CHANGELOG.md     LICENSE      codegen     flake.nix  prepare-release.sh    tests        tonic-health       tonic-protobuf        tonic-types  xds-client
+CONTRIBUTING.md  README.md    examples    grpc       protoc-gen-rust-grpc  tonic        tonic-prost        tonic-protobuf-build  tonic-web
+Cargo.toml       SECURITY.md  flake.lock  interop    publish-release.sh    tonic-build  tonic-prost-build  tonic-reflection      tonic-xds
+
+./src/codegen:
+Cargo.toml  src
+
+./src/codegen/src:
+main.rs
+
+./src/examples:
+Cargo.toml  README.md  build.rs  data  helloworld-tutorial.md  proto  routeguide-tutorial.md  src
+
+./src/examples/data:
+gcp  route_guide_db.json  tls
+
+./src/examples/data/gcp:
+roots.pem
+
+./src/examples/data/tls:
+ca.key  ca.pem  client1.key  client1.pem  client2.key  client2.pem  client_ca.key  client_ca.pem  create.sh  openssl.cnf  server.key  server.pem
+
+./src/examples/proto:
+attrs  echo  googleapis  helloworld  routeguide  unaryecho
+
+./src/examples/proto/attrs:
+attrs.proto
+
+./src/examples/proto/echo:
+echo.proto
+
+./src/examples/proto/googleapis:
+google
+
+./src/examples/proto/googleapis/google:
+api  pubsub
+
+./src/examples/proto/googleapis/google/api:
+annotations.proto  client.proto  field_behavior.proto  http.proto  resource.proto
+
+./src/examples/proto/googleapis/google/pubsub:
+v1
+
+./src/examples/proto/googleapis/google/pubsub/v1:
+pubsub.proto  schema.proto
+
+./src/examples/proto/helloworld:
+helloworld.proto
+
+./src/examples/proto/routeguide:
+route_guide.proto
+
+./src/examples/proto/unaryecho:
+echo.proto
+
+./src/examples/src:
+authentication  cancellation   dynamic               grpc-web  helloworld   load_balance  reflection    streaming        tls_rustls  uds
+autoreload      codec_buffers  dynamic_load_balance  h2c       interceptor  mock          richer-error  tls              tower
+blocking        compression    gcp                   health    json-codec   multiplex     routeguide    tls_client_auth  tracing
+
+./src/examples/src/authentication:
+client.rs  server.rs
+
+./src/examples/src/autoreload:
+server.rs
+
+./src/examples/src/blocking:
+client.rs  server.rs
+
+./src/examples/src/cancellation:
+client.rs  server.rs
+
+./src/examples/src/codec_buffers:
+client.rs  common.rs  server.rs
+
+./src/examples/src/compression:
+client.rs  server.rs
+
+./src/examples/src/dynamic:
+server.rs
+
+./src/examples/src/dynamic_load_balance:
+client.rs  server.rs
+
+./src/examples/src/gcp:
+README.md  client.rs
+
+./src/examples/src/grpc-web:
+client.rs  server.rs
+
+./src/examples/src/h2c:
+client.rs  server.rs
+
+./src/examples/src/health:
+README.md  server.rs
+
+./src/examples/src/helloworld:
+client.rs  server.rs
+
+./src/examples/src/interceptor:
+client.rs  server.rs
+
+./src/examples/src/json-codec:
+client.rs  common.rs  server.rs
+
+./src/examples/src/load_balance:
+client.rs  server.rs
+
+./src/examples/src/mock:
+mock.rs
+
+./src/examples/src/multiplex:
+client.rs  server.rs
+
+./src/examples/src/reflection:
+server.rs
+
+./src/examples/src/richer-error:
+client.rs  client_vec.rs  server.rs  server_vec.rs
+
+./src/examples/src/routeguide:
+client.rs  data.rs  server.rs
+
+./src/examples/src/streaming:
+client.rs  server.rs
+
+./src/examples/src/tls:
+client.rs  server.rs
+
+./src/examples/src/tls_client_auth:
+client.rs  server.rs
+
+./src/examples/src/tls_rustls:
+client.rs  server.rs
+
+./src/examples/src/tower:
+client.rs  server.rs
+
+./src/examples/src/tracing:
+client.rs  server.rs
+
+./src/examples/src/uds:
+client_standard.rs  client_with_connector.rs  server.rs
+
+./src/grpc:
+Cargo.toml  examples  proto  src
+
+./src/grpc/examples:
+inmemory.rs  multiaddr.rs
+
+./src/grpc/proto:
+echo
+
+./src/grpc/proto/echo:
+echo.proto
+
+./src/grpc/src:
+attributes.rs  byte_str.rs  client  codec.rs  credentials  generated  inmemory  lib.rs  macros.rs  rt  send_future.rs  server  service.rs  status  status.rs
+
+./src/grpc/src/client:
+channel.rs  load_balancing  mod.rs  name_resolution  service_config.rs  subchannel.rs  transport
+
+./src/grpc/src/client/load_balancing:
+child_manager.rs  graceful_switch.rs  mod.rs  pick_first.rs  registry.rs  round_robin.rs  test_utils.rs
+
+./src/grpc/src/client/name_resolution:
+backoff.rs  dns  mod.rs  registry.rs
+
+./src/grpc/src/client/name_resolution/dns:
+mod.rs  test.rs
+
+./src/grpc/src/client/transport:
+mod.rs  registry.rs  tonic
+
+./src/grpc/src/client/transport/tonic:
+mod.rs  test.rs
+
+./src/grpc/src/credentials:
+client.rs  dyn_wrapper.rs  insecure.rs  mod.rs  server.rs
+
+./src/grpc/src/generated:
+echo_fds.rs  grpc_examples_echo.rs
+
+./src/grpc/src/inmemory:
+mod.rs
+
+./src/grpc/src/rt:
+hyper_wrapper.rs  mod.rs  tokio
+
+./src/grpc/src/rt/tokio:
+hickory_resolver.rs  mod.rs
+
+./src/grpc/src/server:
+mod.rs
+
+./src/grpc/src/status:
+server_status.rs  status_code.rs
+
+./src/interop:
+Cargo.toml  bin  build.rs  data  proto  src  test.sh  update_binaries.sh
+
+./src/interop/bin:
+client_darwin_amd64  client_linux_amd64  client_windows_amd64.exe  server_darwin_amd64  server_linux_amd64  server_windows_amd64.exe
+
+./src/interop/data:
+
+[... output limited to 10000 bytes; 70 interior bytes omitted ...]
+.rs  grpc_web.rs
+
+./src/tests/wellknown:
+Cargo.toml  build.rs  proto  src
+
+./src/tests/wellknown/proto:
+wellknown.proto
+
+./src/tests/wellknown/src:
+lib.rs
+
+./src/tests/wellknown-compiled:
+Cargo.toml  build.rs  proto  src
+
+./src/tests/wellknown-compiled/proto:
+google.proto  test.proto
+
+./src/tests/wellknown-compiled/src:
+lib.rs
+
+./src/tonic:
+Cargo.toml  LICENSE  benches  benches-disabled  src
+
+./src/tonic/benches:
+decode.rs
+
+./src/tonic/benches-disabled:
+README.md  bench_main.rs  benchmarks  proto
+
+./src/tonic/benches-disabled/benchmarks:
+compiled_protos  mod.rs  request_response.rs  request_response_diverse_types.rs  utils.rs
+
+./src/tonic/benches-disabled/benchmarks/compiled_protos:
+diverse_types.rs  helloworld.rs  mod.rs
+
+./src/tonic/benches-disabled/proto:
+diverse_types  helloworld
+
+./src/tonic/benches-disabled/proto/diverse_types:
+diverse_types.proto
+
+./src/tonic/benches-disabled/proto/helloworld:
+helloworld.proto
+
+./src/tonic/src:
+body.rs  client  codec  codegen.rs  extensions.rs  lib.rs  macros.rs  metadata  request.rs  response.rs  server  service  status.rs  transport  util.rs
+
+./src/tonic/src/client:
+grpc.rs  mod.rs  service.rs
+
+./src/tonic/src/codec:
+buffer.rs  compression.rs  decode.rs  encode.rs  mod.rs
+
+./src/tonic/src/metadata:
+encoding.rs  key.rs  map.rs  mod.rs  value.rs
+
+./src/tonic/src/server:
+grpc.rs  mod.rs  service.rs
+
+./src/tonic/src/service:
+interceptor.rs  layered.rs  mod.rs  recover_error.rs  router.rs
+
+./src/tonic/src/transport:
+channel  error.rs  mod.rs  server  service  tls.rs
+
+./src/tonic/src/transport/channel:
+endpoint.rs  mod.rs  service  tls.rs  uds_connector.rs
+
+./src/tonic/src/transport/channel/service:
+add_origin.rs  connection.rs  connector.rs  discover.rs  executor.rs  io.rs  mod.rs  reconnect.rs  tls.rs  user_agent.rs
+
+./src/tonic/src/transport/server:
+conn.rs  display_error_stack.rs  incoming.rs  io_stream.rs  mod.rs  service  tls.rs  unix.rs
+
+./src/tonic/src/transport/server/service:
+io.rs  mod.rs  tls.rs
+
+./src/tonic/src/transport/service:
+grpc_timeout.rs  mod.rs  tls.rs
+
+./src/tonic-build:
+Cargo.toml  LICENSE  README.md  src
+
+./src/tonic-build/src:
+client.rs  code_gen.rs  lib.rs  manual.rs  server.rs
+
+./src/tonic-health:
+Cargo.toml  LICENSE  README.md  proto  src
+
+./src/tonic-health/proto:
+health.proto
+
+./src/tonic-health/src:
+generated  lib.rs  server.rs
+
+./src/tonic-health/src/generated:
+grpc_health_v1.rs  grpc_health_v1_fds.rs
+
+./src/tonic-prost:
+Cargo.toml  README.md  src
+
+./src/tonic-prost/src:
+codec.rs  lib.rs
+
+./src/tonic-prost-build:
+Cargo.toml  README.md  src
+
+./src/tonic-prost-build/src:
+lib.rs  tests.rs
+
+./src/tonic-protobuf:
+Cargo.toml  src
+
+./src/tonic-protobuf/src:
+lib.rs
+
+./src/tonic-protobuf-build:
+Cargo.toml  README.md  build.rs  src
+
+./src/tonic-protobuf-build/src:
+lib.rs
+
+./src/tonic-reflection:
+Cargo.toml  LICENSE  README.md  proto  src  tests
+
+./src/tonic-reflection/proto:
+reflection_v1.proto  reflection_v1alpha.proto
+
+./src/tonic-reflection/src:
+generated  lib.rs  server
+
+./src/tonic-reflection/src/generated:
+grpc_reflection_v1.rs  grpc_reflection_v1alpha.rs  reflection_v1_fds.rs  reflection_v1alpha1_fds.rs
+
+./src/tonic-reflection/src/server:
+mod.rs  v1.rs  v1alpha.rs
+
+./src/tonic-reflection/tests:
+server.rs  versions.rs
+
+./src/tonic-types:
+Cargo.toml  LICENSE  README.md  proto  src
+
+./src/tonic-types/proto:
+error_details.proto  status.proto
+
+./src/tonic-types/src:
+generated  lib.rs  richer_error
+
+./src/tonic-types/src/generated:
+google_rpc.rs  types_fds.rs
+
+./src/tonic-types/src/richer_error:
+error_details  mod.rs  std_messages
+
+./src/tonic-types/src/richer_error/error_details:
+mod.rs  vec.rs
+
+./src/tonic-types/src/richer_error/std_messages:
+bad_request.rs  error_info.rs  loc_message.rs  prec_failure.rs   request_info.rs   retry_info.rs
+debug_info.rs   help.rs        mod.rs          quota_failure.rs  resource_info.rs
+
+./src/tonic-web:
+Cargo.toml  LICENSE  README.md  src  tests
+
+./src/tonic-web/src:
+call.rs  client.rs  layer.rs  lib.rs  service.rs
+
+./src/tonic-web/tests:
+incomplete-buf-bug.bin
+
+./src/tonic-xds:
+Cargo.toml  examples  proto  src
+
+./src/tonic-xds/examples:
+gen_test_proto.rs
+
+./src/tonic-xds/proto:
+test
+
+./src/tonic-xds/proto/test:
+helloworld.proto
+
+./src/tonic-xds/src:
+client  common  lib.rs  testutil  xds
+
+./src/tonic-xds/src/client:
+channel.rs  cluster.rs  endpoint.rs  lb.rs  mod.rs  route.rs
+
+./src/tonic-xds/src/common:
+async_util.rs  mod.rs
+
+./src/tonic-xds/src/testutil:
+grpc.rs  mod.rs  proto
+
+./src/tonic-xds/src/testutil/proto:
+helloworld.rs  mod.rs
+
+./src/tonic-xds/src/xds:
+mod.rs  route.rs  uri.rs  xds_manager.rs
+
+./src/xds-client:
+Cargo.toml  src
+
+./src/xds-client/src:
+client  codec  error.rs  lib.rs  message.rs  resource  runtime  transport
+
+./src/xds-client/src/client:
+config.rs  mod.rs  watch.rs  worker.rs
+
+./src/xds-client/src/codec:
+mod.rs  prost.rs
+
+./src/xds-client/src/resource:
+mod.rs  prost.rs
+
+./src/xds-client/src/runtime:
+mod.rs  tokio.rs
+
+./src/xds-client/src/transport:
+mod.rs  tonic.rs
+root@0b8bb3e48be3:/app#

@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Solution Length",
+    "passed": true,
+    "message": "569 lines (max: 1000)",
+    "is_warning": true,
+    "details": null,
+    "duration_seconds": null,
+    "result_type": null,
+    "check_type": "solution_length",
+    "raw_data": null
+  }
+]

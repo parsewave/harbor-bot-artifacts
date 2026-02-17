@@ -1,0 +1,314 @@
+New Terminal Output:
+
+root@830ef13b33a0:/app# grep -n "from_headers" -n src/tonic/src/metadata/map.rs | head -n 50
+244:    pub fn from_headers(headers: http::HeaderMap) -> Self {
+2502:    fn test_from_headers_takes_http_headers() {
+2506:        let map = MetadataMap::from_headers(http_map);
+root@830ef13b33a0:/app# sed -n '260,420p' src/tonic/src/metadata/map.rs
+    /// ```
+    pub fn into_headers(self) -> http::HeaderMap {
+        self.headers
+    }
+
+    pub(crate) fn into_sanitized_headers(mut self) -> http::HeaderMap {
+        for r in &Self::GRPC_RESERVED_HEADERS {
+            self.headers.remove(r);
+        }
+        self.headers
+    }
+
+    /// Create an empty `MetadataMap` with the specified capacity.
+    ///
+    /// The returned map will allocate internal storage in order to hold about
+    /// `capacity` elements without reallocating. However, this is a "best
+    /// effort" as there are usage patterns that could cause additional
+    /// allocations before `capacity` metadata entries are stored in the map.
+    ///
+    /// More capacity than requested may be allocated.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let map: MetadataMap = MetadataMap::with_capacity(10);
+    ///
+    /// assert!(map.is_empty());
+    /// assert!(map.capacity() >= 10);
+    /// ```
+    pub fn with_capacity(capacity: usize) -> MetadataMap {
+        MetadataMap {
+            headers: http::HeaderMap::with_capacity(capacity),
+        }
+    }
+
+    /// Returns the number of metadata entries (ascii and binary) stored in the
+    /// map.
+    ///
+    /// This number represents the total number of **values** stored in the map.
+    /// This number can be greater than or equal to the number of **keys**
+    /// stored given that a single key may have more than one associated value.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// assert_eq!(0, map.len());
+    ///
+    /// map.insert("x-host-ip", "127.0.0.1".parse().unwrap());
+    /// map.insert_bin("x-host-name-bin", MetadataValue::from_bytes(b"localhost"));
+    ///
+    /// assert_eq!(2, map.len());
+    ///
+    /// map.append("x-host-ip", "text/html".parse().unwrap());
+    ///
+    /// assert_eq!(3, map.len());
+    /// ```
+    pub fn len(&self) -> usize {
+        self.headers.len()
+    }
+
+    /// Returns the number of keys (ascii and binary) stored in the map.
+    ///
+    /// This number will be less than or equal to `len()` as each key may have
+    /// more than one associated value.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// assert_eq!(0, map.keys_len());
+    ///
+    /// map.insert("x-host-ip", "127.0.0.1".parse().unwrap());
+    /// map.insert_bin("x-host-name-bin", MetadataValue::from_bytes(b"localhost"));
+    ///
+    /// assert_eq!(2, map.keys_len());
+    ///
+    /// map.append("x-host-ip", "text/html".parse().unwrap());
+    ///
+    /// assert_eq!(2, map.keys_len());
+    /// ```
+    pub fn keys_len(&self) -> usize {
+        self.headers.keys_len()
+    }
+
+    /// Returns true if the map contains no elements.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// assert!(map.is_empty());
+    ///
+    /// map.insert("x-host", "hello.world".parse().unwrap());
+    ///
+    /// assert!(!map.is_empty());
+    /// ```
+    pub fn is_empty(&self) -> bool {
+        self.headers.is_empty()
+    }
+
+    /// Clears the map, removing all key-value pairs. Keeps the allocated memory
+    /// for reuse.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    /// map.insert("x-host", "hello.world".parse().unwrap());
+    ///
+    /// map.clear();
+    /// assert!(map.is_empty());
+    /// assert!(map.capacity() > 0);
+    /// ```
+    pub fn clear(&mut self) {
+        self.headers.clear();
+    }
+
+    /// Returns the number of custom metadata entries the map can hold without
+    /// reallocating.
+    ///
+    /// This number is an approximation as certain usage patterns could cause
+    /// additional allocations before the returned capacity is filled.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// assert_eq!(0, map.capacity());
+    ///
+    /// map.insert("x-host", "hello.world".parse().unwrap());
+    /// assert_eq!(6, map.capacity());
+    /// ```
+    pub fn capacity(&self) -> usize {
+        self.headers.capacity()
+    }
+
+    /// Reserves capacity for at least `additional` more custom metadata to be
+    /// inserted into the `MetadataMap`.
+    ///
+    /// The metadata map may reserve more space to avoid frequent reallocations.
+    /// Like with `with_capacity`, this will be a "best effort" to avoid
+    /// allocations until `additional` more custom me
+[... output limited to 10000 bytes; 71 interior bytes omitted ...]
+nner: self.headers.keys(),
+        }
+    }
+
+    /// An iterator visiting all values (both ascii and binary).
+    ///
+    /// The iteration order is arbitrary, but consistent across platforms for
+    /// the same crate version.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// map.insert("x-word", "hello".parse().unwrap());
+    /// map.append("x-word", "goodbye".parse().unwrap());
+    /// map.insert_bin("x-number-bin", MetadataValue::from_bytes(b"123"));
+    ///
+    /// for value in map.values() {
+    ///     match value {
+    ///         ValueRef::Ascii(ref value) =>
+    ///             println!("Ascii value: {:?}", value),
+    ///         ValueRef::Binary(ref value) =>
+    ///             println!("Binary value: {:?}", value),
+    ///     }
+    ///     println!("{:?}", value);
+    /// }
+    /// ```
+    pub fn values(&self) -> Values<'_> {
+root@830ef13b33a0:/app# sed -n '580,700p' src/tonic/src/status.rs
+
+    /// Create a new `Status` with the associated code, message, binary details field and custom metadata
+    pub fn with_details_and_metadata(
+        code: Code,
+        message: impl Into<String>,
+        details: Bytes,
+        metadata: MetadataMap,
+    ) -> Status {
+        StatusInner {
+            code,
+            message: message.into(),
+            details,
+            metadata,
+            source: None,
+        }
+        .into_status()
+    }
+
+    /// Add a source error to this status.
+    pub fn set_source(&mut self, source: Arc<dyn Error + Send + Sync + 'static>) -> &mut Status {
+        self.0.source = Some(source);
+        self
+    }
+
+    /// Build an `http::Response` from the given `Status`.
+    pub fn into_http<B: Default>(self) -> http::Response<B> {
+        let mut response = http::Response::new(B::default());
+        response
+            .headers_mut()
+            .insert(http::header::CONTENT_TYPE, GRPC_CONTENT_TYPE);
+        self.add_header(response.headers_mut()).unwrap();
+        response.extensions_mut().insert(self);
+        response
+    }
+
+    #[doc(hidden)]
+    pub const GRPC_STATUS: HeaderName = HeaderName::from_static("grpc-status");
+    #[doc(hidden)]
+    pub const GRPC_MESSAGE: HeaderName = HeaderName::from_static("grpc-message");
+    #[doc(hidden)]
+    pub const GRPC_STATUS_DETAILS: HeaderName = HeaderName::from_static("grpc-status-details-bin");
+}
+
+fn find_status_in_source_chain(err: &(dyn Error + 'static)) -> Option<Status> {
+    let mut source = Some(err);
+
+    while let Some(err) = source {
+        if let Some(status) = err.downcast_ref::<Status>() {
+            return Some(
+                StatusInner {
+                    code: status.0.code,
+                    message: status.0.message.clone(),
+                    details: status.0.details.clone(),
+                    metadata: status.0.metadata.clone(),
+                    // Since `Status` is not `Clone`, any `source` on the original Status
+                    // cannot be cloned so must remain with the original `Status`.
+                    source: None,
+                }
+                .into_status(),
+            );
+        }
+
+        if let Some(timeout) = err.downcast_ref::<TimeoutExpired>() {
+            return Some(Status::cancelled(timeout.to_string()));
+        }
+
+        // If we are unable to connect to the server, map this to UNAVAILABLE.  This is
+        // consistent with the behavior of a C++ gRPC client when the server is not running, and
+        // matches the spec of:
+        // > The service is currently unavailable. This is most likely a transient condition that
+        // > can be corrected if retried with a backoff.
+        if let Some(connect) = err.downcast_ref::<ConnectError>() {
+            return Some(Status::unavailable(connect.to_string()));
+        }
+
+        #[cfg(any(feature = "server", feature = "channel"))]
+        if let Some(hyper) = err
+            .downcast_ref::<hyper::Error>()
+            .and_then(Status::from_hyper_error)
+        {
+            return Some(hyper);
+        }
+
+        source = err.source();
+    }
+
+    None
+}
+
+impl fmt::Debug for Status {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl fmt::Debug for StatusInner {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // A manual impl to reduce the noise of frequently empty fields.
+        let mut builder = f.debug_struct("Status");
+
+        builder.field("code", &self.code);
+
+        if !self.message.is_empty() {
+            builder.field("message", &self.message);
+        }
+
+        if !self.details.is_empty() {
+            builder.field("details", &self.details);
+        }
+
+        if !self.metadata.is_empty() {
+            builder.field("metadata", &self.metadata);
+        }
+
+        builder.field("source", &self.source);
+
+        builder.finish()
+    }
+}
+
+fn invalid_header_value_byte<Error: fmt::Display>(err: Error) -> Status {
+root@830ef13b33a0:/app#

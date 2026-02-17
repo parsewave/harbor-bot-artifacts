@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Similarity Check",
+    "passed": true,
+    "message": "Max similarity: 14% with 'kv-store-grpc' (threshold: 80%)",
+    "is_warning": false,
+    "details": null,
+    "duration_seconds": null,
+    "result_type": "tb_positive",
+    "check_type": "similarity_check",
+    "raw_data": {
+      "max_similarity": 0.14901581627156635,
+      "most_similar_task": "kv-store-grpc",
+      "threshold": 0.8
+    }
+  }
+]

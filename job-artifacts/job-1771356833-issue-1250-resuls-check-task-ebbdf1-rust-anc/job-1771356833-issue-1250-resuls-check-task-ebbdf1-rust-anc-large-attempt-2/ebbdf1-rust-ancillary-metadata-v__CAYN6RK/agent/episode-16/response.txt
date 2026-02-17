@@ -1,0 +1,15 @@
+{
+  "analysis": "Implemented the metadata validation middleware in `src/tonic/src/service/metadata_validator.rs` and wired it into `src/tonic/src/service/mod.rs` with public re-exports. `cargo test -p tonic` completed successfully: 123 passed, 0 failed. Next, verify the non-functional constraints (notably: no lines >100 chars) with a quick scan.",
+  "plan": "Run a line-length check on the two changed files to ensure no line exceeds 100 characters. If any do, reformat accordingly (without changing behavior).",
+  "commands": [
+    {
+      "keystrokes": "cd /app/src\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "awk 'length($0)>100{print FNR \":\" length($0) \":\" $0}' tonic/src/service/metadata_validator.rs tonic/src/service/mod.rs\n",
+      "duration": 1.0
+    }
+  ],
+  "task_complete": false
+}

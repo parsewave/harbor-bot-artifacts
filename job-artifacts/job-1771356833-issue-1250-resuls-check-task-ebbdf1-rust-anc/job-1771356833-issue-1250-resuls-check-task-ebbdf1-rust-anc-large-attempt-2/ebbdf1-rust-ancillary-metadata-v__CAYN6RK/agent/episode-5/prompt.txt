@@ -1,0 +1,46 @@
+Previous response had warnings:
+WARNINGS: - AUTO-CORRECTED: Extracted JSON from mixed content - please fix this in future responses
+
+Current Terminal Screen:
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+impl MetadataValue<Ascii> {
+    /// Converts a MetadataKey into a `MetadataValue<Ascii>`.
+    ///
+    /// Since every valid MetadataKey is a valid MetadataValue this is done
+    /// infallibly.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let val = AsciiMetadataValue::from_key::<Ascii>("accept".parse().unwrap());
+    /// assert_eq!(val, AsciiMetadataValue::try_from(b"accept").unwrap());
+    /// ```
+    #[inline]
+    pub fn from_key<KeyVE: ValueEncoding>(key: MetadataKey<KeyVE>) -> Self {
+        key.into()
+    }
+
+    /// Returns the length of `self`, in bytes.
+    ///
+    /// This method is not available for `MetadataValue<Binary>` because that
+    /// cannot be implemented in constant time, which most people would probably
+    /// expect. To get the length of `MetadataValue<Binary>`, convert it to a
+    /// Bytes value and measure its length.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let val = AsciiMetadataValue::from_static("hello");
+    /// assert_eq!(val.len(), 5);
+    /// ```
+    #[inline]
+    pub fn len(&self) -> usize {
+        self.inner.len()
+    }
+
+    /// Yields a `&str` slice if the `MetadataValue` only contains visible ASCII
+    /// chars.
+root@b1aac3828518:/app#

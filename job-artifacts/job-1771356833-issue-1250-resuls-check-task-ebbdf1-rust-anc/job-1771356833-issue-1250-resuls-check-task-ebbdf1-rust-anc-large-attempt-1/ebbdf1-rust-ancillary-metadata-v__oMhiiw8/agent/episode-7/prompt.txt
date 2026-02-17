@@ -1,0 +1,43 @@
+Current Terminal Screen:
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+  Downloaded hyper-timeout v0.5.2
+  Downloaded http-body-util v0.1.3
+  Downloaded futures-task v0.3.32
+  Downloaded tower-service v0.3.3
+  Downloaded smallvec v1.15.1
+  Downloaded tokio v1.49.0
+  Downloaded slab v0.4.12
+  Downloaded sync_wrapper v1.0.2
+  Downloaded futures-sink v0.3.32
+  Downloaded fnv v1.0.7
+  Downloaded itoa v1.0.17
+  Downloaded http-body v1.0.1
+  Downloaded env_filter v1.0.0
+  Downloaded async-trait v0.1.89
+  Downloaded 72 crates (6.6MiB) in 0.96s
+   Compiling proc-macro2 v1.0.106
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.44
+   Compiling syn v2.0.116
+   Compiling libc v0.2.182
+   Compiling pin-project-lite v0.2.16
+   Compiling bytes v1.11.1
+   Compiling futures-core v0.3.32
+   Compiling socket2 v0.6.2
+   Compiling mio v1.1.1
+   Compiling tokio-macros v2.6.0
+   Compiling itoa v1.0.17
+   Compiling http v1.4.0
+   Compiling tokio v1.49.0
+   Compiling once_cell v1.21.3
+   Compiling tracing-core v0.1.36
+   Compiling tracing-attributes v0.1.31
+   Compiling hashbrown v0.16.1
+   Compiling slab v0.4.12
+   Compiling memchr v2.8.0
+   Compiling equivalent v1.0.2
+   Compiling futures-sink v0.3.32
+   Compiling tokio-util v0.7.18
+   Compiling indexmap v2.13.0
+    Building [========>                  ] 29/87: indexmap

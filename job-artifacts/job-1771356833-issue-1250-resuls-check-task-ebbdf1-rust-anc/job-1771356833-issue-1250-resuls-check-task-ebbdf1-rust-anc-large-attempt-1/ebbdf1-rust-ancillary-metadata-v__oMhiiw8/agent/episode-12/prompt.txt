@@ -1,0 +1,34 @@
+New Terminal Output:
+
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::contains_key (line 679) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::entry (line 861) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::entry_bin (line 908) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::get (line 442) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::get_all (line 592) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::get_all_bin (line 635) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::get_bin (line 478) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::get_bin_mut (line 552) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::get_mut (line 520) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert (line 1001) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert (line 1008) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert (line 991) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert_bin (line 1028) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert_bin (line 1038) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert_bin (line 1045) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::into_headers (line 252) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::is_empty (line 354) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::iter (line 709) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::iter_mut (line 740) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::keys (line 771) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::keys_len (line 331) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::len (line 305) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::new (line 232) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::remove (line 1163) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::remove_bin (line 1197) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::reserve (line 422) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::values (line 802) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::values_mut (line 833) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::with_capacity (line 283) ... ok
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::append (line 1775) ... ok
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::get (line 1646) ... ok
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::get_mut (line 1673) ...

@@ -1,0 +1,11 @@
+Previous response had warnings:
+WARNINGS: - Command 1 should end with newline when followed by another command. Otherwise the two commands will be concatenated together on the same line.
+
+New Terminal Output:
+
+> ^C
+root@0b8bb3e48be3:/app# cargo check -p tonic
+error: could not find `Cargo.toml` in `/app` or any parent directory
+root@0b8bb3e48be3:/app# cargo test -p tonic
+error: could not find `Cargo.toml` in `/app` or any parent directory
+root@0b8bb3e48be3:/app#

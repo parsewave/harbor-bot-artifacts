@@ -1,0 +1,23 @@
+[
+  {
+    "name": "TB Debug Large",
+    "passed": true,
+    "message": "Outcome: PASS",
+    "is_warning": true,
+    "details": "The only failure is that `service/mod.rs` does not declare the `metadata_validator` module (test looks for the string `metadata_validator`). The instructions explicitly require wiring the module into `tonic/src/service/mod.rs` with a public re-export, which necessarily entails declaring the module there (e.g., `pub mod metadata_validator;`) and re-exporting its items. This is an implementation omission by the agent rather than an underspecified requirement.",
+    "duration_seconds": 16.444111585617065,
+    "result_type": null,
+    "check_type": "tb_debug_large",
+    "raw_data": {
+      "analyzed_agent": "terminus-2",
+      "analyzed_model": "openrouter/openai/gpt-5.2",
+      "analysis_model": "openrouter/openai/gpt-5.2",
+      "outcome": "PASS",
+      "explanation": "The only failure is that `service/mod.rs` does not declare the `metadata_validator` module (test looks for the string `metadata_validator`). The instructions explicitly require wiring the module into `tonic/src/service/mod.rs` with a public re-export, which necessarily entails declaring the module there (e.g., `pub mod metadata_validator;`) and re-exporting its items. This is an implementation omission by the agent rather than an underspecified requirement.",
+      "json_output": {
+        "outcome": "PASS",
+        "explanation": "The only failure is that `service/mod.rs` does not declare the `metadata_validator` module (test looks for the string `metadata_validator`). The instructions explicitly require wiring the module into `tonic/src/service/mod.rs` with a public re-export, which necessarily entails declaring the module there (e.g., `pub mod metadata_validator;`) and re-exporting its items. This is an implementation omission by the agent rather than an underspecified requirement."
+      }
+    }
+  }
+]

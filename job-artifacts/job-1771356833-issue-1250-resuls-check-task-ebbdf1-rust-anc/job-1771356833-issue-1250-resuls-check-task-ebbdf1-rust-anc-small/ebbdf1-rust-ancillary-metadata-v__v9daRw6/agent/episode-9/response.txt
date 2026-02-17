@@ -1,0 +1,15 @@
+{
+  "analysis": "We are currently inside a heredoc started by `cat > src/tonic/src/service/metadata_validator.rs <<'EOF'`. The terminal is waiting for the terminating `EOF` line. We need to provide that line to finish writing the file, then run the tests.",
+  "plan": "1. Send a line containing only `EOF` to close the heredoc.\n2. Run `cargo test --workspace` to compile and test the crate.\n3. If compilation fails, adjust the code accordingly.\n4. Once tests pass, the task will be complete.",
+  "commands": [
+    {
+      "keystrokes": "EOF\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "cargo test --workspace\n",
+      "duration": 300000
+    }
+  ],
+  "task_complete": false
+}

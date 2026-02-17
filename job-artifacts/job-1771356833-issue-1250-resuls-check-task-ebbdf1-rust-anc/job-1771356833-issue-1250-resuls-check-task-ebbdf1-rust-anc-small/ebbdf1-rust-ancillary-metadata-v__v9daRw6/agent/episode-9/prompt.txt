@@ -1,0 +1,43 @@
+Current Terminal Screen:
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+> +            inner,
+> +            validator: self.validator.clone(),
+> +        }
+> +    }
+> +}
+> +
+> +/// Service wrapper that performs validation.
+> +#[derive(Clone)]
+> +pub struct MetadataValidatorService<S, V> {
+> +    inner: S,
+> +    validator: V,
+> +}
+> +
+> +impl<S, V, ReqBody> Service<crate::Request<ReqBody>> for MetadataValidatorService<S, V>
+> +where
+> +    V: MetadataValidator,
+> +    S: Service<crate::Request<ReqBody>>,
+> +    S::Error: From<Status>,
+> +{
+> +    type Response = S::Response;
+> +    type Error = S::Error;
+> +    type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
+> +
+> +    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+> +        self.inner.poll_ready(cx)
+> +    }
+> +
+> +    fn call(&mut self, req: crate::Request<ReqBody>) -> Self::Future {
+> +        let md = req.metadata().clone();
+> +        match self.validator.validate(&md) {
+> +            Ok(()) => {
+> +                let fut = self.inner.call(req);
+> +                async move { fut.await }.boxed()
+> +            }
+> +            Err(e) => async move { Err(e.into()) }.boxed(),
+> +        }
+> +    }
+> +}
+> +EOF
+> cargo test --workspace\n

@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Nop Agent",
+    "passed": true,
+    "message": "Accuracy: 0%",
+    "is_warning": false,
+    "details": "Required: 0%",
+    "duration_seconds": 785.8027286529541,
+    "result_type": "tb_positive",
+    "check_type": "nop_agent",
+    "raw_data": {
+      "accuracy": 0.0,
+      "json_output": {
+        "id": "500bc856-8123-46a2-8fca-d28acfd81e9c",
+        "started_at": "2026-02-17T19:53:33.386695",
+        "finished_at": "2026-02-17T20:05:59.916313",
+        "n_total_trials": 1,
+        "stats": {
+          "n_trials": 1,
+          "n_errors": 0,
+          "evals": {
+            "nop__contributor_tasks": {
+              "n_trials": 1,
+              "n_errors": 0,
+              "metrics": [
+                {
+                  "mean": 0.0
+                }
+              ],
+              "reward_stats": {
+                "reward": {
+                  "0.0": [
+                    "ebbdf1-rust-ancillary-metadata-v__pVeLnPe"
+                  ]
+                }
+              },
+              "exception_stats": {}
+            }
+          }
+        }
+      }
+    }
+  }
+]

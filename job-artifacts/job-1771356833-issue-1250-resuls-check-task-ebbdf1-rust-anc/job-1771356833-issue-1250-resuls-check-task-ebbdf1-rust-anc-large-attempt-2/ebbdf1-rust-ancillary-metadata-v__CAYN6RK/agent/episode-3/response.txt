@@ -1,0 +1,27 @@
+{
+  "analysis": "ripgrep (rg) is not installed, so we must use grep/sed instead. We confirmed MetadataMap has into_headers, len, keys_len, etc., but we still need to locate MetadataMap::from_headers and the get/contains_key/iter APIs using grep. After that, we can implement metadata_validator.rs and wire it into service/mod.rs, then run tests.",
+  "plan": "1) Use grep to locate MetadataMap::from_headers, get/contains_key/iter methods in metadata/map.rs.\n2) Implement src/tonic/src/service/metadata_validator.rs with MetadataValidator trait, ValidatorBuilder (enum rules, no closures), a concrete validator, and a MetadataValidatorLayer/Service wrapper that validates metadata by temporarily converting request headers to MetadataMap and back.\n3) Update src/tonic/src/service/mod.rs to expose and re-export the new middleware types.\n4) Run cargo tests for the tonic crate.",
+  "commands": [
+    {
+      "keystrokes": "grep -n \"from_headers\" -n src/tonic/src/metadata/map.rs | head\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "grep -n \"pub fn get\" src/tonic/src/metadata/map.rs | head -n 40\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "grep -n \"contains_key\" src/tonic/src/metadata/map.rs | head -n 40\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "grep -n \"pub fn iter\" src/tonic/src/metadata/map.rs | head -n 40\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "sed -n '420,560p' src/tonic/src/metadata/map.rs\n",
+      "duration": 0.1
+    }
+  ],
+  "task_complete": false
+}

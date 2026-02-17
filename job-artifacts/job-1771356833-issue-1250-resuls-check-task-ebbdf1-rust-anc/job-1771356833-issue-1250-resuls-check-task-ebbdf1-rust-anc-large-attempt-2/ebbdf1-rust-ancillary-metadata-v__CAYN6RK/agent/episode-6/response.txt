@@ -1,0 +1,19 @@
+{
+  "analysis": "MetadataValue<Ascii> provides to_str() -> Result<&str, _> and as_bytes() -> &[u8]. MetadataValue<VE> also implements AsRef<[u8]>. This is enough to implement header_prefix via to_str (and reject non-visible-ASCII) and max_header_size via value byte length. Next step is to inspect MetadataKey to extract key strings for sizing if needed, then implement the metadata_validator module (trait, builder, validator, and tower layer/service wrapper). We must avoid unwrap/expect/clone/if let/closures/unsafe and keep changes to <=3 files.",
+  "plan": "1) Inspect MetadataKey API (key.rs) to see how to get key as &str for size accounting.\n2) Implement src/tonic/src/service/metadata_validator.rs with enum-based rules and a validator that iterates MetadataMap.\n3) Implement MetadataValidatorLayer and the corresponding Service wrapper that validates request headers by converting to/from MetadataMap (from_headers/into_headers) and short-circuiting with Status converted into an HTTP response.\n4) Update src/tonic/src/service/mod.rs to include and re-export the module.\n5) Run cargo tests for tonic crate.",
+  "commands": [
+    {
+      "keystrokes": "grep -n \"pub struct MetadataKey\" src/tonic/src/metadata/key.rs | head\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "grep -n \"fn as_str\\|pub fn.*str\\|impl.*Display\" src/tonic/src/metadata/key.rs | head -n 60\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "sed -n '1,220p' src/tonic/src/metadata/key.rs\n",
+      "duration": 0.1
+    }
+  ],
+  "task_complete": false
+}

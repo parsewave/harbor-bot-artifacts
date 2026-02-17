@@ -1,0 +1,277 @@
+Previous response had warnings:
+WARNINGS: - Extra text detected after JSON object
+
+New Terminal Output:
+
+root@b1aac3828518:/app# ls -la
+total 12
+drwxr-xr-x  1 root root 4096 Feb 17 20:09 .
+drwxr-xr-x  1 root root 4096 Feb 17 20:48 ..
+drwxr-xr-x 21 root root 4096 Feb 17 20:09 src
+root@b1aac3828518:/app# ls -la src
+total 216
+drwxr-xr-x 21 root root  4096 Feb 17 20:09 .
+drwxr-xr-x  1 root root  4096 Feb 17 20:09 ..
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 .github
+-rw-r--r--  1 root root    35 Feb 17 20:09 .gitignore
+-rw-r--r--  1 root root 61554 Feb 17 20:09 CHANGELOG.md
+-rw-r--r--  1 root root 17932 Feb 17 20:09 CONTRIBUTING.md
+-rw-r--r--  1 root root   889 Feb 17 20:09 Cargo.toml
+-rw-r--r--  1 root root  1056 Feb 17 20:09 LICENSE
+-rw-r--r--  1 root root  4931 Feb 17 20:09 README.md
+-rw-r--r--  1 root root   370 Feb 17 20:09 SECURITY.md
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 codegen
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 examples
+-rw-r--r--  1 root root  4163 Feb 17 20:09 flake.lock
+-rw-r--r--  1 root root  4216 Feb 17 20:09 flake.nix
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 grpc
+drwxr-xr-x  6 root root  4096 Feb 17 20:09 interop
+-rwxr-xr-x  1 root root  1123 Feb 17 20:09 prepare-release.sh
+drwxr-xr-x  4 root root  4096 Feb 17 20:09 protoc-gen-rust-grpc
+-rwxr-xr-x  1 root root   510 Feb 17 20:09 publish-release.sh
+drwxr-xr-x 12 root root  4096 Feb 17 20:09 tests
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 tonic
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 tonic-build
+drwxr-xr-x  4 root root  4096 Feb 17 20:09 tonic-health
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 tonic-prost
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 tonic-prost-build
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 tonic-protobuf
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 tonic-protobuf-build
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 tonic-reflection
+drwxr-xr-x  4 root root  4096 Feb 17 20:09 tonic-types
+drwxr-xr-x  4 root root  4096 Feb 17 20:09 tonic-web
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 tonic-xds
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 xds-client
+root@b1aac3828518:/app# ls -la src/tonic/src/service
+total 40
+drwxr-xr-x 2 root root  4096 Feb 17 20:09 .
+drwxr-xr-x 8 root root  4096 Feb 17 20:09 ..
+-rw-r--r-- 1 root root 10494 Feb 17 20:09 interceptor.rs
+-rw-r--r-- 1 root root  2369 Feb 17 20:09 layered.rs
+-rw-r--r-- 1 root root   533 Feb 17 20:09 mod.rs
+-rw-r--r-- 1 root root  4008 Feb 17 20:09 recover_error.rs
+-rw-r--r-- 1 root root  4663 Feb 17 20:09 router.rs
+root@b1aac3828518:/app# sed -n '1,200p' src/tonic/src/service/mod.rs
+//! Utilities for using Tower services with Tonic.
+
+pub mod interceptor;
+pub(crate) mod layered;
+#[cfg(feature = "router")]
+pub(crate) mod router;
+
+#[doc(inline)]
+pub use self::interceptor::{Interceptor, InterceptorLayer};
+pub use self::layered::{LayerExt, Layered};
+#[doc(inline)]
+#[cfg(feature = "router")]
+pub use self::router::{Routes, RoutesBuilder};
+#[cfg(feature = "router")]
+pub use axum::{body::Body as AxumBody, Router as AxumRouter};
+
+pub mod recover_error;
+pub use self::recover_error::{RecoverError, RecoverErrorLayer};
+root@b1aac3828518:/app# ls -la src/tonic/src/service
+total 40
+drwxr-xr-x 2 root root  4096 Feb 17 20:09 .
+drwxr-xr-x 8 root root  4096 Feb 17 20:09 ..
+-rw-r--r-- 1 root root 10494 Feb 17 20:09 interceptor.rs
+-rw-r--r-- 1 root root  2369 Feb 17 20:09 layered.rs
+-rw-r--r-- 1 root root   533 Feb 17 20:09 mod.rs
+-rw-r--r-- 1 root root  4008 Feb 17 20:09 recover_error.rs
+-rw-r--r-- 1 root root  4663 Feb 17 20:09 router.rs
+root@b1aac3828518:/app# sed -n '1,200p' src/tonic/src/service/interceptor.rs
+//! gRPC interceptors which are a kind of middleware.
+//!
+//! See [`Interceptor`] for more details.
+
+use crate::{request::SanitizeHeaders, Status};
+use pin_project::pin_project;
+use std::{
+    fmt,
+    future::Future,
+    pin::Pin,
+    task::{Context, Poll},
+};
+use tower_layer::Layer;
+use tower_service::Service;
+
+/// A gRPC interceptor.
+///
+/// gRPC interceptors are similar to middleware but have less flexibility. An interceptor allows
+/// you to do two main things, one is to add/remove/check items in the `MetadataMap` of each
+/// request. Two, cancel a request with a `Status`.
+///
+/// Any function that satisfies the bound `FnMut(Request<()>) -> Result<Request<()>, Status>` can be
+/// used as an `Interceptor`.
+///
+/// An interceptor can be used on both the server and client side through the `tonic-build` crate's
+/// generated structs.
+///
+/// See the [interceptor example][example] for more details.
+///
+/// If you need more powerful middleware, [tower] is the recommended approach. You can find
+/// examples of how to use tower with tonic [here][tower-example].
+///
+/// Additionally, interceptors is not the recommended way to add logging to your service. For that
+/// a [tower] middleware is more appropriate since it can also act on the response. For example
+/// tower-http's [`Trace`](https://docs.rs/tower-http/latest/tower_http/trace/index.html)
+/// middleware supports gRPC out of the box.
+///
+/// [tower]: https://crates.io/crates/tower
+/// [example]: https://github.com/hyp
+[... output limited to 10000 bytes; 70 interior bytes omitted ...]
+sMut<http::HeaderMap> for MetadataMap {
+    fn as_mut(&mut self) -> &mut http::HeaderMap {
+        &mut self.headers
+    }
+}
+
+/// `MetadataMap` entry iterator.
+///
+/// Yields `KeyAndValueRef` values. The same header name may be yielded
+/// more than once if it has more than one associated value.
+#[derive(Debug)]
+pub struct Iter<'a> {
+    inner: http::header::Iter<'a, http::header::HeaderValue>,
+}
+
+/// Reference to a key and an associated value in a `MetadataMap`. It can point
+/// to either an ascii or a binary ("*-bin") key.
+#[derive(Debug)]
+pub enum KeyAndValueRef<'a> {
+    /// An ascii metadata key and value.
+    Ascii(&'a MetadataKey<Ascii>, &'a MetadataValue<Ascii>),
+    /// A binary metadata key and value.
+    Binary(&'a MetadataKey<Binary>, &'a MetadataValue<Binary>),
+}
+
+/// Reference to a key and an associated value in a `MetadataMap`. It can point
+/// to either an ascii or a binary ("*-bin") key.
+#[derive(Debug)]
+pub enum KeyAndMutValueRef<'a> {
+    /// An ascii metadata key and value.
+    Ascii(&'a MetadataKey<Ascii>, &'a mut MetadataValue<Ascii>),
+    /// A binary metadata key and value.
+    Binary(&'a MetadataKey<Binary>, &'a mut MetadataValue<Binary>),
+}
+
+/// `MetadataMap` entry iterator.
+///
+/// Yields `(&MetadataKey, &mut value)` tuples. The same header name may be yielded
+/// more than once if it has more than one associated value.
+#[derive(Debug)]
+pub struct IterMut<'a> {
+    inner: http::header::IterMut<'a, http::header::HeaderValue>,
+}
+
+/// A drain iterator of all values associated with a single metadata key.
+#[derive(Debug)]
+pub struct ValueDrain<'a, VE: ValueEncoding> {
+    inner: http::header::ValueDrain<'a, http::header::HeaderValue>,
+    phantom: PhantomData<VE>,
+}
+
+/// An iterator over `MetadataMap` keys.
+///
+/// Yields `KeyRef` values. Each header name is yielded only once, even if it
+/// has more than one associated value.
+#[derive(Debug)]
+pub struct Keys<'a> {
+    inner: http::header::Keys<'a, http::header::HeaderValue>,
+}
+
+/// Reference to a key in a `MetadataMap`. It can point
+/// to either an ascii or a binary ("*-bin") key.
+#[derive(Debug)]
+pub enum KeyRef<'a> {
+    /// An ascii metadata key and value.
+    Ascii(&'a MetadataKey<Ascii>),
+    /// A binary metadata key and value.
+    Binary(&'a MetadataKey<Binary>),
+}
+
+/// `MetadataMap` value iterator.
+///
+/// Yields `ValueRef` values. Each value contained in the `MetadataMap` will be
+/// yielded.
+#[derive(Debug)]
+pub struct Values<'a> {
+    // Need to use http::header::Iter and not http::header::Values to be able
+    // to know if a value is binary or not.
+    inner: http::header::Iter<'a, http::header::HeaderValue>,
+}
+
+/// Reference to a value in a `MetadataMap`. It can point
+/// to either an ascii or a binary ("*-bin" key) value.
+#[derive(Debug)]
+pub enum ValueRef<'a> {
+    /// An ascii metadata key and value.
+    Ascii(&'a MetadataValue<Ascii>),
+    /// A binary metadata key and value.
+    Binary(&'a MetadataValue<Binary>),
+}
+
+/// `MetadataMap` value iterator.
+///
+/// Each value contained in the `MetadataMap` will be yielded.
+#[derive(Debug)]
+pub struct ValuesMut<'a> {
+    // Need to use http::header::IterMut and not http::header::ValuesMut to be
+    // able to know if a value is binary or not.
+    inner: http::header::IterMut<'a, http::header::HeaderValue>,
+}
+
+/// Reference to a value in a `MetadataMap`. It can point
+/// to either an ascii or a binary ("*-bin" key) value.
+#[derive(Debug)]
+pub enum ValueRefMut<'a> {
+    /// An ascii metadata key and value.
+    Ascii(&'a mut MetadataValue<Ascii>),
+    /// A binary metadata key and value.
+    Binary(&'a mut MetadataValue<Binary>),
+}
+
+/// An iterator of all values associated with a single metadata key.
+#[derive(Debug)]
+pub struct ValueIter<'a, VE: ValueEncoding> {
+    inner: Option<http::header::ValueIter<'a, http::header::HeaderValue>>,
+    phantom: PhantomData<VE>,
+}
+
+/// An iterator of all values associated with a single metadata key.
+#[derive(Debug)]
+pub struct ValueIterMut<'a, VE: ValueEncoding> {
+    inner: http::header::ValueIterMut<'a, http::header::HeaderValue>,
+    phantom: PhantomData<VE>,
+}
+
+/// A view to all values stored in a single entry.
+///
+/// This struct is returned by `MetadataMap::get_all` and
+/// `MetadataMap::get_all_bin`.
+#[derive(Debug)]
+pub struct GetAll<'a, VE: ValueEncoding> {
+    inner: Option<http::header::GetAll<'a, http::header::HeaderValue>>,
+    phantom: PhantomData<VE>,
+}
+
+/// A view into a single location in a `MetadataMap`, which may be vacant or
+/// occupied.
+#[derive(Debug)]
+pub enum Entry<'a, VE: ValueEncoding> {
+    /// An occupied entry
+    Occupied(OccupiedEntry<'a, VE>),
+
+    /// A vacant entry
+    Vacant(VacantEntry<'a, VE>),
+}
+
+/// A view into a single empty location in a `MetadataMap`.
+///
+/// This struct is returned as part of the `Entry` enum.
+#[derive(Debug)]
+pub struct VacantEntry<'a, VE: ValueEncoding> {
+    inner: http::header::VacantEntry<'a, http::header::HeaderValue>,
+    phantom: PhantomData<VE>,
+}
+root@b1aac3828518:/app#

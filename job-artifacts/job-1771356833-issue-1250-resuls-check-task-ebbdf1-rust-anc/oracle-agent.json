@@ -1,0 +1,46 @@
+[
+  {
+    "name": "Oracle Agent",
+    "passed": true,
+    "message": "Accuracy: 100%",
+    "is_warning": false,
+    "details": "Required: 100%",
+    "duration_seconds": 1136.6940219402313,
+    "result_type": "tb_positive",
+    "check_type": "oracle_agent",
+    "raw_data": {
+      "accuracy": 1.0,
+      "json_output": {
+        "id": "09e4f296-d94e-49bc-9ed3-545e47cde16b",
+        "started_at": "2026-02-17T19:34:41.043577",
+        "finished_at": "2026-02-17T19:52:54.596060",
+        "n_total_trials": 3,
+        "stats": {
+          "n_trials": 3,
+          "n_errors": 0,
+          "evals": {
+            "oracle__contributor_tasks": {
+              "n_trials": 3,
+              "n_errors": 0,
+              "metrics": [
+                {
+                  "mean": 1.0
+                }
+              ],
+              "reward_stats": {
+                "reward": {
+                  "1.0": [
+                    "ebbdf1-rust-ancillary-metadata-v__WEYYw6u",
+                    "ebbdf1-rust-ancillary-metadata-v__vPyGKHj",
+                    "ebbdf1-rust-ancillary-metadata-v__w4pHSB6"
+                  ]
+                }
+              },
+              "exception_stats": {}
+            }
+          }
+        }
+      }
+    }
+  }
+]

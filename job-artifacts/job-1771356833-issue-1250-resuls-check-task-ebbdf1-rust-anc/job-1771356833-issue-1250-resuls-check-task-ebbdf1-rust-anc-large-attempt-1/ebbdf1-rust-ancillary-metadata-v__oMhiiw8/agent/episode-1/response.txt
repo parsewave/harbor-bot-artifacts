@@ -1,0 +1,19 @@
+{
+  "analysis": "The tonic service module currently contains interceptor, layered, recover_error, and optional router. No metadata validation middleware exists yet. Next we need to inspect existing layer/service patterns (especially interceptor.rs) so the new MetadataValidatorLayer matches tonic conventions and compiles without breaking tests.",
+  "plan": "Open interceptor.rs (and optionally recover_error.rs) to mirror their tower::Layer and tower::Service implementations, including associated types, poll_ready handling, and request forwarding. This will inform how to implement MetadataValidatorLayer and its inner Service wrapper that validates request metadata before calling the inner service.",
+  "commands": [
+    {
+      "keystrokes": "sed -n '1,220p' src/tonic/src/service/interceptor.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "sed -n '220,520p' src/tonic/src/service/interceptor.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "sed -n '1,260p' src/tonic/src/service/recover_error.rs\n",
+      "duration": 0.1
+    }
+  ],
+  "task_complete": false
+}

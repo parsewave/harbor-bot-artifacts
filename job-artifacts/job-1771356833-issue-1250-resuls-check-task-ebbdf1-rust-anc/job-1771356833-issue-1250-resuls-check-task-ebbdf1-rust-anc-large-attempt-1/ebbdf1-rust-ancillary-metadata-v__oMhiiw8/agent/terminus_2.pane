@@ -1,0 +1,2713 @@
+[?2004hroot@830ef13b33a0:/app# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@830ef13b33a0:/app# clear
+[?2004l[H[J[3J[?2004hroot@830ef13b33a0:/app# ls -la
+[?2004ltotal 12
+drwxr-xr-x  1 root root 4096 Feb 17 20:09 [0m[01;34m.[0m
+drwxr-xr-x  1 root root 4096 Feb 17 20:33 [01;34m..[0m
+drwxr-xr-x 21 root root 4096 Feb 17 20:09 [01;34msrc[0m
+[?2004hroot@830ef13b33a0:/app# ls -la src
+[?2004ltotal 216
+drwxr-xr-x 21 root root  4096 Feb 17 20:09 [0m[01;34m.[0m
+drwxr-xr-x  1 root root  4096 Feb 17 20:09 [01;34m..[0m
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 [01;34m.github[0m
+-rw-r--r--  1 root root    35 Feb 17 20:09 .gitignore
+-rw-r--r--  1 root root 61554 Feb 17 20:09 CHANGELOG.md
+-rw-r--r--  1 root root 17932 Feb 17 20:09 CONTRIBUTING.md
+-rw-r--r--  1 root root   889 Feb 17 20:09 Cargo.toml
+-rw-r--r--  1 root root  1056 Feb 17 20:09 LICENSE
+-rw-r--r--  1 root root  4931 Feb 17 20:09 README.md
+-rw-r--r--  1 root root   370 Feb 17 20:09 SECURITY.md
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 [01;34mcodegen[0m
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 [01;34mexamples[0m
+-rw-r--r--  1 root root  4163 Feb 17 20:09 flake.lock
+-rw-r--r--  1 root root  4216 Feb 17 20:09 flake.nix
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 [01;34mgrpc[0m
+drwxr-xr-x  6 root root  4096 Feb 17 20:09 [01;34minterop[0m
+-rwxr-xr-x  1 root root  1123 Feb 17 20:09 [01;32mprepare-release.sh[0m
+drwxr-xr-x  4 root root  4096 Feb 17 20:09 [01;34mprotoc-gen-rust-grpc[0m
+-rwxr-xr-x  1 root root   510 Feb 17 20:09 [01;32mpublish-release.sh[0m
+drwxr-xr-x 12 root root  4096 Feb 17 20:09 [01;34mtests[0m
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 [01;34mtonic[0m
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 [01;34mtonic-build[0m
+drwxr-xr-x  4 root root  4096 Feb 17 20:09 [01;34mtonic-health[0m
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 [01;34mtonic-prost[0m
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 [01;34mtonic-prost-build[0m
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 [01;34mtonic-protobuf[0m
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 [01;34mtonic-protobuf-build[0m
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 [01;34mtonic-reflection[0m
+drwxr-xr-x  4 root root  4096 Feb 17 20:09 [01;34mtonic-types[0m
+drwxr-xr-x  4 root root  4096 Feb 17 20:09 [01;34mtonic-web[0m
+drwxr-xr-x  5 root root  4096 Feb 17 20:09 [01;34mtonic-xds[0m
+drwxr-xr-x  3 root root  4096 Feb 17 20:09 [01;34mxds-client[0m
+[?2004hroot@830ef13b33a0:/app# ls -la src/tonic/src/service
+[?2004ltotal 40
+drwxr-xr-x 2 root root  4096 Feb 17 20:09 [0m[01;34m.[0m
+drwxr-xr-x 8 root root  4096 Feb 17 20:09 [01;34m..[0m
+-rw-r--r-- 1 root root 10494 Feb 17 20:09 interceptor.rs
+-rw-r--r-- 1 root root  2369 Feb 17 20:09 layered.rs
+-rw-r--r-- 1 root root   533 Feb 17 20:09 mod.rs
+-rw-r--r-- 1 root root  4008 Feb 17 20:09 recover_error.rs
+-rw-r--r-- 1 root root  4663 Feb 17 20:09 router.rs
+[?2004hroot@830ef13b33a0:/app# sed -n '1,200p' src/tonic/src/service/mod.rs
+[?2004l//! Utilities for using Tower services with Tonic.
+
+pub mod interceptor;
+pub(crate) mod layered;
+#[cfg(feature = "router")]
+pub(crate) mod router;
+
+#[doc(inline)]
+pub use self::interceptor::{Interceptor, InterceptorLayer};
+pub use self::layered::{LayerExt, Layered};
+#[doc(inline)]
+#[cfg(feature = "router")]
+pub use self::router::{Routes, RoutesBuilder};
+#[cfg(feature = "router")]
+pub use axum::{body::Body as AxumBody, Router as AxumRouter};
+
+pub mod recover_error;
+pub use self::recover_error::{RecoverError, RecoverErrorLayer};
+[?2004hroot@830ef13b33a0:/app# ls -la src/tonic/src/service
+[?2004ltotal 40
+drwxr-xr-x 2 root root  4096 Feb 17 20:09 [0m[01;34m.[0m
+drwxr-xr-x 8 root root  4096 Feb 17 20:09 [01;34m..[0m
+-rw-r--r-- 1 root root 10494 Feb 17 20:09 interceptor.rs
+-rw-r--r-- 1 root root  2369 Feb 17 20:09 layered.rs
+-rw-r--r-- 1 root root   533 Feb 17 20:09 mod.rs
+-rw-r--r-- 1 root root  4008 Feb 17 20:09 recover_error.rs
+-rw-r--r-- 1 root root  4663 Feb 17 20:09 router.rs
+[?2004hroot@830ef13b33a0:/app# sed -n '1,220p' src/tonic/src/service/interceptor.rs
+[?2004l//! gRPC interceptors which are a kind of middleware.
+//!
+//! See [`Interceptor`] for more details.
+
+use crate::{request::SanitizeHeaders, Status};
+use pin_project::pin_project;
+use std::{
+    fmt,
+    future::Future,
+    pin::Pin,
+    task::{Context, Poll},
+};
+use tower_layer::Layer;
+use tower_service::Service;
+
+/// A gRPC interceptor.
+///
+/// gRPC interceptors are similar to middleware but have less flexibility. An interceptor allows
+/// you to do two main things, one is to add/remove/check items in the `MetadataMap` of each
+/// request. Two, cancel a request with a `Status`.
+///
+/// Any function that satisfies the bound `FnMut(Request<()>) -> Result<Request<()>, Status>` can be
+/// used as an `Interceptor`.
+///
+/// An interceptor can be used on both the server and client side through the `tonic-build` crate's
+/// generated structs.
+///
+/// See the [interceptor example][example] for more details.
+///
+/// If you need more powerful middleware, [tower] is the recommended approach. You can find
+/// examples of how to use tower with tonic [here][tower-example].
+///
+/// Additionally, interceptors is not the recommended way to add logging to your service. For that
+/// a [tower] middleware is more appropriate since it can also act on the response. For example
+/// tower-http's [`Trace`](https://docs.rs/tower-http/latest/tower_http/trace/index.html)
+/// middleware supports gRPC out of the box.
+///
+/// [tower]: https://crates.io/crates/tower
+/// [example]: https://github.com/hyperium/tonic/tree/master/examples/src/interceptor
+/// [tower-example]: https://github.com/hyperium/tonic/tree/master/examples/src/tower
+pub trait Interceptor {
+    /// Intercept a request before it is sent, optionally cancelling it.
+    fn call(&mut self, request: crate::Request<()>) -> Result<crate::Request<()>, Status>;
+}
+
+impl<F> Interceptor for F
+where
+    F: FnMut(crate::Request<()>) -> Result<crate::Request<()>, Status>,
+{
+    fn call(&mut self, request: crate::Request<()>) -> Result<crate::Request<()>, Status> {
+        self(request)
+    }
+}
+
+/// A gRPC interceptor that can be used as a [`Layer`],
+///
+/// See [`Interceptor`] for more details.
+#[derive(Debug, Clone, Copy)]
+pub struct InterceptorLayer<I> {
+    interceptor: I,
+}
+
+impl<I> InterceptorLayer<I> {
+    /// Create a new interceptor layer.
+    ///
+    /// See [`Interceptor`] for more details.
+    pub fn new(interceptor: I) -> Self {
+        Self { interceptor }
+    }
+}
+
+impl<S, I> Layer<S> for InterceptorLayer<I>
+where
+    I: Clone,
+{
+    type Service = InterceptedService<S, I>;
+
+    fn layer(&self, service: S) -> Self::Service {
+        InterceptedService::new(service, self.interceptor.clone())
+    }
+}
+
+/// A service wrapped in an interceptor middleware.
+///
+/// See [`Interceptor`] for more details.
+#[derive(Clone, Copy)]
+pub struct InterceptedService<S, I> {
+    inner: S,
+    interceptor: I,
+}
+
+impl<S, I> InterceptedService<S, I> {
+    /// Create a new `InterceptedService` that wraps `S` and intercepts each request with the
+    /// function `F`.
+    pub fn new(service: S, interceptor: I) -> Self {
+        Self {
+            inner: service,
+            interceptor,
+        }
+    }
+}
+
+impl<S, I> fmt::Debug for InterceptedService<S, I>
+where
+    S: fmt::Debug,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("InterceptedService")
+            .field("inner", &self.inner)
+            .field("f", &format_args!("{}", std::any::type_name::<I>()))
+            .finish()
+    }
+}
+
+impl<S, I, ReqBody, ResBody> Service<http::Request<ReqBody>> for InterceptedService<S, I>
+where
+    S: Service<http::Request<ReqBody>, Response = http::Response<ResBody>>,
+    I: Interceptor,
+{
+    type Response = http::Response<ResponseBody<ResBody>>;
+    type Error = S::Error;
+    type Future = ResponseFuture<S::Future>;
+
+    #[inline]
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.inner.poll_ready(cx)
+    }
+
+    fn call(&mut self, req: http::Request<ReqBody>) -> Self::Future {
+        // It is bad practice to modify the body (i.e. Message) of the request via an interceptor.
+        // To avoid exposing the body of the request to the interceptor function, we first remove it
+        // here, allow the interceptor to modify the metadata and extensions, and then recreate the
+        // HTTP request with the body. Tonic requests do not preserve the URI, HTTP version, and
+        // HTTP method of the HTTP request, so we extract them here and then add them back in below.
+        let uri = req.uri().clone();
+        let method = req.method().clone();
+        let version = req.version();
+        let req = crate::Request::from_http(req);
+        let (metadata, extensions, msg) = req.into_parts();
+
+        match self
+            .interceptor
+            .call(crate::Request::from_parts(metadata, extensions, ()))
+        {
+            Ok(req) => {
+                let (metadata, extensions, _) = req.into_parts();
+                let req = crate::Request::from_parts(metadata, extensions, msg);
+                let req = req.into_http(uri, method, version, SanitizeHeaders::No);
+                ResponseFuture::future(self.inner.call(req))
+            }
+            Err(status) => ResponseFuture::status(status),
+        }
+    }
+}
+
+// required to use `InterceptedService` with `Router`
+impl<S, I> crate::server::NamedService for InterceptedService<S, I>
+where
+    S: crate::server::NamedService,
+{
+    const NAME: &'static str = S::NAME;
+}
+
+/// Response future for [`InterceptedService`].
+#[pin_project]
+#[derive(Debug)]
+pub struct ResponseFuture<F> {
+    #[pin]
+    kind: Kind<F>,
+}
+
+impl<F> ResponseFuture<F> {
+    fn future(future: F) -> Self {
+        Self {
+            kind: Kind::Future(future),
+        }
+    }
+
+    fn status(status: Status) -> Self {
+        Self {
+            kind: Kind::Status(Some(status)),
+        }
+    }
+}
+
+#[pin_project(project = KindProj)]
+#[derive(Debug)]
+enum Kind<F> {
+    Future(#[pin] F),
+    Status(Option<Status>),
+}
+
+impl<F, E, B> Future for ResponseFuture<F>
+where
+    F: Future<Output = Result<http::Response<B>, E>>,
+{
+    type Output = Result<http::Response<ResponseBody<B>>, E>;
+
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        match self.project().kind.project() {
+            KindProj::Future(future) => future.poll(cx).map_ok(|res| res.map(ResponseBody::wrap)),
+            KindProj::Status(status) => {
+                let (parts, ()) = status.take().unwrap().into_http::<()>().into_parts();
+                let response = http::Response::from_parts(parts, ResponseBody::<B>::empty());
+                Poll::Ready(Ok(response))
+            }
+        }
+    }
+}
+
+/// Response body for [`InterceptedService`].
+#[pin_project]
+#[derive(Debug)]
+pub struct ResponseBody<B> {
+    #[pin]
+    kind: ResponseBodyKind<B>,
+}
+
+#[pin_project(project = ResponseBodyKindProj)]
+#[derive(Debug)]
+[?2004hroot@830ef13b33a0:/app# sed -n '220,520p' src/tonic/src/service/interceptor.rs
+[?2004l#[derive(Debug)]
+enum ResponseBodyKind<B> {
+    Empty,
+    Wrap(#[pin] B),
+}
+
+impl<B> ResponseBody<B> {
+    fn new(kind: ResponseBodyKind<B>) -> Self {
+        Self { kind }
+    }
+
+    fn empty() -> Self {
+        Self::new(ResponseBodyKind::Empty)
+    }
+
+    fn wrap(body: B) -> Self {
+        Self::new(ResponseBodyKind::Wrap(body))
+    }
+}
+
+impl<B: http_body::Body> http_body::Body for ResponseBody<B> {
+    type Data = B::Data;
+    type Error = B::Error;
+
+    fn poll_frame(
+        self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+    ) -> Poll<Option<Result<http_body::Frame<Self::Data>, Self::Error>>> {
+        match self.project().kind.project() {
+            ResponseBodyKindProj::Empty => Poll::Ready(None),
+            ResponseBodyKindProj::Wrap(body) => body.poll_frame(cx),
+        }
+    }
+
+    fn size_hint(&self) -> http_body::SizeHint {
+        match &self.kind {
+            ResponseBodyKind::Empty => http_body::SizeHint::with_exact(0),
+            ResponseBodyKind::Wrap(body) => body.size_hint(),
+        }
+    }
+
+    fn is_end_stream(&self) -> bool {
+        match &self.kind {
+            ResponseBodyKind::Empty => true,
+            ResponseBodyKind::Wrap(body) => body.is_end_stream(),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn doesnt_remove_headers_from_requests() {
+        let svc = tower::service_fn(|request: http::Request<()>| async move {
+            assert_eq!(
+                request
+                    .headers()
+                    .get("user-agent")
+                    .expect("missing in leaf service"),
+                "test-tonic"
+            );
+
+            Ok::<_, Status>(http::Response::new(()))
+        });
+
+        let svc = InterceptedService::new(svc, |request: crate::Request<()>| {
+            assert_eq!(
+                request
+                    .metadata()
+                    .get("user-agent")
+                    .expect("missing in interceptor"),
+                "test-tonic"
+            );
+
+            Ok(request)
+        });
+
+        let request = http::Request::builder()
+            .header("user-agent", "test-tonic")
+            .body(())
+            .unwrap();
+
+        svc.oneshot(request).await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn handles_intercepted_status_as_response() {
+        let message = "Blocked by the interceptor";
+        let expected = Status::permission_denied(message).into_http::<()>();
+
+        let svc = tower::service_fn(|_: http::Request<()>| async {
+            Ok::<_, Status>(http::Response::new(()))
+        });
+
+        let svc = InterceptedService::new(svc, |_: crate::Request<()>| {
+            Err(Status::permission_denied(message))
+        });
+
+        let request = http::Request::builder().body(()).unwrap();
+        let response = svc.oneshot(request).await.unwrap();
+
+        assert_eq!(expected.status(), response.status());
+        assert_eq!(expected.version(), response.version());
+        assert_eq!(expected.headers(), response.headers());
+    }
+
+    #[tokio::test]
+    async fn doesnt_change_http_method() {
+        let svc = tower::service_fn(|request: http::Request<()>| async move {
+            assert_eq!(request.method(), http::Method::OPTIONS);
+
+            Ok::<_, hyper::Error>(hyper::Response::new(()))
+        });
+
+        let svc = InterceptedService::new(svc, Ok);
+
+        let request = http::Request::builder()
+            .method(http::Method::OPTIONS)
+            .body(())
+            .unwrap();
+
+        svc.oneshot(request).await.unwrap();
+    }
+}
+[?2004hroot@830ef13b33a0:/app# sed -n '1,260p' src/tonic/src/service/recover_error.rs
+[?2004l//! Middleware which recovers from error.
+
+use std::{
+    fmt,
+    future::Future,
+    pin::Pin,
+    task::{ready, Context, Poll},
+};
+
+use http::Response;
+use pin_project::pin_project;
+use tower_layer::Layer;
+use tower_service::Service;
+
+use crate::Status;
+
+/// Layer which applies the [`RecoverError`] middleware.
+#[derive(Debug, Default, Clone)]
+pub struct RecoverErrorLayer {
+    _priv: (),
+}
+
+impl RecoverErrorLayer {
+    /// Create a new `RecoverErrorLayer`.
+    pub fn new() -> Self {
+        Self { _priv: () }
+    }
+}
+
+impl<S> Layer<S> for RecoverErrorLayer {
+    type Service = RecoverError<S>;
+
+    fn layer(&self, inner: S) -> Self::Service {
+        RecoverError::new(inner)
+    }
+}
+
+/// Middleware that attempts to recover from service errors by turning them into a response built
+/// from the `Status`.
+#[derive(Debug, Clone)]
+pub struct RecoverError<S> {
+    inner: S,
+}
+
+impl<S> RecoverError<S> {
+    /// Create a new `RecoverError` middleware.
+    pub fn new(inner: S) -> Self {
+        Self { inner }
+    }
+}
+
+impl<S, Req, ResBody> Service<Req> for RecoverError<S>
+where
+    S: Service<Req, Response = Response<ResBody>>,
+    S::Error: Into<crate::BoxError>,
+{
+    type Response = Response<ResponseBody<ResBody>>;
+    type Error = crate::BoxError;
+    type Future = ResponseFuture<S::Future>;
+
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.inner.poll_ready(cx).map_err(Into::into)
+    }
+
+    fn call(&mut self, req: Req) -> Self::Future {
+        ResponseFuture {
+            inner: self.inner.call(req),
+        }
+    }
+}
+
+/// Response future for [`RecoverError`].
+#[pin_project]
+pub struct ResponseFuture<F> {
+    #[pin]
+    inner: F,
+}
+
+impl<F> fmt::Debug for ResponseFuture<F> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ResponseFuture").finish()
+    }
+}
+
+impl<F, E, ResBody> Future for ResponseFuture<F>
+where
+    F: Future<Output = Result<Response<ResBody>, E>>,
+    E: Into<crate::BoxError>,
+{
+    type Output = Result<Response<ResponseBody<ResBody>>, crate::BoxError>;
+
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        match ready!(self.project().inner.poll(cx)) {
+            Ok(response) => {
+                let response = response.map(ResponseBody::full);
+                Poll::Ready(Ok(response))
+            }
+            Err(err) => match Status::try_from_error(err.into()) {
+                Ok(status) => {
+                    let (parts, ()) = status.into_http::<()>().into_parts();
+                    let res = Response::from_parts(parts, ResponseBody::empty());
+                    Poll::Ready(Ok(res))
+                }
+                Err(err) => Poll::Ready(Err(err)),
+            },
+        }
+    }
+}
+
+/// Response body for [`RecoverError`].
+#[pin_project]
+pub struct ResponseBody<B> {
+    #[pin]
+    inner: Option<B>,
+}
+
+impl<B> fmt::Debug for ResponseBody<B> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ResponseBody").finish()
+    }
+}
+
+impl<B> ResponseBody<B> {
+    fn full(inner: B) -> Self {
+        Self { inner: Some(inner) }
+    }
+
+    const fn empty() -> Self {
+        Self { inner: None }
+    }
+}
+
+impl<B> http_body::Body for ResponseBody<B>
+where
+    B: http_body::Body,
+{
+    type Data = B::Data;
+    type Error = B::Error;
+
+    fn poll_frame(
+        self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+    ) -> Poll<Option<Result<http_body::Frame<Self::Data>, Self::Error>>> {
+        match self.project().inner.as_pin_mut() {
+            Some(b) => b.poll_frame(cx),
+            None => Poll::Ready(None),
+        }
+    }
+
+    fn is_end_stream(&self) -> bool {
+        match &self.inner {
+            Some(b) => b.is_end_stream(),
+            None => true,
+        }
+    }
+
+    fn size_hint(&self) -> http_body::SizeHint {
+        match &self.inner {
+            Some(body) => body.size_hint(),
+            None => http_body::SizeHint::with_exact(0),
+        }
+    }
+}
+[?2004hroot@830ef13b33a0:/app# rg -n "pub type MetadataMap|struct MetadataMap|MetadataMap" src/tonic/src | head
+[?2004lbash: rg: command not found
+[?2004hroot@830ef13b33a0:/app# ls -la src/tonic/src/metadata
+[?2004ltotal 148
+drwxr-xr-x 2 root root  4096 Feb 17 20:09 [0m[01;34m.[0m
+drwxr-xr-x 8 root root  4096 Feb 17 20:09 [01;34m..[0m
+-rw-r--r-- 1 root root  6794 Feb 17 20:09 encoding.rs
+-rw-r--r-- 1 root root  9150 Feb 17 20:09 key.rs
+-rw-r--r-- 1 root root 88156 Feb 17 20:09 map.rs
+-rw-r--r-- 1 root root  1457 Feb 17 20:09 mod.rs
+-rw-r--r-- 1 root root 28372 Feb 17 20:09 value.rs
+[?2004hroot@830ef13b33a0:/app# sed -n '1,220p' src/tonic/src/metadata/mod.rs
+[?2004l//! Contains data structures and utilities for handling gRPC custom metadata.
+
+mod encoding;
+mod key;
+mod map;
+mod value;
+
+pub use self::encoding::Ascii;
+pub use self::encoding::Binary;
+pub use self::key::AsciiMetadataKey;
+pub use self::key::BinaryMetadataKey;
+pub use self::key::MetadataKey;
+pub use self::map::Entry;
+pub use self::map::GetAll;
+pub use self::map::Iter;
+pub use self::map::IterMut;
+pub use self::map::KeyAndMutValueRef;
+pub use self::map::KeyAndValueRef;
+pub use self::map::KeyRef;
+pub use self::map::Keys;
+pub use self::map::MetadataMap;
+pub use self::map::OccupiedEntry;
+pub use self::map::VacantEntry;
+pub use self::map::ValueDrain;
+pub use self::map::ValueIter;
+pub use self::map::ValueRef;
+pub use self::map::ValueRefMut;
+pub use self::map::Values;
+pub use self::map::ValuesMut;
+pub use self::value::AsciiMetadataValue;
+pub use self::value::BinaryMetadataValue;
+pub use self::value::MetadataValue;
+use http::HeaderValue;
+
+pub(crate) use self::map::GRPC_TIMEOUT_HEADER;
+
+/// HTTP Header `content-type` value for gRPC calls.
+pub const GRPC_CONTENT_TYPE: HeaderValue = HeaderValue::from_static("application/grpc");
+
+/// The metadata::errors module contains types for errors that can occur
+/// while handling gRPC custom metadata.
+pub mod errors {
+    pub use super::encoding::InvalidMetadataValue;
+    pub use super::encoding::InvalidMetadataValueBytes;
+    pub use super::key::InvalidMetadataKey;
+    pub use super::value::ToStrError;
+}
+[?2004hroot@830ef13b33a0:/app# rg -n "into_http" src/tonic/src/service src/tonic/src | head -n 50
+[?2004lbash: rg: command not found
+[?2004hroot@830ef13b33a0:/app# grep -n "impl MetadataMap" -n src/tonic/src/metadata/map.rs | head
+[?2004l213:// ===== impl MetadataMap =====
+215:impl MetadataMap {
+[?2004hroot@830ef13b33a0:/app# sed -n '1,120p' src/tonic/src/metadata/map.rs
+[?2004luse http::HeaderName;
+
+pub(crate) use self::as_encoding_agnostic_metadata_key::AsEncodingAgnosticMetadataKey;
+pub(crate) use self::as_metadata_key::AsMetadataKey;
+pub(crate) use self::into_metadata_key::IntoMetadataKey;
+
+use super::encoding::{Ascii, Binary, ValueEncoding};
+use super::key::{InvalidMetadataKey, MetadataKey};
+use super::value::MetadataValue;
+
+use std::marker::PhantomData;
+
+/// A set of gRPC custom metadata entries.
+///
+/// # Examples
+///
+/// Basic usage
+///
+/// ```
+/// # use tonic::metadata::*;
+/// let mut map = MetadataMap::new();
+///
+/// map.insert("x-host", "example.com".parse().unwrap());
+/// map.insert("x-number", "123".parse().unwrap());
+/// map.insert_bin("trace-proto-bin", MetadataValue::from_bytes(b"[binary data]"));
+///
+/// assert!(map.contains_key("x-host"));
+/// assert!(!map.contains_key("x-location"));
+///
+/// assert_eq!(map.get("x-host").unwrap(), "example.com");
+///
+/// map.remove("x-host");
+///
+/// assert!(!map.contains_key("x-host"));
+/// ```
+#[derive(Clone, Debug, Default)]
+pub struct MetadataMap {
+    headers: http::HeaderMap,
+}
+
+impl AsRef<http::HeaderMap> for MetadataMap {
+    fn as_ref(&self) -> &http::HeaderMap {
+        &self.headers
+    }
+}
+
+impl AsMut<http::HeaderMap> for MetadataMap {
+    fn as_mut(&mut self) -> &mut http::HeaderMap {
+        &mut self.headers
+    }
+}
+
+/// `MetadataMap` entry iterator.
+///
+/// Yields `KeyAndValueRef` values. The same header name may be yielded
+/// more than once if it has more than one associated value.
+#[derive(Debug)]
+pub struct Iter<'a> {
+    inner: http::header::Iter<'a, http::header::HeaderValue>,
+}
+
+/// Reference to a key and an associated value in a `MetadataMap`. It can point
+/// to either an ascii or a binary ("*-bin") key.
+#[derive(Debug)]
+pub enum KeyAndValueRef<'a> {
+    /// An ascii metadata key and value.
+    Ascii(&'a MetadataKey<Ascii>, &'a MetadataValue<Ascii>),
+    /// A binary metadata key and value.
+    Binary(&'a MetadataKey<Binary>, &'a MetadataValue<Binary>),
+}
+
+/// Reference to a key and an associated value in a `MetadataMap`. It can point
+/// to either an ascii or a binary ("*-bin") key.
+#[derive(Debug)]
+pub enum KeyAndMutValueRef<'a> {
+    /// An ascii metadata key and value.
+    Ascii(&'a MetadataKey<Ascii>, &'a mut MetadataValue<Ascii>),
+    /// A binary metadata key and value.
+    Binary(&'a MetadataKey<Binary>, &'a mut MetadataValue<Binary>),
+}
+
+/// `MetadataMap` entry iterator.
+///
+/// Yields `(&MetadataKey, &mut value)` tuples. The same header name may be yielded
+/// more than once if it has more than one associated value.
+#[derive(Debug)]
+pub struct IterMut<'a> {
+    inner: http::header::IterMut<'a, http::header::HeaderValue>,
+}
+
+/// A drain iterator of all values associated with a single metadata key.
+#[derive(Debug)]
+pub struct ValueDrain<'a, VE: ValueEncoding> {
+    inner: http::header::ValueDrain<'a, http::header::HeaderValue>,
+    phantom: PhantomData<VE>,
+}
+
+/// An iterator over `MetadataMap` keys.
+///
+/// Yields `KeyRef` values. Each header name is yielded only once, even if it
+/// has more than one associated value.
+#[derive(Debug)]
+pub struct Keys<'a> {
+    inner: http::header::Keys<'a, http::header::HeaderValue>,
+}
+
+/// Reference to a key in a `MetadataMap`. It can point
+/// to either an ascii or a binary ("*-bin") key.
+#[derive(Debug)]
+pub enum KeyRef<'a> {
+    /// An ascii metadata key and value.
+    Ascii(&'a MetadataKey<Ascii>),
+    /// A binary metadata key and value.
+    Binary(&'a MetadataKey<Binary>),
+}
+
+/// `MetadataMap` value iterator.
+///
+/// Yields `ValueRef` values. Each value contained in the `MetadataMap` will be
+/// yielded.
+[?2004hroot@830ef13b33a0:/app# sed -n '120,260p' src/tonic/src/metadata/map.rs
+[?2004l/// yielded.
+#[derive(Debug)]
+pub struct Values<'a> {
+    // Need to use http::header::Iter and not http::header::Values to be able
+    // to know if a value is binary or not.
+    inner: http::header::Iter<'a, http::header::HeaderValue>,
+}
+
+/// Reference to a value in a `MetadataMap`. It can point
+/// to either an ascii or a binary ("*-bin" key) value.
+#[derive(Debug)]
+pub enum ValueRef<'a> {
+    /// An ascii metadata key and value.
+    Ascii(&'a MetadataValue<Ascii>),
+    /// A binary metadata key and value.
+    Binary(&'a MetadataValue<Binary>),
+}
+
+/// `MetadataMap` value iterator.
+///
+/// Each value contained in the `MetadataMap` will be yielded.
+#[derive(Debug)]
+pub struct ValuesMut<'a> {
+    // Need to use http::header::IterMut and not http::header::ValuesMut to be
+    // able to know if a value is binary or not.
+    inner: http::header::IterMut<'a, http::header::HeaderValue>,
+}
+
+/// Reference to a value in a `MetadataMap`. It can point
+/// to either an ascii or a binary ("*-bin" key) value.
+#[derive(Debug)]
+pub enum ValueRefMut<'a> {
+    /// An ascii metadata key and value.
+    Ascii(&'a mut MetadataValue<Ascii>),
+    /// A binary metadata key and value.
+    Binary(&'a mut MetadataValue<Binary>),
+}
+
+/// An iterator of all values associated with a single metadata key.
+#[derive(Debug)]
+pub struct ValueIter<'a, VE: ValueEncoding> {
+    inner: Option<http::header::ValueIter<'a, http::header::HeaderValue>>,
+    phantom: PhantomData<VE>,
+}
+
+/// An iterator of all values associated with a single metadata key.
+#[derive(Debug)]
+pub struct ValueIterMut<'a, VE: ValueEncoding> {
+    inner: http::header::ValueIterMut<'a, http::header::HeaderValue>,
+    phantom: PhantomData<VE>,
+}
+
+/// A view to all values stored in a single entry.
+///
+/// This struct is returned by `MetadataMap::get_all` and
+/// `MetadataMap::get_all_bin`.
+#[derive(Debug)]
+pub struct GetAll<'a, VE: ValueEncoding> {
+    inner: Option<http::header::GetAll<'a, http::header::HeaderValue>>,
+    phantom: PhantomData<VE>,
+}
+
+/// A view into a single location in a `MetadataMap`, which may be vacant or
+/// occupied.
+#[derive(Debug)]
+pub enum Entry<'a, VE: ValueEncoding> {
+    /// An occupied entry
+    Occupied(OccupiedEntry<'a, VE>),
+
+    /// A vacant entry
+    Vacant(VacantEntry<'a, VE>),
+}
+
+/// A view into a single empty location in a `MetadataMap`.
+///
+/// This struct is returned as part of the `Entry` enum.
+#[derive(Debug)]
+pub struct VacantEntry<'a, VE: ValueEncoding> {
+    inner: http::header::VacantEntry<'a, http::header::HeaderValue>,
+    phantom: PhantomData<VE>,
+}
+
+/// A view into a single occupied location in a `MetadataMap`.
+///
+/// This struct is returned as part of the `Entry` enum.
+#[derive(Debug)]
+pub struct OccupiedEntry<'a, VE: ValueEncoding> {
+    inner: http::header::OccupiedEntry<'a, http::header::HeaderValue>,
+    phantom: PhantomData<VE>,
+}
+
+pub(crate) const GRPC_TIMEOUT_HEADER: &str = "grpc-timeout";
+
+// ===== impl MetadataMap =====
+
+impl MetadataMap {
+    // Headers reserved by the gRPC protocol.
+    pub(crate) const GRPC_RESERVED_HEADERS: [HeaderName; 5] = [
+        HeaderName::from_static("te"),
+        HeaderName::from_static("content-type"),
+        HeaderName::from_static("grpc-message"),
+        HeaderName::from_static("grpc-message-type"),
+        HeaderName::from_static("grpc-status"),
+    ];
+
+    /// Create an empty `MetadataMap`.
+    ///
+    /// The map will be created without any capacity. This function will not
+    /// allocate.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let map = MetadataMap::new();
+    ///
+    /// assert!(map.is_empty());
+    /// assert_eq!(0, map.capacity());
+    /// ```
+    pub fn new() -> Self {
+        MetadataMap::with_capacity(0)
+    }
+
+    /// Convert an HTTP HeaderMap to a MetadataMap
+    pub fn from_headers(headers: http::HeaderMap) -> Self {
+        MetadataMap { headers }
+    }
+
+    /// Convert a MetadataMap into a HTTP HeaderMap
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    /// map.insert("x-host", "example.com".parse().unwrap());
+    ///
+    /// let http_map = map.into_headers();
+    ///
+    /// assert_eq!(http_map.get("x-host").unwrap(), "example.com");
+    /// ```
+[?2004hroot@830ef13b33a0:/app# grep -R -n "pub struct Request" src/tonic/src | head
+[?2004lsrc/tonic/src/request.rs:18:pub struct Request<T> {
+[?2004hroot@830ef13b33a0:/app# sed -n '1,220p' src/tonic/src/request.rs
+[?2004luse crate::metadata::{MetadataMap, MetadataValue};
+#[cfg(feature = "server")]
+use crate::transport::server::TcpConnectInfo;
+#[cfg(all(feature = "server", feature = "_tls-any"))]
+use crate::transport::server::TlsConnectInfo;
+use http::Extensions;
+#[cfg(feature = "server")]
+use std::net::SocketAddr;
+#[cfg(all(feature = "server", feature = "_tls-any"))]
+use std::sync::Arc;
+use std::time::Duration;
+#[cfg(all(feature = "server", feature = "_tls-any"))]
+use tokio_rustls::rustls::pki_types::CertificateDer;
+use tokio_stream::Stream;
+
+/// A gRPC request and metadata from an RPC call.
+#[derive(Debug)]
+pub struct Request<T> {
+    metadata: MetadataMap,
+    message: T,
+    extensions: Extensions,
+}
+
+/// Trait implemented by RPC request types.
+///
+/// Types implementing this trait can be used as arguments to client RPC
+/// methods without explicitly wrapping them into `tonic::Request`s. The purpose
+/// is to make client calls slightly more convenient to write.
+///
+/// Tonic's code generation and blanket implementations handle this for you,
+/// so it is not necessary to implement this trait directly.
+///
+/// # Example
+///
+/// Given the following gRPC method definition:
+/// ```proto
+/// rpc GetFeature(Point) returns (Feature) {}
+/// ```
+///
+/// we can call `get_feature` in two equivalent ways:
+/// ```rust
+/// # pub struct Point {}
+/// # pub struct Client {}
+/// # impl Client {
+/// #   fn get_feature(&self, r: impl tonic::IntoRequest<Point>) {}
+/// # }
+/// # let client = Client {};
+/// use tonic::Request;
+///
+/// client.get_feature(Point {});
+/// client.get_feature(Request::new(Point {}));
+/// ```
+pub trait IntoRequest<T>: sealed::Sealed {
+    /// Wrap the input message `T` in a `tonic::Request`
+    fn into_request(self) -> Request<T>;
+}
+
+/// Trait implemented by RPC streaming request types.
+///
+/// Types implementing this trait can be used as arguments to client streaming
+/// RPC methods without explicitly wrapping them into `tonic::Request`s. The
+/// purpose is to make client calls slightly more convenient to write.
+///
+/// Tonic's code generation and blanket implementations handle this for you,
+/// so it is not necessary to implement this trait directly.
+///
+/// # Example
+///
+/// Given the following gRPC service method definition:
+/// ```proto
+/// rpc RecordRoute(stream Point) returns (RouteSummary) {}
+/// ```
+/// we can call `record_route` in two equivalent ways:
+///
+/// ```rust
+/// # #[derive(Clone)]
+/// # pub struct Point {};
+/// # pub struct Client {};
+/// # impl Client {
+/// #   fn record_route(&self, r: impl tonic::IntoStreamingRequest<Message = Point>) {}
+/// # }
+/// # let client = Client {};
+/// use tonic::Request;
+///
+/// let messages = vec![Point {}, Point {}];
+///
+/// client.record_route(Request::new(tokio_stream::iter(messages.clone())));
+/// client.record_route(tokio_stream::iter(messages));
+/// ```
+pub trait IntoStreamingRequest: sealed::Sealed {
+    /// The RPC request stream type
+    type Stream: Stream<Item = Self::Message> + Send + 'static;
+
+    /// The RPC request type
+    type Message;
+
+    /// Wrap the stream of messages in a `tonic::Request`
+    fn into_streaming_request(self) -> Request<Self::Stream>;
+}
+
+impl<T> Request<T> {
+    /// Create a new gRPC request.
+    ///
+    /// ```rust
+    /// # use tonic::Request;
+    /// # pub struct HelloRequest {
+    /// #   pub name: String,
+    /// # }
+    /// Request::new(HelloRequest {
+    ///    name: "Bob".into(),
+    /// });
+    /// ```
+    pub fn new(message: T) -> Self {
+        Request {
+            metadata: MetadataMap::new(),
+            message,
+            extensions: Extensions::new(),
+        }
+    }
+
+    /// Get a reference to the message
+    pub fn get_ref(&self) -> &T {
+        &self.message
+    }
+
+    /// Get a mutable reference to the message
+    pub fn get_mut(&mut self) -> &mut T {
+        &mut self.message
+    }
+
+    /// Get a reference to the custom request metadata.
+    pub fn metadata(&self) -> &MetadataMap {
+        &self.metadata
+    }
+
+    /// Get a mutable reference to the request metadata.
+    pub fn metadata_mut(&mut self) -> &mut MetadataMap {
+        &mut self.metadata
+    }
+
+    /// Consumes `self`, returning the message
+    pub fn into_inner(self) -> T {
+        self.message
+    }
+
+    /// Consumes `self` returning the parts of the request.
+    pub fn into_parts(self) -> (MetadataMap, Extensions, T) {
+        (self.metadata, self.extensions, self.message)
+    }
+
+    /// Create a new gRPC request from metadata, extensions and message.
+    pub fn from_parts(metadata: MetadataMap, extensions: Extensions, message: T) -> Self {
+        Self {
+            metadata,
+            extensions,
+            message,
+        }
+    }
+
+    pub(crate) fn from_http_parts(parts: http::request::Parts, message: T) -> Self {
+        Request {
+            metadata: MetadataMap::from_headers(parts.headers),
+            message,
+            extensions: parts.extensions,
+        }
+    }
+
+    /// Convert an HTTP request to a gRPC request
+    pub fn from_http(http: http::Request<T>) -> Self {
+        let (parts, message) = http.into_parts();
+        Request::from_http_parts(parts, message)
+    }
+
+    pub(crate) fn into_http(
+        self,
+        uri: http::Uri,
+        method: http::Method,
+        version: http::Version,
+        sanitize_headers: SanitizeHeaders,
+    ) -> http::Request<T> {
+        let mut request = http::Request::new(self.message);
+
+        *request.version_mut() = version;
+        *request.method_mut() = method;
+        *request.uri_mut() = uri;
+        *request.headers_mut() = match sanitize_headers {
+            SanitizeHeaders::Yes => self.metadata.into_sanitized_headers(),
+            SanitizeHeaders::No => self.metadata.into_headers(),
+        };
+        *request.extensions_mut() = self.extensions;
+
+        request
+    }
+
+    #[doc(hidden)]
+    pub fn map<F, U>(self, f: F) -> Request<U>
+    where
+        F: FnOnce(T) -> U,
+    {
+        let message = f(self.message);
+
+        Request {
+            metadata: self.metadata,
+            message,
+            extensions: self.extensions,
+        }
+    }
+
+    /// Get the local address of this connection.
+    ///
+    /// This will return `None` if the `IO` type used
+    /// does not implement `Connected` or when using a unix domain socket.
+    /// This currently only works on the server side.
+    #[cfg(feature = "server")]
+    pub fn local_addr(&self) -> Option<SocketAddr> {
+        let addr = self
+            .extensions()
+            .get::<TcpConnectInfo>()
+            .and_then(|i| i.local_addr());
+
+[?2004hroot@830ef13b33a0:/app# grep -R -n "fn into_http" src/tonic/src | head -n 50
+[?2004lsrc/tonic/src/request.rs:174:    pub(crate) fn into_http(
+src/tonic/src/status.rs:605:    pub fn into_http<B: Default>(self) -> http::Response<B> {
+src/tonic/src/response.rs:82:    pub(crate) fn into_http(self) -> http::Response<T> {
+[?2004hroot@830ef13b33a0:/app# grep -n "from_headers" -n src/tonic/src/metadata/map.rs | head -n 50
+[?2004l244:    pub fn from_headers(headers: http::HeaderMap) -> Self {
+2502:    fn test_from_headers_takes_http_headers() {
+2506:        let map = MetadataMap::from_headers(http_map);
+[?2004hroot@830ef13b33a0:/app# sed -n '260,420p' src/tonic/src/metadata/map.rs
+[?2004l    /// ```
+    pub fn into_headers(self) -> http::HeaderMap {
+        self.headers
+    }
+
+    pub(crate) fn into_sanitized_headers(mut self) -> http::HeaderMap {
+        for r in &Self::GRPC_RESERVED_HEADERS {
+            self.headers.remove(r);
+        }
+        self.headers
+    }
+
+    /// Create an empty `MetadataMap` with the specified capacity.
+    ///
+    /// The returned map will allocate internal storage in order to hold about
+    /// `capacity` elements without reallocating. However, this is a "best
+    /// effort" as there are usage patterns that could cause additional
+    /// allocations before `capacity` metadata entries are stored in the map.
+    ///
+    /// More capacity than requested may be allocated.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let map: MetadataMap = MetadataMap::with_capacity(10);
+    ///
+    /// assert!(map.is_empty());
+    /// assert!(map.capacity() >= 10);
+    /// ```
+    pub fn with_capacity(capacity: usize) -> MetadataMap {
+        MetadataMap {
+            headers: http::HeaderMap::with_capacity(capacity),
+        }
+    }
+
+    /// Returns the number of metadata entries (ascii and binary) stored in the
+    /// map.
+    ///
+    /// This number represents the total number of **values** stored in the map.
+    /// This number can be greater than or equal to the number of **keys**
+    /// stored given that a single key may have more than one associated value.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// assert_eq!(0, map.len());
+    ///
+    /// map.insert("x-host-ip", "127.0.0.1".parse().unwrap());
+    /// map.insert_bin("x-host-name-bin", MetadataValue::from_bytes(b"localhost"));
+    ///
+    /// assert_eq!(2, map.len());
+    ///
+    /// map.append("x-host-ip", "text/html".parse().unwrap());
+    ///
+    /// assert_eq!(3, map.len());
+    /// ```
+    pub fn len(&self) -> usize {
+        self.headers.len()
+    }
+
+    /// Returns the number of keys (ascii and binary) stored in the map.
+    ///
+    /// This number will be less than or equal to `len()` as each key may have
+    /// more than one associated value.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// assert_eq!(0, map.keys_len());
+    ///
+    /// map.insert("x-host-ip", "127.0.0.1".parse().unwrap());
+    /// map.insert_bin("x-host-name-bin", MetadataValue::from_bytes(b"localhost"));
+    ///
+    /// assert_eq!(2, map.keys_len());
+    ///
+    /// map.append("x-host-ip", "text/html".parse().unwrap());
+    ///
+    /// assert_eq!(2, map.keys_len());
+    /// ```
+    pub fn keys_len(&self) -> usize {
+        self.headers.keys_len()
+    }
+
+    /// Returns true if the map contains no elements.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// assert!(map.is_empty());
+    ///
+    /// map.insert("x-host", "hello.world".parse().unwrap());
+    ///
+    /// assert!(!map.is_empty());
+    /// ```
+    pub fn is_empty(&self) -> bool {
+        self.headers.is_empty()
+    }
+
+    /// Clears the map, removing all key-value pairs. Keeps the allocated memory
+    /// for reuse.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    /// map.insert("x-host", "hello.world".parse().unwrap());
+    ///
+    /// map.clear();
+    /// assert!(map.is_empty());
+    /// assert!(map.capacity() > 0);
+    /// ```
+    pub fn clear(&mut self) {
+        self.headers.clear();
+    }
+
+    /// Returns the number of custom metadata entries the map can hold without
+    /// reallocating.
+    ///
+    /// This number is an approximation as certain usage patterns could cause
+    /// additional allocations before the returned capacity is filled.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// assert_eq!(0, map.capacity());
+    ///
+    /// map.insert("x-host", "hello.world".parse().unwrap());
+    /// assert_eq!(6, map.capacity());
+    /// ```
+    pub fn capacity(&self) -> usize {
+        self.headers.capacity()
+    }
+
+    /// Reserves capacity for at least `additional` more custom metadata to be
+    /// inserted into the `MetadataMap`.
+    ///
+    /// The metadata map may reserve more space to avoid frequent reallocations.
+    /// Like with `with_capacity`, this will be a "best effort" to avoid
+    /// allocations until `additional` more custom metadata is inserted. Certain
+    /// usage patterns could cause additional allocations before the number is
+    /// reached.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the new allocation size overflows `usize`.
+    ///
+    /// # Examples
+[?2004hroot@830ef13b33a0:/app# sed -n '420,620p' src/tonic/src/metadata/map.rs
+[?2004l    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    /// map.reserve(10);
+    /// # map.insert("x-host", "bar".parse().unwrap());
+    /// ```
+    pub fn reserve(&mut self, additional: usize) {
+        self.headers.reserve(additional);
+    }
+
+    /// Returns a reference to the value associated with the key. This method
+    /// is for ascii metadata entries (those whose names don't end with
+    /// "-bin"). For binary entries, use get_bin.
+    ///
+    /// If there are multiple values associated with the key, then the first one
+    /// is returned. Use `get_all` to get all values associated with a given
+    /// key. Returns `None` if there are no values associated with the key.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    /// assert!(map.get("x-host").is_none());
+    ///
+    /// map.insert("x-host", "hello".parse().unwrap());
+    /// assert_eq!(map.get("x-host").unwrap(), &"hello");
+    /// assert_eq!(map.get("x-host").unwrap(), &"hello");
+    ///
+    /// map.append("x-host", "world".parse().unwrap());
+    /// assert_eq!(map.get("x-host").unwrap(), &"hello");
+    ///
+    /// // Attempting to read a key of the wrong type fails by not
+    /// // finding anything.
+    /// map.append_bin("host-bin", MetadataValue::from_bytes(b"world"));
+    /// assert!(map.get("host-bin").is_none());
+    /// assert!(map.get("host-bin".to_string()).is_none());
+    /// assert!(map.get(&("host-bin".to_string())).is_none());
+    ///
+    /// // Attempting to read an invalid key string fails by not
+    /// // finding anything.
+    /// assert!(map.get("host{}bin").is_none());
+    /// assert!(map.get("host{}bin".to_string()).is_none());
+    /// assert!(map.get(&("host{}bin".to_string())).is_none());
+    /// ```
+    pub fn get<K>(&self, key: K) -> Option<&MetadataValue<Ascii>>
+    where
+        K: AsMetadataKey<Ascii>,
+    {
+        key.get(self)
+    }
+
+    /// Like get, but for Binary keys (for example "trace-proto-bin").
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    /// assert!(map.get_bin("trace-proto-bin").is_none());
+    ///
+    /// map.insert_bin("trace-proto-bin", MetadataValue::from_bytes(b"hello"));
+    /// assert_eq!(map.get_bin("trace-proto-bin").unwrap(), &"hello");
+    /// assert_eq!(map.get_bin("trace-proto-bin").unwrap(), &"hello");
+    ///
+    /// map.append_bin("trace-proto-bin", MetadataValue::from_bytes(b"world"));
+    /// assert_eq!(map.get_bin("trace-proto-bin").unwrap(), &"hello");
+    ///
+    /// // Attempting to read a key of the wrong type fails by not
+    /// // finding anything.
+    /// map.append("host", "world".parse().unwrap());
+    /// assert!(map.get_bin("host").is_none());
+    /// assert!(map.get_bin("host".to_string()).is_none());
+    /// assert!(map.get_bin(&("host".to_string())).is_none());
+    ///
+    /// // Attempting to read an invalid key string fails by not
+    /// // finding anything.
+    /// assert!(map.get_bin("host{}-bin").is_none());
+    /// assert!(map.get_bin("host{}-bin".to_string()).is_none());
+    /// assert!(map.get_bin(&("host{}-bin".to_string())).is_none());
+    /// ```
+    pub fn get_bin<K>(&self, key: K) -> Option<&MetadataValue<Binary>>
+    where
+        K: AsMetadataKey<Binary>,
+    {
+        key.get(self)
+    }
+
+    /// Returns a mutable reference to the value associated with the key. This
+    /// method is for ascii metadata entries (those whose names don't end with
+    /// "-bin"). For binary entries, use get_mut_bin.
+    ///
+    /// If there are multiple values associated with the key, then the first one
+    /// is returned. Use `entry` to get all values associated with a given
+    /// key. Returns `None` if there are no values associated with the key.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::default();
+    /// map.insert("x-host", "hello".parse().unwrap());
+    /// map.get_mut("x-host").unwrap().set_sensitive(true);
+    ///
+    /// assert!(map.get("x-host").unwrap().is_sensitive());
+    ///
+    /// // Attempting to read a key of the wrong type fails by not
+    /// // finding anything.
+    /// map.append_bin("host-bin", MetadataValue::from_bytes(b"world"));
+    /// assert!(map.get_mut("host-bin").is_none());
+    /// assert!(map.get_mut("host-bin".to_string()).is_none());
+    /// assert!(map.get_mut(&("host-bin".to_string())).is_none());
+    ///
+    /// // Attempting to read an invalid key string fails by not
+    /// // finding anything.
+    /// assert!(map.get_mut("host{}").is_none());
+    /// assert!(map.get_mut("host{}".to_string()).is_none());
+    /// assert!(map.get_mut(&("host{}".to_string())).is_none());
+    /// ```
+    pub fn get_mut<K>(&mut self, key: K) -> Option<&mut MetadataValue<Ascii>>
+    where
+        K: AsMetadataKey<Ascii>,
+    {
+        key.get_mut(self)
+    }
+
+    /// Like get_mut, but for Binary keys (for example "trace-proto-bin").
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::default();
+    /// map.insert_bin("trace-proto-bin", MetadataValue::from_bytes(b"hello"));
+    /// map.get_bin_mut("trace-proto-bin").unwrap().set_sensitive(true);
+    ///
+    /// assert!(map.get_bin("trace-proto-bin").unwrap().is_sensitive());
+    ///
+    /// // Attempting to read a key of the wrong type fails by not
+    /// // finding anything.
+    /// map.append("host", "world".parse().unwrap());
+    /// assert!(map.get_bin_mut("host").is_none());
+    /// assert!(map.get_bin_mut("host".to_string()).is_none());
+    /// assert!(map.get_bin_mut(&("host".to_string())).is_none());
+    ///
+    /// // Attempting to read an invalid key string fails by not
+    /// // finding anything.
+    /// assert!(map.get_bin_mut("host{}-bin").is_none());
+    /// assert!(map.get_bin_mut("host{}-bin".to_string()).is_none());
+    /// assert!(map.get_bin_mut(&("host{}-bin".to_string())).is_none());
+    /// ```
+    pub fn get_bin_mut<K>(&mut self, key: K) -> Option<&mut MetadataValue<Binary>>
+    where
+        K: AsMetadataKey<Binary>,
+    {
+        key.get_mut(self)
+    }
+
+    /// Returns a view of all values associated with a key. This method is for
+    /// ascii metadata entries (those whose names don't end with "-bin"). For
+    /// binary entries, use get_all_bin.
+    ///
+    /// The returned view does not incur any allocations and allows iterating
+    /// the values associated with the key.  See [`GetAll`] for more details.
+    /// Returns `None` if there are no values associated with the key.
+    ///
+    /// [`GetAll`]: struct.GetAll.html
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// map.insert("x-host", "hello".parse().unwrap());
+    /// map.append("x-host", "goodbye".parse().unwrap());
+    ///
+    /// {
+    ///     let view = map.get_all("x-host");
+    ///
+    ///     let mut iter = view.iter();
+    ///     assert_eq!(&"hello", iter.next().unwrap());
+    ///     assert_eq!(&"goodbye", iter.next().unwrap());
+    ///     assert!(iter.next().is_none());
+    /// }
+    ///
+    /// // Attempting to read a key of the wrong type fails by not
+    /// // finding anything.
+    /// map.append_bin("host-bin", MetadataValue::from_bytes(b"world"));
+    /// assert!(map.get_all("host-bin").iter().next().is_none());
+    /// assert!(map.get_all("host-bin".to_string()).iter().next().is_none());
+    /// assert!(map.get_all(&("host-bin".to_string())).iter().next().is_none());
+    ///
+    /// // Attempting to read an invalid key string fails by not
+    /// // finding anything.
+    /// assert!(map.get_all("host{}").iter().next().is_none());
+    /// assert!(map.get_all("host{}".to_string()).iter().next().is_none());
+    /// assert!(map.get_all(&("host{}".to_string())).iter().next().is_none());
+    /// ```
+[?2004hroot@830ef13b33a0:/app# grep -n "pub fn (get|contains_key|iter|keys|len)" src/tonic/src/metadata/map.rs | head -n 50
+[?2004l[?2004hroot@830ef13b33a0:/app# sed -n '620,820p' src/tonic/src/metadata/map.rs
+[?2004l    /// ```
+    pub fn get_all<K>(&self, key: K) -> GetAll<'_, Ascii>
+    where
+        K: AsMetadataKey<Ascii>,
+    {
+        GetAll {
+            inner: key.get_all(self),
+            phantom: PhantomData,
+        }
+    }
+
+    /// Like get_all, but for Binary keys (for example "trace-proto-bin").
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// map.insert_bin("trace-proto-bin", MetadataValue::from_bytes(b"hello"));
+    /// map.append_bin("trace-proto-bin", MetadataValue::from_bytes(b"goodbye"));
+    ///
+    /// {
+    ///     let view = map.get_all_bin("trace-proto-bin");
+    ///
+    ///     let mut iter = view.iter();
+    ///     assert_eq!(&"hello", iter.next().unwrap());
+    ///     assert_eq!(&"goodbye", iter.next().unwrap());
+    ///     assert!(iter.next().is_none());
+    /// }
+    ///
+    /// // Attempting to read a key of the wrong type fails by not
+    /// // finding anything.
+    /// map.append("host", "world".parse().unwrap());
+    /// assert!(map.get_all_bin("host").iter().next().is_none());
+    /// assert!(map.get_all_bin("host".to_string()).iter().next().is_none());
+    /// assert!(map.get_all_bin(&("host".to_string())).iter().next().is_none());
+    ///
+    /// // Attempting to read an invalid key string fails by not
+    /// // finding anything.
+    /// assert!(map.get_all_bin("host{}-bin").iter().next().is_none());
+    /// assert!(map.get_all_bin("host{}-bin".to_string()).iter().next().is_none());
+    /// assert!(map.get_all_bin(&("host{}-bin".to_string())).iter().next().is_none());
+    /// ```
+    pub fn get_all_bin<K>(&self, key: K) -> GetAll<'_, Binary>
+    where
+        K: AsMetadataKey<Binary>,
+    {
+        GetAll {
+            inner: key.get_all(self),
+            phantom: PhantomData,
+        }
+    }
+
+    /// Returns true if the map contains a value for the specified key. This
+    /// method works for both ascii and binary entries.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    /// assert!(!map.contains_key("x-host"));
+    ///
+    /// map.append_bin("host-bin", MetadataValue::from_bytes(b"world"));
+    /// map.insert("x-host", "world".parse().unwrap());
+    ///
+    /// // contains_key works for both Binary and Ascii keys:
+    /// assert!(map.contains_key("x-host"));
+    /// assert!(map.contains_key("host-bin"));
+    ///
+    /// // contains_key returns false for invalid keys:
+    /// assert!(!map.contains_key("x{}host"));
+    /// ```
+    pub fn contains_key<K>(&self, key: K) -> bool
+    where
+        K: AsEncodingAgnosticMetadataKey,
+    {
+        key.contains_key(self)
+    }
+
+    /// An iterator visiting all key-value pairs (both ascii and binary).
+    ///
+    /// The iteration order is arbitrary, but consistent across platforms for
+    /// the same crate version. Each key will be yielded once per associated
+    /// value. So, if a key has 3 associated values, it will be yielded 3 times.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// map.insert("x-word", "hello".parse().unwrap());
+    /// map.append("x-word", "goodbye".parse().unwrap());
+    /// map.insert("x-number", "123".parse().unwrap());
+    ///
+    /// for key_and_value in map.iter() {
+    ///     match key_and_value {
+    ///         KeyAndValueRef::Ascii(ref key, ref value) =>
+    ///             println!("Ascii: {:?}: {:?}", key, value),
+    ///         KeyAndValueRef::Binary(ref key, ref value) =>
+    ///             println!("Binary: {:?}: {:?}", key, value),
+    ///     }
+    /// }
+    /// ```
+    pub fn iter(&self) -> Iter<'_> {
+        Iter {
+            inner: self.headers.iter(),
+        }
+    }
+
+    /// An iterator visiting all key-value pairs, with mutable value references.
+    ///
+    /// The iterator order is arbitrary, but consistent across platforms for the
+    /// same crate version. Each key will be yielded once per associated value,
+    /// so if a key has 3 associated values, it will be yielded 3 times.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// map.insert("x-word", "hello".parse().unwrap());
+    /// map.append("x-word", "goodbye".parse().unwrap());
+    /// map.insert("x-number", "123".parse().unwrap());
+    ///
+    /// for key_and_value in map.iter_mut() {
+    ///     match key_and_value {
+    ///         KeyAndMutValueRef::Ascii(key, mut value) =>
+    ///             value.set_sensitive(true),
+    ///         KeyAndMutValueRef::Binary(key, mut value) =>
+    ///             value.set_sensitive(false),
+    ///     }
+    /// }
+    /// ```
+    pub fn iter_mut(&mut self) -> IterMut<'_> {
+        IterMut {
+            inner: self.headers.iter_mut(),
+        }
+    }
+
+    /// An iterator visiting all keys.
+    ///
+    /// The iteration order is arbitrary, but consistent across platforms for
+    /// the same crate version. Each key will be yielded only once even if it
+    /// has multiple associated values.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// map.insert("x-word", "hello".parse().unwrap());
+    /// map.append("x-word", "goodbye".parse().unwrap());
+    /// map.insert_bin("x-number-bin", MetadataValue::from_bytes(b"123"));
+    ///
+    /// for key in map.keys() {
+    ///     match key {
+    ///         KeyRef::Ascii(ref key) =>
+    ///             println!("Ascii key: {:?}", key),
+    ///         KeyRef::Binary(ref key) =>
+    ///             println!("Binary key: {:?}", key),
+    ///     }
+    ///     println!("{:?}", key);
+    /// }
+    /// ```
+    pub fn keys(&self) -> Keys<'_> {
+        Keys {
+            inner: self.headers.keys(),
+        }
+    }
+
+    /// An iterator visiting all values (both ascii and binary).
+    ///
+    /// The iteration order is arbitrary, but consistent across platforms for
+    /// the same crate version.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::new();
+    ///
+    /// map.insert("x-word", "hello".parse().unwrap());
+    /// map.append("x-word", "goodbye".parse().unwrap());
+    /// map.insert_bin("x-number-bin", MetadataValue::from_bytes(b"123"));
+    ///
+    /// for value in map.values() {
+    ///     match value {
+    ///         ValueRef::Ascii(ref value) =>
+    ///             println!("Ascii value: {:?}", value),
+    ///         ValueRef::Binary(ref value) =>
+    ///             println!("Binary value: {:?}", value),
+    ///     }
+    ///     println!("{:?}", value);
+    /// }
+    /// ```
+    pub fn values(&self) -> Values<'_> {
+[?2004hroot@830ef13b33a0:/app# sed -n '580,700p' src/tonic/src/status.rs
+[?2004l
+    /// Create a new `Status` with the associated code, message, binary details field and custom metadata
+    pub fn with_details_and_metadata(
+        code: Code,
+        message: impl Into<String>,
+        details: Bytes,
+        metadata: MetadataMap,
+    ) -> Status {
+        StatusInner {
+            code,
+            message: message.into(),
+            details,
+            metadata,
+            source: None,
+        }
+        .into_status()
+    }
+
+    /// Add a source error to this status.
+    pub fn set_source(&mut self, source: Arc<dyn Error + Send + Sync + 'static>) -> &mut Status {
+        self.0.source = Some(source);
+        self
+    }
+
+    /// Build an `http::Response` from the given `Status`.
+    pub fn into_http<B: Default>(self) -> http::Response<B> {
+        let mut response = http::Response::new(B::default());
+        response
+            .headers_mut()
+            .insert(http::header::CONTENT_TYPE, GRPC_CONTENT_TYPE);
+        self.add_header(response.headers_mut()).unwrap();
+        response.extensions_mut().insert(self);
+        response
+    }
+
+    #[doc(hidden)]
+    pub const GRPC_STATUS: HeaderName = HeaderName::from_static("grpc-status");
+    #[doc(hidden)]
+    pub const GRPC_MESSAGE: HeaderName = HeaderName::from_static("grpc-message");
+    #[doc(hidden)]
+    pub const GRPC_STATUS_DETAILS: HeaderName = HeaderName::from_static("grpc-status-details-bin");
+}
+
+fn find_status_in_source_chain(err: &(dyn Error + 'static)) -> Option<Status> {
+    let mut source = Some(err);
+
+    while let Some(err) = source {
+        if let Some(status) = err.downcast_ref::<Status>() {
+            return Some(
+                StatusInner {
+                    code: status.0.code,
+                    message: status.0.message.clone(),
+                    details: status.0.details.clone(),
+                    metadata: status.0.metadata.clone(),
+                    // Since `Status` is not `Clone`, any `source` on the original Status
+                    // cannot be cloned so must remain with the original `Status`.
+                    source: None,
+                }
+                .into_status(),
+            );
+        }
+
+        if let Some(timeout) = err.downcast_ref::<TimeoutExpired>() {
+            return Some(Status::cancelled(timeout.to_string()));
+        }
+
+        // If we are unable to connect to the server, map this to UNAVAILABLE.  This is
+        // consistent with the behavior of a C++ gRPC client when the server is not running, and
+        // matches the spec of:
+        // > The service is currently unavailable. This is most likely a transient condition that
+        // > can be corrected if retried with a backoff.
+        if let Some(connect) = err.downcast_ref::<ConnectError>() {
+            return Some(Status::unavailable(connect.to_string()));
+        }
+
+        #[cfg(any(feature = "server", feature = "channel"))]
+        if let Some(hyper) = err
+            .downcast_ref::<hyper::Error>()
+            .and_then(Status::from_hyper_error)
+        {
+            return Some(hyper);
+        }
+
+        source = err.source();
+    }
+
+    None
+}
+
+impl fmt::Debug for Status {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl fmt::Debug for StatusInner {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // A manual impl to reduce the noise of frequently empty fields.
+        let mut builder = f.debug_struct("Status");
+
+        builder.field("code", &self.code);
+
+        if !self.message.is_empty() {
+            builder.field("message", &self.message);
+        }
+
+        if !self.details.is_empty() {
+            builder.field("details", &self.details);
+        }
+
+        if !self.metadata.is_empty() {
+            builder.field("metadata", &self.metadata);
+        }
+
+        builder.field("source", &self.source);
+
+        builder.finish()
+    }
+}
+
+fn invalid_header_value_byte<Error: fmt::Display>(err: Error) -> Status {
+[?2004hroot@830ef13b33a0:/app# grep -n "pub fn contains_key" -n src/tonic/src/metadata/map.rs | head -n 20
+[?2004l694:    pub fn contains_key<K>(&self, key: K) -> bool
+[?2004hroot@830ef13b33a0:/app# grep -n "pub fn get\(" -n src/tonic/src/metadata/map.rs | head -n 20
+[?2004lgrep: Unmatched ( or \(
+[?2004hroot@830ef13b33a0:/app# sed -n '820,980p' src/tonic/src/metadata/map.rs
+[?2004l    pub fn values(&self) -> Values<'_> {
+        Values {
+            inner: self.headers.iter(),
+        }
+    }
+
+    /// An iterator visiting all values mutably.
+    ///
+    /// The iteration order is arbitrary, but consistent across platforms for
+    /// the same crate version.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::default();
+    ///
+    /// map.insert("x-word", "hello".parse().unwrap());
+    /// map.append("x-word", "goodbye".parse().unwrap());
+    /// map.insert("x-number", "123".parse().unwrap());
+    ///
+    /// for value in map.values_mut() {
+    ///     match value {
+    ///         ValueRefMut::Ascii(mut value) =>
+    ///             value.set_sensitive(true),
+    ///         ValueRefMut::Binary(mut value) =>
+    ///             value.set_sensitive(false),
+    ///     }
+    /// }
+    /// ```
+    pub fn values_mut(&mut self) -> ValuesMut<'_> {
+        ValuesMut {
+            inner: self.headers.iter_mut(),
+        }
+    }
+
+    /// Gets the given ascii key's corresponding entry in the map for in-place
+    /// manipulation. For binary keys, use `entry_bin`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// let mut map = MetadataMap::default();
+    ///
+    /// let headers = &[
+    ///     "content-length",
+    ///     "x-hello",
+    ///     "Content-Length",
+    ///     "x-world",
+    /// ];
+    ///
+    /// for &header in headers {
+    ///     let counter = map.entry(header).unwrap().or_insert("".parse().unwrap());
+    ///     *counter = format!("{}{}", counter.to_str().unwrap(), "1").parse().unwrap();
+    /// }
+    ///
+    /// assert_eq!(map.get("content-length").unwrap(), "11");
+    /// assert_eq!(map.get("x-hello").unwrap(), "1");
+    ///
+    /// // Gracefully handles parting invalid key strings
+    /// assert!(!map.entry("a{}b").is_ok());
+    ///
+    /// // Attempting to read a key of the wrong type fails by not
+    /// // finding anything.
+    /// map.append_bin("host-bin", MetadataValue::from_bytes(b"world"));
+    /// assert!(!map.entry("host-bin").is_ok());
+    /// assert!(!map.entry("host-bin".to_string()).is_ok());
+    /// assert!(!map.entry(&("host-bin".to_string())).is_ok());
+    ///
+    /// // Attempting to read an invalid key string fails by not
+    /// // finding anything.
+    /// assert!(!map.entry("host{}").is_ok());
+    /// assert!(!map.entry("host{}".to_string()).is_ok());
+    /// assert!(!map.entry(&("host{}".to_string())).is_ok());
+    /// ```
+    pub fn entry<K>(&mut self, key: K) -> Result<Entry<'_, Ascii>, InvalidMetadataKey>
+    where
+        K: AsMetadataKey<Ascii>,
+    {
+        self.generic_entry::<Ascii, K>(key)
+    }
+
+    /// Gets the given Binary key's corresponding entry in the map for in-place
+    /// manipulation.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use tonic::metadata::*;
+    /// # use std::str;
+    /// let mut map = MetadataMap::default();
+    ///
+    /// let headers = &[
+    ///     "content-length-bin",
+    ///     "x-hello-bin",
+    ///     "Content-Length-bin",
+    ///     "x-world-bin",
+    /// ];
+    ///
+    /// for &header in headers {
+    ///     let counter = map.entry_bin(header).unwrap().or_insert(MetadataValue::from_bytes(b""));
+    ///     *counter = MetadataValue::from_bytes(format!("{}{}", str::from_utf8(counter.to_bytes().unwrap().as_ref()).unwrap(), "1").as_bytes());
+    /// }
+    ///
+    /// assert_eq!(map.get_bin("content-length-bin").unwrap(), "11");
+    /// assert_eq!(map.get_bin("x-hello-bin").unwrap(), "1");
+    ///
+    /// // Attempting to read a key of the wrong type fails by not
+    /// // finding anything.
+    /// map.append("host", "world".parse().unwrap());
+    /// assert!(!map.entry_bin("host").is_ok());
+    /// assert!(!map.entry_bin("host".to_string()).is_ok());
+    /// assert!(!map.entry_bin(&("host".to_string())).is_ok());
+    ///
+    /// // Attempting to read an invalid key string fails by not
+    /// // finding anything.
+    /// assert!(!map.entry_bin("host{}-bin").is_ok());
+    /// assert!(!map.entry_bin("host{}-bin".to_string()).is_ok());
+    /// assert!(!map.entry_bin(&("host{}-bin".to_string())).is_ok());
+    /// ```
+    pub fn entry_bin<K>(&mut self, key: K) -> Result<Entry<'_, Binary>, InvalidMetadataKey>
+    where
+        K: AsMetadataKey<Binary>,
+    {
+        self.generic_entry::<Binary, K>(key)
+    }
+
+    fn generic_entry<VE: ValueEncoding, K>(
+        &mut self,
+        key: K,
+    ) -> Result<Entry<'_, VE>, InvalidMetadataKey>
+    where
+        K: AsMetadataKey<VE>,
+    {
+        match key.entry(self) {
+            Ok(entry) => Ok(match entry {
+                http::header::Entry::Occupied(e) => Entry::Occupied(OccupiedEntry {
+                    inner: e,
+                    phantom: PhantomData,
+                }),
+                http::header::Entry::Vacant(e) => Entry::Vacant(VacantEntry {
+                    inner: e,
+                    phantom: PhantomData,
+                }),
+            }),
+            Err(err) => Err(err),
+        }
+    }
+
+    /// Inserts an ascii key-value pair into the map. To insert a binary entry,
+    /// use `insert_bin`.
+    ///
+    /// This method panics when the given key is a string and it cannot be
+    /// converted to a `MetadataKey<Ascii>`.
+    ///
+    /// If the map did not previously have this key present, then `None` is
+    /// returned.
+    ///
+    /// If the map did have this key present, the new value is associated with
+    /// the key and all previous values are removed. **Note** that only a single
+[?2004hroot@830ef13b33a0:/app# cat > src/tonic/src/service/metadata_validator.rs <<'EOF'
+[?2004l[?2004h> //! Middleware for validating incoming request metadata.
+[?2004l[?2004h> 
+[?2004l [?2004h> use crate::metadata::MetadataMap;
+[?2004lest me[?2004h> use crate::Status;
+[?2004la[?2004h> 
+[?2004l[?2004h> use pin_project::pin_project;
+[?2004l[?2004h> use std::fmt;
+[?2004l[?2004h> use std::future::Future;
+[?2004l[?2004h> use std::pin::Pin;
+[?2004l>[?2004h> use std::task::{ready, Context, Poll};
+[?2004l[?2004h> use tower_layer::Layer;
+[?2004l[?2004h> use tower_service::Service;
+[?2004l[?2004h> 
+[?2004lw[?2004h> /// Validates incoming request metadata.
+[?2004lconst [?2004h> pub trait MetadataValidator {
+[?2004l[?2004h>     /// Validate a request's metadata.
+[?2004l}[?2004h>     fn validate(&self, metadata: &MetadataMap) -> Result<(), Status>;
+[?2004l[?2004h> }
+[?2004lV:[?2004h> 
+[?2004l [?2004h> #[derive(Debug)]
+[?2004l[?2004h> enum Rule {
+[?2004lype[?2004h>     RequireHeader { name: String },
+[?2004l[?2004h>     MaxHeaderSize { limit: usize },
+[?2004l[?2004h>     HeaderPrefix { name: String, prefix: String },
+[?2004l[?2004h>     MaxTotalHeaders { max: usize },
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004l[?2004h> #[derive(Debug, Default)]
+[?2004l[?2004h> struct Validator {
+[?2004l[?2004h>     rules: Vec<Rule>,
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004l[?2004h> impl MetadataValidator for Validator {
+[?2004l[?2004h>     fn validate(&self, metadata: &MetadataMap) -> Result<(), Status> {
+[?2004l,
+[?2004h>         for rule in self.rules.iter() {
+[?2004l[?2004h>             match rule {
+[?2004l[?2004h>                 Rule::RequireHeader { name } => {
+[?2004l[?2004h>                     if !metadata.contains_key(name.as_str()) {
+[?2004l[?2004h>                         return Err(Status::failed_precondition("required metadata missing"));
+[?2004l[?2004h>                     }
+[?2004l[?2004h>                 }
+[?2004l[?2004h>                 Rule::MaxHeaderSize { limit } => {
+[?2004l[?2004h>                     let headers = metadata.as_ref();
+[?2004l[?2004h>                     for (name, value) in headers.iter() {
+[?2004l[?2004h>                         let mut size = name.as_str().len();
+[?2004l[?2004h>                         size += value.as_bytes().len();
+[?2004l[?2004h>                         if size > *limit {
+[?2004l[?2004h>                             return Err(Status::invalid_argument("metadata header too large"));
+[?2004l[?2004h>                         }
+[?2004l[?2004h>                     }
+[?2004l[?2004h>                 }
+[?2004l[?2004h>                 Rule::HeaderPrefix { name, prefix } => {
+[?2004l[?2004h>                     match metadata.get(name.as_str()) {
+[?2004l[?2004h>                         Some(value) => match value.to_str() {
+[?2004l[?2004h>                             Ok(s) => {
+[?2004l[?2004h>                                 if !s.starts_with(prefix.as_str()) {
+[?2004l[?2004h>                                     return Err(Status::invalid_argument(
+[?2004l[?2004h>                                         "metadata header does not match prefix",
+[?2004la[?2004h>                                     ));
+[?2004let r[?2004h>                                 }
+[?2004l[?2004h>                             }
+[?2004l[?2004h>                             Err(_) => {
+[?2004l[?2004h>                                 return Err(Status::invalid_argument("metadata header not ascii"));
+[?2004l[?2004h>                             }
+[?2004l[?2004h>                         },
+[?2004l[?2004h>                         None => {
+[?2004l[?2004h>                             return Err(Status::invalid_argument("metadata header missing"));
+[?2004l[?2004h>                         }
+[?2004l  i[?2004h>                     }
+[?2004la[?2004h>                 }
+[?2004l[?2004h>                 Rule::MaxTotalHeaders { max } => {
+[?2004l/ R[?2004h>                     if metadata.len() > *max {
+[?2004lid[?2004h>                         return Err(Status::resource_exhausted("too many metadata headers"));
+[?2004l[?2004h>                     }
+[?2004l {
+[?2004h>                 }
+[?2004l[?2004h>             }
+[?2004l[?2004h>         }
+[?2004l  Se[?2004h> 
+[?2004l[?2004h>         Ok(())
+[?2004le[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004l[?2004h> /// Builder for composing metadata validation rules.
+[?2004l[?2004h> #[derive(Debug, Default)]
+[?2004lim[?2004h> pub struct ValidatorBuilder {
+[?2004l[?2004h>     rules: Vec<Rule>,
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004lf[?2004h> impl ValidatorBuilder {
+[?2004ler[?2004h>     /// Create a new builder.
+[?2004l[?2004h>     pub fn new() -> Self {
+[?2004l[?2004h>         Self { rules: Vec::new() }
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     /// Require the presence of a metadata header.
+[?2004l[?2004h>     pub fn require_header(mut self, name: impl Into<String>) -> Self {
+[?2004ll_[?2004h>         self.rules.push(Rule::RequireHeader { name: name.into() });
+[?2004l[?2004h>         self
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     /// Enforce a maximum per-header size (name + value) in bytes.
+[?2004lch[?2004h>     pub fn max_header_size(mut self, limit: usize) -> Self {
+[?2004l=> b[?2004h>         self.rules.push(Rule::MaxHeaderSize { limit });
+[?2004l[?2004h>         self
+[?2004l
+   [?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     /// Require a header value to start with the given prefix.
+[?2004l[?2004h>     pub fn header_prefix(mut self, name: impl Into<String>, prefix: impl Into<String>) -> Self {
+[?2004l[?2004h>         self.rules.push(Rule::HeaderPrefix {
+[?2004l     [?2004h>             name: name.into(),
+[?2004l[?2004h>             prefix: prefix.into(),
+[?2004l[?2004h>         });
+[?2004l [?2004h>         self
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l:[?2004h>     /// Limit the total number of metadata header entries.
+[?2004l[?2004h>     pub fn max_total_headers(mut self, max: usize) -> Self {
+[?2004l[?2004h>         self.rules.push(Rule::MaxTotalHeaders { max });
+[?2004l[?2004h>         self
+[?2004lwrapped [?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     /// Build the validator.
+[?2004l[?2004h>     pub fn build(self) -> impl MetadataValidator {
+[?2004l[?2004h>         Validator { rules: self.rules }
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004l [?2004h> /// A layer which validates request metadata before forwarding the request.
+[?2004l[?2004h> #[derive(Debug, Clone, Copy)]
+[?2004l[?2004h> pub struct MetadataValidatorLayer<'a, V> {
+[?2004l[?2004h>     validator: &'a V,
+[?2004l [?2004h> }
+[?2004l[?2004h> 
+[?2004l[?2004h> impl<'a, V> MetadataValidatorLayer<'a, V> {
+[?2004l  [?2004h>     /// Create a new `MetadataValidatorLayer`.
+[?2004l)[?2004h>     pub const fn new(validator: &'a V) -> Self {
+[?2004l[?2004h>         Self { validator }
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004lF[?2004h> impl<'a, S, V> Layer<S> for MetadataValidatorLayer<'a, V>
+[?2004l[?2004h> where
+[?2004l[?2004h>     V: MetadataValidator,
+[?2004l[?2004h> {
+[?2004l[?2004h>     type Service = MetadataValidatedService<'a, S, V>;
+[?2004l[?2004h> 
+[?2004l[?2004h>     fn layer(&self, inner: S) -> Self::Service {
+[?2004l[?2004h>         MetadataValidatedService {
+[?2004l[?2004h>             inner,
+[?2004l[?2004h>             validator: self.validator,
+[?2004lh[?2004h>         }
+[?2004l[?2004h>     }
+[?2004lpo[?2004h> }
+[?2004lll[?2004h> 
+[?2004l[?2004h> /// A service which validates request metadata.
+[?2004l[?2004h> #[derive(Clone, Copy)]
+[?2004l[?2004h> pub struct MetadataValidatedService<'a, S, V> {
+[?2004l[?2004h>     inner: S,
+[?2004l[?2004h>     validator: &'a V,
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004l [?2004h> impl<'a, S, V> fmt::Debug for MetadataValidatedService<'a, S, V>
+[?2004l[?2004h> where
+[?2004l
+[?2004h>     S: fmt::Debug,
+[?2004l[?2004h> {
+[?2004l[?2004h>     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+[?2004l[?2004h>         f.debug_struct("MetadataValidatedService")
+[?2004l[?2004h>             .field("inner", &self.inner)
+[?2004l[?2004h>             .field("validator", &format_args!("{}", std::any::type_name::<V>()))
+[?2004l[?2004h>             .finish()
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004l[?2004h> impl<'a, S, V, ReqBody, ResBody> Service<http::Request<ReqBody>>
+[?2004l[?2004h>     for MetadataValidatedService<'a, S, V>
+[?2004l[?2004h> where
+[?2004l[?2004h>     S: Service<http::Request<ReqBody>, Response = http::Response<ResBody>>,
+[?2004l[?2004h>     V: MetadataValidator,
+[?2004l[?2004h> {
+[?2004l[?2004h>     type Response = http::Response<ResponseBody<ResBody>>;
+[?2004l[?2004h>     type Error = S::Error;
+[?2004l[?2004h>     type Future = ResponseFuture<S::Future, S::Error, ResBody>;
+[?2004l[?2004h> 
+[?2004l[?2004h>     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+[?2004l[?2004h>         self.inner.poll_ready(cx)
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     fn call(&mut self, req: http::Request<ReqBody>) -> Self::Future {
+[?2004l[?2004h>         let (mut parts, body) = req.into_parts();
+[?2004l[?2004h>         let headers = std::mem::take(&mut parts.headers);
+[?2004l[?2004h>         let metadata = MetadataMap::from_headers(headers);
+[?2004l[?2004h> 
+[?2004l[?2004h>         match self.validator.validate(&metadata) {
+[?2004l[?2004h>             Ok(()) => {
+[?2004l[?2004h>                 parts.headers = metadata.into_headers();
+[?2004l[?2004h>                 let req = http::Request::from_parts(parts, body);
+[?2004l[?2004h>                 ResponseFuture::Inner {
+[?2004l[?2004h>                     inner: self.inner.call(req),
+[?2004l[?2004h>                 }
+[?2004l[?2004h>             }
+[?2004l[?2004h>             Err(status) => {
+[?2004l[?2004h>                 let (parts, ()) = status.into_http::<()>().into_parts();
+[?2004l[?2004h>                 let res = http::Response::from_parts(parts, ResponseBody::empty());
+[?2004l[?2004h>                 ResponseFuture::Ready {
+[?2004l[?2004h>                     inner: std::future::ready(Ok(res)),
+[?2004l[?2004h>                 }
+[?2004l[?2004h>             }
+[?2004l[?2004h>         }
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004l[?2004h> /// Response body used by the metadata validator middleware.
+[?2004l[?2004h> #[pin_project]
+[?2004l[?2004h> pub struct ResponseBody<B> {
+[?2004l[?2004h>     #[pin]
+[?2004l[?2004h>     inner: Option<B>,
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004l[?2004h> impl<B> ResponseBody<B> {
+[?2004l[?2004h>     fn full(inner: B) -> Self {
+[?2004l[?2004h>         Self { inner: Some(inner) }
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     const fn empty() -> Self {
+[?2004l[?2004h>         Self { inner: None }
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004l[?2004h> impl<B> fmt::Debug for ResponseBody<B> {
+[?2004l[?2004h>     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+[?2004l[?2004h>         f.debug_struct("ResponseBody").finish()
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004l[?2004h> impl<B> http_body::Body for ResponseBody<B>
+[?2004l[?2004h> where
+[?2004l[?2004h>     B: http_body::Body,
+[?2004l[?2004h> {
+[?2004l[?2004h>     type Data = B::Data;
+[?2004l[?2004h>     type Error = B::Error;
+[?2004l[?2004h> 
+[?2004l[?2004h>     fn poll_frame(
+[?2004l[?2004h>         self: Pin<&mut Self>,
+[?2004l[?2004h>         cx: &mut Context<'_>,
+[?2004l[?2004h>     ) -> Poll<Option<Result<http_body::Frame<Self::Data>, Self::Error>>> {
+[?2004l[?2004h>         match self.project().inner.as_pin_mut() {
+[?2004l[?2004h>             Some(b) => b.poll_frame(cx),
+[?2004l[?2004h>             None => Poll::Ready(None),
+[?2004l[?2004h>         }
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     fn is_end_stream(&self) -> bool {
+[?2004l[?2004h>         match &self.inner {
+[?2004l[?2004h>             Some(b) => b.is_end_stream(),
+[?2004l[?2004h>             None => true,
+[?2004l[?2004h>         }
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     fn size_hint(&self) -> http_body::SizeHint {
+[?2004l[?2004h>         match &self.inner {
+[?2004l[?2004h>             Some(b) => b.size_hint(),
+[?2004l[?2004h>             None => http_body::SizeHint::with_exact(0),
+[?2004l[?2004h>         }
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004l[?2004h> /// Response future for [`MetadataValidatedService`].
+[?2004l[?2004h> #[pin_project(project = ResponseFutureProj)]
+[?2004l[?2004h> pub enum ResponseFuture<F, E, B> {
+[?2004l[?2004h>     /// The wrapped service's response future.
+[?2004l[?2004h>     Inner {
+[?2004l[?2004h>         #[pin]
+[?2004l[?2004h>         inner: F,
+[?2004l[?2004h>     },
+[?2004l[?2004h> 
+[?2004l[?2004h>     /// An immediate response future.
+[?2004l[?2004h>     Ready {
+[?2004l[?2004h>         #[pin]
+[?2004l[?2004h>         inner: std::future::Ready<Result<http::Response<ResponseBody<B>>, E>>,
+[?2004l[?2004h>     },
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004l[?2004h> impl<F, E, B> fmt::Debug for ResponseFuture<F, E, B> {
+[?2004l[?2004h>     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+[?2004l[?2004h>         f.debug_struct("ResponseFuture").finish()
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> 
+[?2004l[?2004h> impl<F, E, ResBody> Future for ResponseFuture<F, E, ResBody>
+[?2004l[?2004h> where
+[?2004l[?2004h>     F: Future<Output = Result<http::Response<ResBody>, E>>,
+[?2004l[?2004h> {
+[?2004l[?2004h>     type Output = Result<http::Response<ResponseBody<ResBody>>, E>;
+[?2004l[?2004h> 
+[?2004l[?2004h>     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+[?2004l[?2004h>         match self.project() {
+[?2004l[?2004h>             ResponseFutureProj::Inner { inner } => match ready!(inner.poll(cx)) {
+[?2004l[?2004h>                 Ok(res) => Poll::Ready(Ok(res.map(ResponseBody::full))),
+[?2004l[?2004h>                 Err(err) => Poll::Ready(Err(err)),
+[?2004l[?2004h>             },
+[?2004l[?2004h>             ResponseFutureProj::Ready { inner } => inner.poll(cx),
+[?2004l[?2004h>         }
+[?2004l[?2004h>     }
+[?2004l[?2004h> }
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@830ef13b33a0:/app# apply_patch <<'EOF'
+[?2004l[?2004h> *** Begin Patch
+[?2004l[?2004h> *** Update File: src/tonic/src/service/mod.rs
+[?2004l[?2004h> @@
+[?2004l[?2004h>  pub mod interceptor;
+[?2004l[?2004h> +pub mod metadata_validator;
+[?2004l[?2004h>  pub(crate) mod layered;
+[?2004l[?2004h>  #[cfg(feature = "router")]
+[?2004l[?2004h>  pub(crate) mod router;
+[?2004l[?2004h> @@
+[?2004l[?2004h>  pub use self::interceptor::{Interceptor, InterceptorLayer};
+[?2004l[?2004h> +pub use self::metadata_validator::{MetadataValidator, MetadataValidatorLayer, ValidatorBuilder};
+[?2004l[?2004h>  pub use self::layered::{LayerExt, Layered};
+[?2004l[?2004h> *** End Patch
+[?2004l[?2004h> EOF
+[?2004lbash: apply_patch: command not found
+[?2004hroot@830ef13b33a0:/app# cargo test -p tonic --manifest-path src/Cargo.toml
+[?2004l[1m[92m    Updating[0m crates.io index
+[1m[96m       Fetch[0m [===========>                     ] 72 complete; 93 pending                                                                                      [1m[96m       Fetch[0m [===========>                     ] 164 complete; 1 pending                                                                                      [1m[96m       Fetch[0m [==============>                  ] 165 complete; 63 pending                                                                                     [1m[96m       Fetch[0m [=================>               ] 228 complete; 22 pending                                                                                     [1m[96m       Fetch[0m [=======================>         ] 261 complete; 13 pending                                                                                     [1m[96m       Fetch[0m [=============================>   ] 281 complete; 5 pending                                                                                      [K[1m[92m     Locking[0m 314 packages to latest compatible versions
+[1m[92m      Adding[0m matchit v0.8.4 [1m[33m(available: v0.8.6)[0m
+[1m[92m      Adding[0m rand v0.9.2 [1m[33m(available: v0.10.0)[0m
+[1m[96m Downloading[0m 1 crate                                                                                                                                          [1m[96m Downloading[0m 2 crates                                                                                                                                         [1m[96m Downloading[0m 3 crates                                                                                                                                         [1m[96m Downloading[0m 4 crates                                                                                                                                         [1m[96m Downloading[0m 5 crates                                                                                                                                         [1m[96m Downloading[0m 6 crates                                                                                                                                         [1m[96m Downloading[0m 7 crates                                                                                                                                         [1m[96m Downloading[0m 8 crates                                                                                                                                         [1m[96m Downloading[0m 9 crates                                                                                                                                         [1m[96m Downloading[0m 10 crates                                                                                                                                        [1m[96m Downloading[0m 11 crates                                                                                                                                        [1m[96m Downloading[0m 12 crates                                                                                                                                        [1m[96m Downloading[0m 13 crates                                                                                                                                        [1m[96m Downloading[0m 14 crates                                                                                                                                        [1m[96m Downloading[0m 15 crates                                                                                                                                        [1m[96m Downloading[0m 16 crates                                                                                                                                        [1m[96m Downloading[0m 17 crates                                                                                                                                        [1m[96m Downloading[0m 18 crates                                                                                                                                        [1m[96m Downloading[0m 19 crates                                                                                                                                        [1m[96m Downloading[0m 20 crates                                                                                                                                        [1m[96m Downloading[0m 21 crates                                                                                                                                        [1m[96m Downloading[0m 22 crates                                                                                                                                        [1m[96m Downloading[0m 23 crates                                                                                                                                        [1m[96m Downloading[0m 24 crates                                                                                                                                        [1m[96m Downloading[0m 25 crates                                                                                                                                        [1m[96m Downloading[0m 26 crates                                                                                                                                        [1m[96m Downloading[0m 27 crates                                                                                                                                        [1m[96m Downloading[0m 28 crates                                                                                                                                        [1m[96m Downloading[0m 29 crates                                                                                                                                        [1m[96m Downloading[0m 30 crates                                                                                                                                        [1m[96m Downloading[0m 31 crates                                                                                                                                        [1m[96m Downloading[0m 32 crates                                                                                                                                        [1m[96m Downloading[0m 33 crates                                                                                                                                        [1m[96m Downloading[0m 34 crates                                                                                                                                        [1m[96m Downloading[0m 35 crates                                                                                                                                        [1m[96m Downloading[0m 36 crates                                                                                                                                        [1m[96m Downloading[0m 37 crates                                                                                                                                        [1m[96m Downloading[0m 38 crates                                                                                                                                        [1m[96m Downloading[0m 39 crates                                                                                                                                        [1m[96m Downloading[0m 40 crates                                                                                                                                        [1m[96m Downloading[0m 41 crates                                                                                                                                        [1m[96m Downloading[0m 42 crates                                                                                                                                        [1m[96m Downloading[0m 43 crates                                                                                                                                        [1m[96m Downloading[0m 44 crates                                                                                                                                        [1m[96m Downloading[0m 45 crates                                                                                                                                        [1m[96m Downloading[0m 46 crates                                                                                                                                        [1m[96m Downloading[0m 47 crates                                                                                                                                        [1m[96m Downloading[0m 48 crates                                                                                                                                        [1m[96m Downloading[0m 49 crates                                                                                                                                        [1m[96m Downloading[0m 50 crates                                                                                                                                        [1m[96m Downloading[0m 51 crates                                                                                                                                        [1m[96m Downloading[0m 52 crates                                                                                                                                        [1m[96m Downloading[0m 53 crates                                                                                                                                        [1m[96m Downloading[0m 54 crates                                                                                                                                        [1m[96m Downloading[0m 55 crates                                                                                                                                        [1m[96m Downloading[0m 56 crates                                                                                                                                        [1m[96m Downloading[0m 57 crates                                                                                                                                        [1m[96m Downloading[0m 58 crates                                                                                                                                        [1m[96m Downloading[0m 59 crates                                                                                                                                        [1m[96m Downloading[0m 60 crates                                                                                                                                        [1m[96m Downloading[0m 61 crates                                                                                                                                        [1m[96m Downloading[0m 62 crates                                                                                                                                        [1m[96m Downloading[0m 63 crates                                                                                                                                        [1m[96m Downloading[0m 64 crates                                                                                                                                        [1m[96m Downloading[0m 65 crates                                                                                                                                        [1m[96m Downloading[0m 66 crates                                                                                                                                        [1m[96m Downloading[0m 67 crates                                                                                                                                        [1m[96m Downloading[0m 68 crates                                                                                                                                        [1m[96m Downloading[0m 69 crates                                                                                                                                        [1m[96m Downloading[0m 70 crates                                                                                                                                        [1m[96m Downloading[0m 71 crates                                                                                                                                        [1m[96m Downloading[0m 72 crates                                                                                                                                        [K[1m[92m  Downloaded[0m cfg-if v1.0.4
+[1m[96m Downloading[0m 71 crates, remaining bytes: 546.6KiB                                                                                                             [K[1m[92m  Downloaded[0m atomic-waker v1.1.2
+[1m[96m Downloading[0m 70 crates, remaining bytes: 482.6KiB                                                                                                             [K[1m[92m  Downloaded[0m equivalent v1.0.2
+[1m[96m Downloading[0m 69 crates, remaining bytes: 556.3KiB                                                                                                             [K[1m[92m  Downloaded[0m bencher v0.1.5
+[1m[96m Downloading[0m 68 crates, remaining bytes: 511.0KiB                                                                                                             [K[1m[92m  Downloaded[0m axum-core v0.5.6
+[1m[96m Downloading[0m 67 crates, remaining bytes: 646.9KiB                                                                                                             [K[1m[92m  Downloaded[0m tower-layer v0.3.3
+[1m[96m Downloading[0m 66 crates, remaining bytes: 542.4KiB                                                                                                             [K[1m[92m  Downloaded[0m httpdate v1.0.3
+[1m[96m Downloading[0m 65 crates, remaining bytes: 526.4KiB                                                                                                             [K[1m[92m  Downloaded[0m quickcheck v1.1.0
+[1m[96m Downloading[0m 64 crates, remaining bytes: 1.2MiB                                                                                                               [K[1m[92m  Downloaded[0m try-lock v0.2.5
+[1m[96m Downloading[0m 63 crates, remaining bytes: 4.3MiB                                                                                                               [K[1m[92m  Downloaded[0m futures-core v0.3.32
+[1m[96m Downloading[0m 62 crates, remaining bytes: 4.2MiB                                                                                                               [K[1m[92m  Downloaded[0m mime v0.3.17
+[1m[96m Downloading[0m 61 crates, remaining bytes: 5.5MiB                                                                                                               [K[1m[92m  Downloaded[0m quickcheck_macros v1.2.0
+[1m[96m Downloading[0m 60 crates, remaining bytes: 5.8MiB                                                                                                               [K[1m[92m  Downloaded[0m want v0.3.1
+[1m[96m Downloading[0m 59 crates, remaining bytes: 5.6MiB                                                                                                               [K[1m[92m  Downloaded[0m pin-utils v0.1.0
+[1m[96m Downloading[0m 58 crates, remaining bytes: 5.4MiB                                                                                                               [K[1m[92m  Downloaded[0m tokio-macros v2.6.0
+[1m[96m Downloading[0m 57 crates, remaining bytes: 5.4MiB                                                                                                               [K[1m[92m  Downloaded[0m futures-channel v0.3.32
+[1m[96m Downloading[0m 56 crates, remaining bytes: 5.4MiB                                                                                                               [K[1m[92m  Downloaded[0m static_assertions v1.1.0
+[1m[96m Downloading[0m 55 crates, remaining bytes: 5.0MiB                                                                                                               [K[1m[92m  Downloaded[0m tracing-attributes v0.1.31
+[1m[96m Downloading[0m 54 crates, remaining bytes: 4.6MiB                                                                                                               [K[1m[92m  Downloaded[0m unicode-ident v1.0.24
+[1m[96m Downloading[0m 53 crates, remaining bytes: 4.2MiB                                                                                                               [K[1m[92m  Downloaded[0m tracing-core v0.1.36
+[1m[96m Downloading[0m 52 crates, remaining bytes: 4.0MiB                                                                                                               [K[1m[92m  Downloaded[0m serde_core v1.0.228
+[1m[96m Downloading[0m 51 crates, remaining bytes: 3.5MiB                                                                                                               [K[1m[92m  Downloaded[0m mio v1.1.1
+[1m[96m Downloading[0m 50 crates, remaining bytes: 3.2MiB                                                                                                               [K[1m[92m  Downloaded[0m tower v0.5.3
+[1m[96m Downloading[0m 49 crates, remaining bytes: 2.9MiB                                                                                                               [K[1m[92m  Downloaded[0m axum v0.8.8
+[1m[96m Downloading[0m 48 crates, remaining bytes: 2.6MiB                                                                                                               [K[1m[92m  Downloaded[0m tokio-util v0.7.18
+[1m[96m Downloading[0m 47 crates, remaining bytes: 2.4MiB                                                                                                               [K[1m[92m  Downloaded[0m regex v1.12.3
+[1m[96m Downloading[0m 46 crates, remaining bytes: 2.2MiB                                                                                                               [K[1m[92m  Downloaded[0m hashbrown v0.16.1
+[1m[96m Downloading[0m 45 crates, remaining bytes: 2.1MiB                                                                                                               [K[1m[92m  Downloaded[0m h2 v0.4.13
+[1m[96m Downloading[0m 44 crates, remaining bytes: 2.0MiB                                                                                                               [K[1m[92m  Downloaded[0m futures-util v0.3.32
+[1m[96m Downloading[0m 43 crates, remaining bytes: 1.9MiB                                                                                                               [K[1m[92m  Downloaded[0m hyper v1.8.1
+[1m[96m Downloading[0m 42 crates, remaining bytes: 1.8MiB                                                                                                               [K[1m[92m  Downloaded[0m aho-corasick v1.1.4
+[1m[96m Downloading[0m 41 crates, remaining bytes: 1.7MiB                                                                                                               [K[1m[92m  Downloaded[0m rand v0.10.0
+[1m[96m Downloading[0m 40 crates, remaining bytes: 1.6MiB                                                                                                               [K[1m[92m  Downloaded[0m syn v2.0.116
+[1m[96m Downloading[0m 39 crates, remaining bytes: 1.5MiB                                                                                                               [K[1m[92m  Downloaded[0m memchr v2.8.0
+[1m[96m Downloading[0m 38 crates, remaining bytes: 1.4MiB                                                                                                               [K[1m[92m  Downloaded[0m indexmap v2.13.0
+[1m[96m Downloading[0m 37 crates, remaining bytes: 1.3MiB                                                                                                               [K[1m[92m  Downloaded[0m http v1.4.0
+[1m[96m Downloading[0m 36 crates, remaining bytes: 1.2MiB                                                                                                               [K[1m[92m  Downloaded[0m hyper-util v0.1.20
+[1m[96m Downloading[0m 35 crates, remaining bytes: 1.1MiB                                                                                                               [K[1m[92m  Downloaded[0m regex-syntax v0.8.9
+[1m[96m Downloading[0m 34 crates, remaining bytes: 1.0MiB                                                                                                               [K[1m[92m  Downloaded[0m proc-macro2 v1.0.106
+[1m[96m Downloading[0m 33 crates, remaining bytes: 996.8KiB                                                                                                             [K[1m[92m  Downloaded[0m pin-project v1.1.10
+[1m[96m Downloading[0m 32 crates, remaining bytes: 928.6KiB                                                                                                             [K[1m[92m  Downloaded[0m getrandom v0.4.1
+[1m[96m Downloading[0m 31 crates, remaining bytes: 844.9KiB                                                                                                             [K[1m[92m  Downloaded[0m tracing v0.1.44
+[1m[96m Downloading[0m 30 crates, extracting tracing ...                                                                                                                [K[1m[92m  Downloaded[0m socket2 v0.6.2
+[1m[96m Downloading[0m 29 crates, remaining bytes: 764.9KiB                                                                                                             [K[1m[92m  Downloaded[0m once_cell v1.21.3
+[1m[96m Downloading[0m 28 crates, remaining bytes: 694.6KiB                                                                                                             [K[1m[92m  Downloaded[0m log v0.4.29
+[1m[96m Downloading[0m 27 crates, remaining bytes: 608.3KiB                                                                                                             [K[1m[92m  Downloaded[0m httparse v1.10.1
+[1m[96m Downloading[0m 26 crates, remaining bytes: 573.1KiB                                                                                                             [K[1m[92m  Downloaded[0m bytes v1.11.1
+[1m[96m Downloading[0m 25 crates, remaining bytes: 525.2KiB                                                                                                             [K[1m[92m  Downloaded[0m tokio-stream v0.1.18
+[1m[96m Downloading[0m 24 crates, remaining bytes: 472.3KiB                                                                                                             [K[1m[92m  Downloaded[0m quote v1.0.44
+[1m[96m Downloading[0m 23 crates, remaining bytes: 413.3KiB                                                                                                             [K[1m[92m  Downloaded[0m regex-automata v0.4.14
+[1m[96m Downloading[0m 22 crates, extracting regex-automata ...                                                                                                         [K[1m[92m  Downloaded[0m matchit v0.8.4
+[1m[96m Downloading[0m 21 crates, remaining bytes: 336.7KiB                                                                                                             [K[1m[92m  Downloaded[0m env_logger v0.11.9
+[1m[96m Downloading[0m 20 crates, remaining bytes: 288.7KiB                                                                                                             [K[1m[92m  Downloaded[0m base64 v0.22.1
+[1m[96m Downloading[0m 19 crates, remaining bytes: 244.4KiB                                                                                                             [K[1m[92m  Downloaded[0m rand_core v0.10.0
+[1m[96m Downloading[0m 18 crates, remaining bytes: 224.4KiB                                                                                                             [K[1m[92m  Downloaded[0m pin-project-lite v0.2.16
+[1m[96m Downloading[0m 17 crates, remaining bytes: 184.7KiB                                                                                                             [K[1m[92m  Downloaded[0m pin-project-internal v1.1.10
+[1m[96m Downloading[0m 16 crates, remaining bytes: 152.8KiB                                                                                                             [K[1m[92m  Downloaded[0m libc v0.2.182
+[1m[96m Downloading[0m 15 crates, extracting libc ...                                                                                                                   [1m[96m Downloading[0m 15 crates, remaining bytes: 89.0KiB                                                                                                              [K[1m[92m  Downloaded[0m percent-encoding v2.3.2
+[1m[96m Downloading[0m 14 crates, remaining bytes: 89.0KiB                                                                                                              [K[1m[92m  Downloaded[0m hyper-timeout v0.5.2
+[1m[96m Downloading[0m 13 crates, remaining bytes: 73.0KiB                                                                                                              [K[1m[92m  Downloaded[0m http-body-util v0.1.3
+[1m[96m Downloading[0m 12 crates, remaining bytes: 57.0KiB                                                                                                              [K[1m[92m  Downloaded[0m futures-task v0.3.32
+[1m[96m Downloading[0m 11 crates, remaining bytes: 41.0KiB                                                                                                              [K[1m[92m  Downloaded[0m tower-service v0.3.3
+[1m[96m Downloading[0m 10 crates, remaining bytes: 21.0KiB                                                                                                              [K[1m[92m  Downloaded[0m smallvec v1.15.1
+[1m[96m Downloading[0m 9 crates, remaining bytes: 5.0KiB                                                                                                                [K[1m[92m  Downloaded[0m tokio v1.49.0
+[1m[96m Downloading[0m 8 crates, extracting tokio ...                                                                                                                   [K[1m[92m  Downloaded[0m slab v0.4.12
+[1m[96m Downloading[0m 7 crates                                                                                                                                         [K[1m[92m  Downloaded[0m sync_wrapper v1.0.2
+[1m[96m Downloading[0m 6 crates                                                                                                                                         [K[1m[92m  Downloaded[0m futures-sink v0.3.32
+[1m[96m Downloading[0m 5 crates                                                                                                                                         [K[1m[92m  Downloaded[0m fnv v1.0.7
+[1m[96m Downloading[0m 4 crates                                                                                                                                         [K[1m[92m  Downloaded[0m itoa v1.0.17
+[1m[96m Downloading[0m 3 crates                                                                                                                                         [K[1m[92m  Downloaded[0m http-body v1.0.1
+[1m[96m Downloading[0m 2 crates                                                                                                                                         [K[1m[92m  Downloaded[0m env_filter v1.0.0
+[1m[96m Downloading[0m 1 crate                                                                                                                                          [K[1m[92m  Downloaded[0m async-trait v0.1.89
+[1m[96m Downloading[0m 0 crates                                                                                                                                         [K[1m[92m  Downloaded[0m 72 crates (6.6MiB) in 0.96s
+[1m[92m   Compiling[0m proc-macro2 v1.0.106
+[1m[96m    Building[0m [                            ] 0/87: proc-macro2(build.rs)                                                                                       [1m[96m    Building[0m [                            ] 1/87: proc-macro2(build)                                                                                          [K[1m[92m   Compiling[0m unicode-ident v1.0.24
+[1m[96m    Building[0m [                            ] 2/87: unicode-ident                                                                                               [K[1m[92m   Compiling[0m quote v1.0.44
+[1m[96m    Building[0m [                            ] 3/87: quote(build.rs)                                                                                             [1m[96m    Building[0m [>                           ] 4/87: quote(build)                                                                                                [1m[96m    Building[0m [>                           ] 5/87: proc-macro2                                                                                                 [1m[96m    Building[0m [>                           ] 6/87: quote                                                                                                       [K[1m[92m   Compiling[0m syn v2.0.116
+[1m[96m    Building[0m [=>                          ] 7/87: syn                                                                                                         [K[1m[92m   Compiling[0m libc v0.2.182
+[1m[96m    Building[0m [=>                          ] 8/87: libc(build.rs)                                                                                              [1m[96m    Building[0m [=>                          ] 9/87: libc(build)                                                                                                 [1m[96m    Building[0m [==>                        ] 10/87: libc                                                                                                        [K[1m[92m   Compiling[0m pin-project-lite v0.2.16
+[1m[96m    Building[0m [==>                        ] 11/87: pin-project-lite                                                                                            [K[1m[92m   Compiling[0m bytes v1.11.1
+[1m[96m    Building[0m [==>                        ] 12/87: bytes                                                                                                       [K[1m[92m   Compiling[0m futures-core v0.3.32
+[1m[96m    Building[0m [===>                       ] 13/87: futures-core                                                                                                [K[1m[92m   Compiling[0m socket2 v0.6.2
+[1m[96m    Building[0m [===>                       ] 14/87: socket2                                                                                                     [K[1m[92m   Compiling[0m mio v1.1.1
+[1m[96m    Building[0m [===>                       ] 15/87: mio                                                                                                         [K[1m[92m   Compiling[0m tokio-macros v2.6.0
+[1m[96m    Building[0m [===>                       ] 16/87: tokio-macros                                                                                                [K[1m[92m   Compiling[0m itoa v1.0.17
+[1m[96m    Building[0m [====>                      ] 17/87: itoa                                                                                                        [K[1m[92m   Compiling[0m http v1.4.0
+[1m[96m    Building[0m [====>                      ] 18/87: http                                                                                                        [K[1m[92m   Compiling[0m tokio v1.49.0
+[1m[96m    Building[0m [====>                      ] 19/87: tokio                                                                                                       [K[1m[92m   Compiling[0m once_cell v1.21.3
+[1m[96m    Building[0m [=====>                     ] 20/87: once_cell                                                                                                   [K[1m[92m   Compiling[0m tracing-core v0.1.36
+[1m[96m    Building[0m [=====>                     ] 21/87: tracing-core                                                                                                [K[1m[92m   Compiling[0m tracing-attributes v0.1.31
+[1m[96m    Building[0m [=====>                     ] 22/87: tracing-attributes                                                                                          [K[1m[92m   Compiling[0m hashbrown v0.16.1
+[1m[96m    Building[0m [======>                    ] 23/87: hashbrown                                                                                                   [K[1m[92m   Compiling[0m slab v0.4.12
+[1m[96m    Building[0m [======>                    ] 24/87: slab                                                                                                        [K[1m[92m   Compiling[0m memchr v2.8.0
+[1m[96m    Building[0m [======>                    ] 25/87: memchr                                                                                                      [K[1m[92m   Compiling[0m equivalent v1.0.2
+[1m[96m    Building[0m [=======>                   ] 26/87: equivalent                                                                                                  [K[1m[92m   Compiling[0m futures-sink v0.3.32
+[1m[96m    Building[0m [=======>                   ] 27/87: futures-sink                                                                                                [K[1m[92m   Compiling[0m tokio-util v0.7.18
+[1m[96m    Building[0m [=======>                   ] 28/87: tokio-util                                                                                                  [K[1m[92m   Compiling[0m indexmap v2.13.0
+[1m[96m    Building[0m [========>                  ] 29/87: indexmap                                                                                                    [K[1m[92m   Compiling[0m tracing v0.1.44
+[1m[96m    Building[0m [========>                  ] 30/87: tracing                                                                                                     [K[1m[92m   Compiling[0m http-body v1.0.1
+[1m[96m    Building[0m [========>                  ] 31/87: http-body                                                                                                   [K[1m[92m   Compiling[0m tower-service v0.3.3
+[1m[96m    Building[0m [========>                  ] 32/87: tower-service                                                                                               [K[1m[92m   Compiling[0m futures-task v0.3.32
+[1m[96m    Building[0m [=========>                 ] 33/87: futures-task                                                                                                [K[1m[92m   Compiling[0m httparse v1.10.1
+[1m[96m    Building[0m [=========>                 ] 34/87: httparse(build.rs)                                                                                          [1m[96m    Building[0m [=========>                 ] 35/87: httparse(build)                                                                                             [K[1m[92m   Compiling[0m futures-util v0.3.32
+[1m[96m    Building[0m [==========>                ] 36/87: futures-util                                                                                                [K[1m[92m   Compiling[0m aho-corasick v1.1.4
+[1m[96m    Building[0m [==========>                ] 37/87: aho-corasick                                                                                                [K[1m[92m   Compiling[0m atomic-waker v1.1.2
+[1m[96m    Building[0m [==========>                ] 38/87: atomic-waker                                                                                                [K[1m[92m   Compiling[0m try-lock v0.2.5
+[1m[96m    Building[0m [===========>               ] 39/87: try-lock                                                                                                    [K[1m[92m   Compiling[0m fnv v1.0.7
+[1m[96m    Building[0m [===========>               ] 40/87: fnv                                                                                                         [K[1m[92m   Compiling[0m regex-syntax v0.8.9
+[1m[96m    Building[0m [===========>               ] 41/87: regex-syntax                                                                                                [K[1m[92m   Compiling[0m regex-automata v0.4.14
+[1m[96m    Building[0m [============>              ] 42/87: regex-automata                                                                                              [K[1m[92m   Compiling[0m h2 v0.4.13
+[1m[96m    Building[0m [============>              ] 43/87: h2                                                                                                          [K[1m[92m   Compiling[0m want v0.3.1
+[1m[96m    Building[0m [============>              ] 44/87: want                                                                                                        [1m[96m    Building[0m [============>              ] 45/87: httparse                                                                                                    [K[1m[92m   Compiling[0m futures-channel v0.3.32
+[1m[96m    Building[0m [=============>             ] 46/87: futures-channel                                                                                             [K[1m[92m   Compiling[0m httpdate v1.0.3
+[1m[96m    Building[0m [=============>             ] 47/87: httpdate                                                                                                    [K[1m[92m   Compiling[0m sync_wrapper v1.0.2
+[1m[96m    Building[0m [=============>             ] 48/87: sync_wrapper                                                                                                [K[1m[92m   Compiling[0m tower-layer v0.3.3
+[1m[96m    Building[0m [==============>            ] 49/87: tower-layer                                                                                                 [K[1m[92m   Compiling[0m getrandom v0.4.1
+[1m[96m    Building[0m [==============>            ] 50/87: getrandom(build.rs)                                                                                         [K[1m[92m   Compiling[0m pin-utils v0.1.0
+[1m[96m    Building[0m [==============>            ] 51/87: pin-utils                                                                                                   [K[1m[92m   Compiling[0m smallvec v1.15.1
+[1m[96m    Building[0m [===============>           ] 52/87: smallvec                                                                                                    [K[1m[92m   Compiling[0m serde_core v1.0.228
+[1m[96m    Building[0m [===============>           ] 53/87: serde_core(build.rs)                                                                                        [1m[96m    Building[0m [===============>           ] 54/87: serde_core(build)                                                                                           [K[1m[92m   Compiling[0m hyper v1.8.1
+[1m[96m    Building[0m [================>          ] 55/87: hyper                                                                                                       [1m[96m    Building[0m [================>          ] 56/87: getrandom(build)                                                                                            [K[1m[92m   Compiling[0m regex v1.12.3
+[1m[96m    Building[0m [================>          ] 57/87: regex                                                                                                       [K[1m[92m   Compiling[0m http-body-util v0.1.3
+[1m[96m    Building[0m [=================>         ] 58/87: http-body-util                                                                                              [K[1m[92m   Compiling[0m cfg-if v1.0.4
+[1m[96m    Building[0m [=================>         ] 59/87: cfg-if                                                                                                      [K[1m[92m   Compiling[0m mime v0.3.17
+[1m[96m    Building[0m [=================>         ] 60/87: mime                                                                                                        [K[1m[92m   Compiling[0m log v0.4.29
+[1m[96m    Building[0m [=================>         ] 61/87: log                                                                                                         [K[1m[92m   Compiling[0m rand_core v0.10.0
+[1m[96m    Building[0m [==================>        ] 62/87: rand_core                                                                                                   [1m[96m    Building[0m [==================>        ] 63/87: getrandom                                                                                                   [K[1m[92m   Compiling[0m env_filter v1.0.0
+[1m[96m    Building[0m [==================>        ] 64/87: env_filter                                                                                                  [K[1m[92m   Compiling[0m axum-core v0.5.6
+[1m[96m    Building[0m [===================>       ] 65/87: axum-core                                                                                                   [K[1m[92m   Compiling[0m hyper-util v0.1.20
+[1m[96m    Building[0m [===================>       ] 66/87: hyper-util                                                                                                  [1m[96m    Building[0m [===================>       ] 67/87: serde_core                                                                                                  [K[1m[92m   Compiling[0m tower v0.5.3
+[1m[96m    Building[0m [====================>      ] 68/87: tower                                                                                                       [K[1m[92m   Compiling[0m pin-project-internal v1.1.10
+[1m[96m    Building[0m [====================>      ] 69/87: pin-project-internal                                                                                        [K[1m[92m   Compiling[0m percent-encoding v2.3.2
+[1m[96m    Building[0m [====================>      ] 70/87: percent-encoding                                                                                            [K[1m[92m   Compiling[0m matchit v0.8.4
+[1m[96m    Building[0m [=====================>     ] 71/87: matchit                                                                                                     [K[1m[92m   Compiling[0m axum v0.8.8
+[1m[96m    Building[0m [=====================>     ] 72/87: axum                                                                                                        [K[1m[92m   Compiling[0m pin-project v1.1.10
+[1m[96m    Building[0m [=====================>     ] 73/87: pin-project                                                                                                 [K[1m[92m   Compiling[0m hyper-timeout v0.5.2
+[1m[96m    Building[0m [=====================>     ] 74/87: hyper-timeout                                                                                               [K[1m[92m   Compiling[0m env_logger v0.11.9
+[1m[96m    Building[0m [======================>    ] 75/87: env_logger                                                                                                  [K[1m[92m   Compiling[0m rand v0.10.0
+[1m[96m    Building[0m [======================>    ] 76/87: rand                                                                                                        [K[1m[92m   Compiling[0m tokio-stream v0.1.18
+[1m[96m    Building[0m [======================>    ] 77/87: tokio-stream                                                                                                [K[1m[92m   Compiling[0m async-trait v0.1.89
+[1m[96m    Building[0m [=======================>   ] 78/87: async-trait                                                                                                 [K[1m[92m   Compiling[0m base64 v0.22.1
+[1m[96m    Building[0m [=======================>   ] 79/87: base64                                                                                                      [K[1m[92m   Compiling[0m quickcheck v1.1.0
+[1m[96m    Building[0m [=======================>   ] 80/87: quickcheck                                                                                                  [K[1m[92m   Compiling[0m quickcheck_macros v1.2.0
+[1m[96m    Building[0m [========================>  ] 81/87: quickcheck_macros                                                                                           [K[1m[92m   Compiling[0m bencher v0.1.5
+[1m[96m    Building[0m [========================>  ] 82/87: bencher                                                                                                     [K[1m[92m   Compiling[0m static_assertions v1.1.0
+[1m[96m    Building[0m [========================>  ] 83/87: static_assertions                                                                                           [K[1m[92m   Compiling[0m tonic v0.14.4 (/app/src/tonic)
+[1m[96m    Building[0m [=========================> ] 84/87: tonic                                                                                                       [1m[96m    Building[0m [=========================> ] 86/87: tonic(test)                                                                                                 [K[1m[92m    Finished[0m `test` profile [unoptimized + debuginfo] target(s) in 1m 45s
+[1m[92m     Running[0m unittests src/lib.rs (src/target/debug/deps/tonic-2b34fabb3511b8d2)
+
+running 73 tests
+test codec::buffer::tests::decode_buf ... [32mok[m
+test codec::buffer::tests::encode_buf ... [32mok[m
+test codec::compression::tests::convert_none_into_header_value ... [32mok[m
+test metadata::key::tests::test_from_bytes_ascii ... [32mok[m
+test metadata::key::tests::test_from_bytes_binary ... [32mok[m
+test metadata::map::tests::test_from_headers_takes_http_headers ... [32mok[m
+test metadata::map::tests::test_iter_categorizes_ascii_entries ... [32mok[m
+test metadata::map::tests::test_iter_categorizes_binary_entries ... [32mok[m
+test metadata::map::tests::test_iter_mut_categorizes_ascii_entries ... [32mok[m
+test metadata::map::tests::test_iter_mut_categorizes_binary_entries ... [32mok[m
+test metadata::map::tests::test_keys_categorizes_ascii_entries ... [32mok[m
+test metadata::map::tests::test_keys_categorizes_binary_entries ... [32mok[m
+test metadata::map::tests::test_to_headers_encoding ... [32mok[m
+test metadata::map::tests::test_values_categorizes_ascii_entries ... [32mok[m
+test metadata::map::tests::test_values_categorizes_binary_entries ... [32mok[m
+test metadata::map::tests::test_values_mut_categorizes_ascii_entries ... [32mok[m
+test metadata::map::tests::test_values_mut_categorizes_binary_entries ... [32mok[m
+test metadata::value::from_i16 ... [32mok[m
+test metadata::value::from_i32 ... [32mok[m
+test metadata::value::from_i64 ... [32mok[m
+test metadata::value::from_isize ... [32mok[m
+test metadata::value::from_metadata_value_tests::it_can_insert_metadata_key_as_metadata_value ... [32mok[m
+test metadata::value::from_u16 ... [32mok[m
+test metadata::value::from_u32 ... [32mok[m
+test metadata::value::from_u64 ... [32mok[m
+test metadata::value::from_usize ... [32mok[m
+test metadata::value::test_ascii_value_hash ... [32mok[m
+test metadata::value::test_debug ... [32mok[m
+test metadata::value::test_from_shared_base64_encodes ... [32mok[m
+test metadata::value::test_invalid_binary_value_hash ... [32mok[m
+test metadata::value::test_is_empty ... [32mok[m
+test metadata::value::test_valid_binary_value_hash ... [32mok[m
+test metadata::value::test_value_eq_bytes ... [32mok[m
+test metadata::value::test_value_eq_str ... [32mok[m
+test metadata::value::test_value_eq_value ... [32mok[m
+test request::tests::duration_to_grpc_timeout_a_very_long_time ... [32mok[m
+test request::tests::duration_to_grpc_timeout_less_than_second ... [32mok[m
+test request::tests::duration_to_grpc_timeout_more_than_second ... [32mok[m
+test request::tests::preserves_user_agent ... [32mok[m
+test request::tests::reserved_headers_are_excluded ... [32mok[m
+test response::tests::reserved_headers_are_excluded ... [32mok[m
+test service::interceptor::tests::doesnt_change_http_method ... [32mok[m
+test service::interceptor::tests::doesnt_remove_headers_from_requests ... [32mok[m
+test service::interceptor::tests::handles_intercepted_status_as_response ... [32mok[m
+test service::layered::tests::named_service_is_propagated_to_layered ... [32mok[m
+test status::tests::code_from_i32 ... [32mok[m
+test status::tests::constructors ... [32mok[m
+test status::tests::details ... [32mok[m
+test status::tests::from_error_h2 ... [32mok[m
+test status::tests::from_error_nested ... [32mok[m
+test status::tests::from_error_status ... [32mok[m
+test status::tests::from_error_unknown ... [32mok[m
+test status::tests::to_h2_error ... [32mok[m
+test transport::channel::service::user_agent::tests::appends_custom_user_agent_to_request_user_agent ... [32mok[m
+test transport::channel::service::user_agent::tests::appends_default_user_agent_to_request_user_agent ... [32mok[m
+test transport::channel::service::user_agent::tests::prepends_custom_user_agent_to_default ... [32mok[m
+test transport::channel::service::user_agent::tests::sets_custom_user_agent_if_none_present ... [32mok[m
+test transport::channel::service::user_agent::tests::sets_default_if_no_custom_user_agent ... [32mok[m
+test transport::channel::service::user_agent::tests::sets_default_user_agent_if_none_present ... [32mok[m
+test transport::server::display_error_stack::tests::test_display_error_stack ... [32mok[m
+test transport::server::incoming::tests::one_tcpincoming_at_a_time ... [32mok[m
+test transport::server::tests::server_tcp_defaults ... [32mok[m
+test transport::service::grpc_timeout::tests::fuzz ... [32mok[m
+test transport::service::grpc_timeout::tests::test_header_not_present ... [32mok[m
+test transport::service::grpc_timeout::tests::test_hours ... [32mok[m
+test transport::service::grpc_timeout::tests::test_invalid_digits - should panic ... [32mok[m
+test transport::service::grpc_timeout::tests::test_invalid_unit - should panic ... [32mok[m
+test transport::service::grpc_timeout::tests::test_microseconds ... [32mok[m
+test transport::service::grpc_timeout::tests::test_milliseconds ... [32mok[m
+test transport::service::grpc_timeout::tests::test_minutes ... [32mok[m
+test transport::service::grpc_timeout::tests::test_nanoseconds ... [32mok[m
+test transport::service::grpc_timeout::tests::test_seconds ... [32mok[m
+test transport::service::grpc_timeout::tests::test_too_many_digits - should panic ... [32mok[m
+
+test result: [32mok[m. 73 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+[1m[92m   Doc-tests[0m tonic
+
+running 130 tests
+test tonic/src/client/grpc.rs - client::grpc::Grpc<T>::accept_compressed (line 111) ... [32mok[m
+test tonic/src/client/grpc.rs - client::grpc::Grpc<T>::max_decoding_message_size (line 140) ... [32mok[m
+test tonic/src/client/grpc.rs - client::grpc::Grpc<T>::max_encoding_message_size (line 170) ... [32mok[m
+test tonic/src/client/grpc.rs - client::grpc::Grpc<T>::send_compressed (line 80) ... [32mok[m
+test tonic/src/codec/decode.rs - codec::decode::Streaming<T>::message (line 323) ... [32mok[m
+test tonic/src/codec/decode.rs - codec::decode::Streaming<T>::trailers (line 350) ... [32mok[m
+test tonic/src/codec/mod.rs - codec::BufferSettings (line 36) ... [33mignored[m
+test tonic/src/macros.rs - macros::include_file_descriptor_set (line 43) ... [33mignored[m
+test tonic/src/macros.rs - macros::include_file_descriptor_set (line 52) ... [33mignored[m
+test tonic/src/macros.rs - macros::include_file_descriptor_set (line 64) ... [33mignored[m
+test tonic/src/macros.rs - macros::include_proto (line 17) ... [33mignored[m
+test tonic/src/macros.rs - macros::include_proto (line 23) ... [33mignored[m
+test tonic/src/macros.rs - macros::include_proto (line 5) ... [33mignored[m
+test tonic/src/metadata/key.rs - metadata::key::MetadataKey<VE>::eq (line 220) ... [32mok[m
+test tonic/src/metadata/key.rs - metadata::key::MetadataKey<VE>::from_static (line 68) ... [32mok[m
+test tonic/src/metadata/key.rs - metadata::key::MetadataKey<VE>::from_static (line 78) ... [32mok[m
+test tonic/src/metadata/key.rs - metadata::key::MetadataKey<VE>::from_static (line 84) ... [32mok[m
+test tonic/src/metadata/key.rs - metadata::key::MetadataKey<VE>::from_static (line 91) ... [32mok[m
+test tonic/src/metadata/key.rs - metadata::key::MetadataKey<VE>::from_static (line 97) ... [32mok[m
+test tonic/src/metadata/key.rs - metadata::key::str::eq (line 240) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::Entry<'a,VE>::key (line 1520) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::Entry<'a,VE>::or_insert (line 1440) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::Entry<'a,VE>::or_insert_with (line 1480) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::Entry<'a,VE>::or_insert_with (line 1492) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::GetAll<'a,VE>::iter (line 1961) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap (line 19) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::append (line 1078) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::append (line 1092) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::append (line 1099) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::append_bin (line 1119) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::append_bin (line 1133) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::append_bin (line 1140) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::capacity (line 394) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::clear (line 373) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::contains_key (line 679) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::entry (line 861) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::entry_bin (line 908) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::get (line 442) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::get_all (line 592) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::get_all_bin (line 635) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::get_bin (line 478) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::get_bin_mut (line 552) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::get_mut (line 520) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert (line 1001) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert (line 1008) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert (line 991) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert_bin (line 1028) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert_bin (line 1038) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::insert_bin (line 1045) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::into_headers (line 252) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::is_empty (line 354) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::iter (line 709) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::iter_mut (line 740) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::keys (line 771) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::keys_len (line 331) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::len (line 305) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::new (line 232) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::remove (line 1163) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::remove_bin (line 1197) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::reserve (line 422) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::values (line 802) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::values_mut (line 833) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::with_capacity (line 283) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::append (line 1775) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::get (line 1646) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::get_mut (line 1673) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::insert (line 1722) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::insert_mult (line 1746) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::into_mut (line 1699) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::iter (line 1867) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::iter_mut (line 1894) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::key (line 1623) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::remove (line 1800) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::OccupiedEntry<'a,VE>::remove_entry (line 1825) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::VacantEntry<'a,VE>::insert (line 1576) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::VacantEntry<'a,VE>::insert_entry (line 1597) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::VacantEntry<'a,VE>::into_key (line 1557) ... [32mok[m
+test tonic/src/metadata/map.rs - metadata::map::VacantEntry<'a,VE>::key (line 1543) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<Ascii>::as_bytes (line 441) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<Ascii>::from_key (line 390) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<Ascii>::len (line 409) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<Ascii>::to_str (line 427) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<Binary>::from_bytes (line 457) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE> (line 238) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE> (line 246) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE> (line 274) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE> (line 282) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE>::as_encoded_bytes (line 183) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE>::as_encoded_bytes (line 189) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE>::from_static (line 59) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE>::from_static (line 65) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE>::is_empty (line 98) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE>::is_sensitive (line 163) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE>::set_sensitive (line 137) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE>::to_bytes (line 117) ... [32mok[m
+test tonic/src/metadata/value.rs - metadata::value::MetadataValue<VE>::to_bytes (line 123) ... [32mok[m
+test tonic/src/request.rs - request::IntoRequest (line 41) ... [32mok[m
+test tonic/src/request.rs - request::IntoStreamingRequest (line 75) ... [32mok[m
+test tonic/src/request.rs - request::Request<T>::extensions_mut (line 310) - compile ... [32mok[m
+test tonic/src/request.rs - request::Request<T>::extensions_mut (line 329) - compile ... [32mok[m
+test tonic/src/request.rs - request::Request<T>::new (line 104) ... [32mok[m
+test tonic/src/request.rs - request::Request<T>::set_timeout (line 275) ... [32mok[m
+test tonic/src/response.rs - response::Response<T>::new (line 16) ... [32mok[m
+test tonic/src/server/grpc.rs - server::grpc::Grpc<T>::accept_compressed (line 70) ... [32mok[m
+test tonic/src/server/grpc.rs - server::grpc::Grpc<T>::max_decoding_message_size (line 130) ... [32mok[m
+test tonic/src/server/grpc.rs - server::grpc::Grpc<T>::max_encoding_message_size (line 160) ... [32mok[m
+test tonic/src/server/grpc.rs - server::grpc::Grpc<T>::send_compressed (line 101) ... [32mok[m
+test tonic/src/status.rs - status::Code::description (line 124) ... [32mok[m
+test tonic/src/status.rs - status::Status (line 29) ... [32mok[m
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::concurrency_limit (line 301) ... [32mok[m
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::connect_timeout (line 247) ... [32mok[m
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::from_shared (line 157) ... [32mok[m
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::from_static (line 138) ... [32mok[m
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::origin (line 207) ... [32mok[m
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::rate_limit (line 315) ... [32mok[m
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::timeout (line 222) ... [32mok[m
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::uri (line 546) ... [32mok[m
+test tonic/src/transport/channel/endpoint.rs - transport::channel::endpoint::Endpoint::user_agent (line 182) ... [32mok[m
+test tonic/src/transport/channel/mod.rs - transport::channel::Channel::from_shared (line 97) ... [32mok[m
+test tonic/src/transport/channel/mod.rs - transport::channel::Channel::from_static (line 86) ... [32mok[m
+test tonic/src/transport/mod.rs - transport (line 20) - compile ... [32mok[m
+test tonic/src/transport/mod.rs - transport (line 47) - compile ... [32mok[m
+test tonic/src/transport/server/conn.rs - transport::server::conn::Connected (line 21) ... [32mok[m
+test tonic/src/transport/server/incoming.rs - transport::server::incoming::TcpIncoming::bind (line 33) - compile ... [32mok[m
+test tonic/src/transport/server/mod.rs - transport::server::Server<L>::concurrency_limit_per_connection (line 175) ... [32mok[m
+test tonic/src/transport/server/mod.rs - transport::server::Server<L>::layer (line 537) ... [32mok[m
+test tonic/src/transport/server/mod.rs - transport::server::Server<L>::layer (line 553) ... [32mok[m
+test tonic/src/transport/server/mod.rs - transport::server::Server<L>::load_shed (line 199) ... [32mok[m
+test tonic/src/transport/server/mod.rs - transport::server::Server<L>::max_connection_age (line 274) ... [32mok[m
+test tonic/src/transport/server/mod.rs - transport::server::Server<L>::timeout (line 214) ... [32mok[m
+
+test result: [32mok[m. 123 passed; 0 failed; 7 ignored; 0 measured; 0 filtered out; finished in 88.73s
+
+[?2004hroot@830ef13b33a0:/app# cd /app
+[?2004l[?2004hroot@830ef13b33a0:/app# grep -n "unwrap\\(|expect\\(" -n src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs || true
+[?2004lgrep: Unmatched ( or \(
+[?2004hroot@830ef13b33a0:/app# grep -n "\\.clone\\(" -n src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs || true
+[?2004lgrep: Unmatched ( or \(
+[?2004hroot@830ef13b33a0:/app# grep -n "if let" -n src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs || true
+[?2004l[?2004hroot@830ef13b33a0:/app# grep -n "|.*|" -n src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs || true
+[?2004l[?2004hroot@830ef13b33a0:/app# awk 'length($0)>100{print FNR ":" length($0) ":" $0}' src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs || true
+[?2004l[?2004hroot@830ef13b33a0:/app# grep -nF "unwrap(" src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs || true
+[?2004l[?2004hroot@830ef13b33a0:/app# grep -nF "expect(" src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs || true
+[?2004l[?2004hroot@830ef13b33a0:/app# grep -nF ".clone(" src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs || true
+[?2004l[?2004hroot@830ef13b33a0:/app# grep -n "if let" src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs || true
+[?2004l[?2004hroot@830ef13b33a0:/app# grep -n "|" src/tonic/src/service/metadata_validator.rs src/tonic/src/service/mod.rs | head -n 50 || true
+[?2004l[?2004hroot@830ef13b33a0:/app# 

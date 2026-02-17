@@ -1,0 +1,10 @@
+{
+  "analysis": "We need to understand the MetadataMap API to implement validation (e.g., checking header existence, size, prefix). We'll inspect the map implementation.",
+  "plan": "List the source file for metadata map and view relevant methods.",
+  "commands": [
+    {
+      "keystrokes": "sed -n '1,200p' src/tonic/src/metadata/map.rs\n",
+      "duration": 0.1
+    }
+  ]
+}

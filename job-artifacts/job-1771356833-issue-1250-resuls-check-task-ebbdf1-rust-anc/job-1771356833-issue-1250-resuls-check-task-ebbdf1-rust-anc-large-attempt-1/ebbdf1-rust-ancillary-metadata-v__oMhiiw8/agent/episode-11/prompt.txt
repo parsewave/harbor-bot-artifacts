@@ -1,0 +1,43 @@
+Current Terminal Screen:
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+
+   Doc-tests tonic
+
+running 130 tests
+test tonic/src/client/grpc.rs - client::grpc::Grpc<T>::accept_compressed (line 111) ... ok
+test tonic/src/client/grpc.rs - client::grpc::Grpc<T>::max_decoding_message_size (line 140) ... ok
+test tonic/src/client/grpc.rs - client::grpc::Grpc<T>::max_encoding_message_size (line 170) ... ok
+test tonic/src/client/grpc.rs - client::grpc::Grpc<T>::send_compressed (line 80) ... ok
+test tonic/src/codec/decode.rs - codec::decode::Streaming<T>::message (line 323) ... ok
+test tonic/src/codec/decode.rs - codec::decode::Streaming<T>::trailers (line 350) ... ok
+test tonic/src/codec/mod.rs - codec::BufferSettings (line 36) ... ignored
+test tonic/src/macros.rs - macros::include_file_descriptor_set (line 43) ... ignored
+test tonic/src/macros.rs - macros::include_file_descriptor_set (line 52) ... ignored
+test tonic/src/macros.rs - macros::include_file_descriptor_set (line 64) ... ignored
+test tonic/src/macros.rs - macros::include_proto (line 17) ... ignored
+test tonic/src/macros.rs - macros::include_proto (line 23) ... ignored
+test tonic/src/macros.rs - macros::include_proto (line 5) ... ignored
+test tonic/src/metadata/key.rs - metadata::key::MetadataKey<VE>::eq (line 220) ... ok
+test tonic/src/metadata/key.rs - metadata::key::MetadataKey<VE>::from_static (line 68) ... ok
+test tonic/src/metadata/key.rs - metadata::key::MetadataKey<VE>::from_static (line 78) ... ok
+test tonic/src/metadata/key.rs - metadata::key::MetadataKey<VE>::from_static (line 84) ... ok
+test tonic/src/metadata/key.rs - metadata::key::MetadataKey<VE>::from_static (line 91) ... ok
+test tonic/src/metadata/key.rs - metadata::key::MetadataKey<VE>::from_static (line 97) ... ok
+test tonic/src/metadata/key.rs - metadata::key::str::eq (line 240) ... ok
+test tonic/src/metadata/map.rs - metadata::map::Entry<'a,VE>::key (line 1520) ... ok
+test tonic/src/metadata/map.rs - metadata::map::Entry<'a,VE>::or_insert (line 1440) ... ok
+test tonic/src/metadata/map.rs - metadata::map::Entry<'a,VE>::or_insert_with (line 1480) ... ok
+test tonic/src/metadata/map.rs - metadata::map::Entry<'a,VE>::or_insert_with (line 1492) ... ok
+test tonic/src/metadata/map.rs - metadata::map::GetAll<'a,VE>::iter (line 1961) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap (line 19) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::append (line 1078) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::append (line 1092) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::append (line 1099) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::append_bin (line 1119) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::append_bin (line 1133) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::append_bin (line 1140) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::capacity (line 394) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::clear (line 373) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::contains_key (line 679) ... ok
+test tonic/src/metadata/map.rs - metadata::map::MetadataMap::entry (line 861) ...

@@ -1,0 +1,23 @@
+[
+  {
+    "name": "TB Debug Small",
+    "passed": true,
+    "message": "Outcome: PASS",
+    "is_warning": true,
+    "details": "The failing tests are due to the implementation not being added at all (metadata_validator.rs missing and mod.rs not updated). The instructions explicitly require creating tonic/src/service/metadata_validator.rs, defining the trait/builder/layer, and re-exporting from tonic/src/service/mod.rs, so the test expectations are directly specified. This looks like agent non-completion/timeout rather than insufficient or ambiguous task instructions.",
+    "duration_seconds": 16.7827308177948,
+    "result_type": null,
+    "check_type": "tb_debug_small",
+    "raw_data": {
+      "analyzed_agent": "terminus-2",
+      "analyzed_model": "openrouter/openai/gpt-oss-120b:exacto",
+      "analysis_model": "openrouter/openai/gpt-5.2",
+      "outcome": "PASS",
+      "explanation": "The failing tests are due to the implementation not being added at all (metadata_validator.rs missing and mod.rs not updated). The instructions explicitly require creating tonic/src/service/metadata_validator.rs, defining the trait/builder/layer, and re-exporting from tonic/src/service/mod.rs, so the test expectations are directly specified. This looks like agent non-completion/timeout rather than insufficient or ambiguous task instructions.",
+      "json_output": {
+        "outcome": "PASS",
+        "explanation": "The failing tests are due to the implementation not being added at all (metadata_validator.rs missing and mod.rs not updated). The instructions explicitly require creating tonic/src/service/metadata_validator.rs, defining the trait/builder/layer, and re-exporting from tonic/src/service/mod.rs, so the test expectations are directly specified. This looks like agent non-completion/timeout rather than insufficient or ambiguous task instructions."
+      }
+    }
+  }
+]

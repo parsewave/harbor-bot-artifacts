@@ -1,0 +1,118 @@
+{
+    "id": "2e3f6e98-2cf8-40d5-b568-987efb91f61d",
+    "task_name": "ebbdf1-rust-ancillary-metadata-validator-layer",
+    "trial_name": "ebbdf1-rust-ancillary-metadata-v__v9daRw6",
+    "trial_uri": "file:///tmp/harbor-runs/job-1771356833-issue-1250-resuls-check-task-ebbdf1-rust-anc-small/ebbdf1-rust-ancillary-metadata-v__v9daRw6",
+    "task_id": {
+        "path": "/tmp/harbor-runs/workspaces/tb-bot-job-1771356833-issue-1250-resuls-check-task-ebbdf1-rust-anc-0da785aa/contributor_tasks/ebbdf1-rust-ancillary-metadata-validator-layer"
+    },
+    "source": "contributor_tasks",
+    "task_checksum": "b667898c23063019035d5f5c3ad66a0eedb7adff2f9f5f863a4660851fabedb5",
+    "config": {
+        "task": {
+            "path": "/tmp/harbor-runs/workspaces/tb-bot-job-1771356833-issue-1250-resuls-check-task-ebbdf1-rust-anc-0da785aa/contributor_tasks/ebbdf1-rust-ancillary-metadata-validator-layer",
+            "git_url": null,
+            "git_commit_id": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "contributor_tasks"
+        },
+        "trial_name": "ebbdf1-rust-ancillary-metadata-v__v9daRw6",
+        "trials_dir": "/tmp/harbor-runs/job-1771356833-issue-1250-resuls-check-task-ebbdf1-rust-anc-small",
+        "timeout_multiplier": 1.0,
+        "agent": {
+            "name": "terminus-2",
+            "import_path": null,
+            "model_name": "openrouter/openai/gpt-oss-120b:exacto",
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "kwargs": {}
+        },
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "kwargs": {}
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "job_id": "d63272d6-dc37-412e-8615-2bb3239a5581"
+    },
+    "agent_info": {
+        "name": "terminus-2",
+        "version": "2.0.0",
+        "model_info": {
+            "name": "openai/gpt-oss-120b:exacto",
+            "provider": "openrouter"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 379851,
+        "n_cache_tokens": 72,
+        "n_output_tokens": 20793,
+        "cost_usd": 0.01876463622,
+        "rollout_details": [],
+        "metadata": {
+            "n_episodes": 0,
+            "api_request_times_msec": [
+                7206.998586654663,
+                7351.027011871338,
+                9749.52483177185,
+                22929.491996765137,
+                23450.01459121704,
+                27226.00769996643,
+                7490.532875061035,
+                30126.413106918335,
+                22857.516288757324,
+                6968.416452407837,
+                7507.581472396851,
+                3858.314037322998,
+                8940.310001373291,
+                14271.790504455566,
+                11571.659564971924,
+                4128.9122104644775,
+                5498.388051986694,
+                5998.4681606292725
+            ],
+            "summarization_count": 0
+        }
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.0
+        }
+    },
+    "exception_info": {
+        "exception_type": "AgentTimeoutError",
+        "exception_message": "Agent execution timed out after 900.0 seconds",
+        "exception_traceback": "Traceback (most recent call last):\n  File \"/usr/local/lib/python3.13/asyncio/tasks.py\", line 507, in wait_for\n    return await fut\n           ^^^^^^^^^\n  File \"/app/.venv/lib/python3.13/site-packages/harbor/agents/terminus_2/terminus_2.py\", line 1397, in run\n    actual_episodes = await self._run_agent_loop(\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<4 lines>...\n    )\n    ^\n  File \"/app/.venv/lib/python3.13/site-packages/harbor/agents/terminus_2/terminus_2.py\", line 1226, in _run_agent_loop\n    timeout_occurred, terminal_output = await self._execute_commands(\n                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<2 lines>...\n    )\n    ^\n  File \"/app/.venv/lib/python3.13/site-packages/harbor/agents/terminus_2/terminus_2.py\", line 1043, in _execute_commands\n    await session.send_keys(\n    ...<3 lines>...\n    )\n  File \"/app/.venv/lib/python3.13/site-packages/harbor/agents/terminus_2/tmux_session.py\", line 563, in send_keys\n    await self._send_non_blocking_keys(\n    ...<2 lines>...\n    )\n  File \"/app/.venv/lib/python3.13/site-packages/harbor/agents/terminus_2/tmux_session.py\", line 523, in _send_non_blocking_keys\n    await asyncio.sleep(min_timeout_sec - elapsed_time_sec)\n  File \"/usr/local/lib/python3.13/asyncio/tasks.py\", line 718, in sleep\n    return await future\n           ^^^^^^^^^^^^\nasyncio.exceptions.CancelledError\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/.venv/lib/python3.13/site-packages/harbor/trial/trial.py\", line 243, in _execute_agent\n    await asyncio.wait_for(\n    ...<6 lines>...\n    )\n  File \"/usr/local/lib/python3.13/asyncio/tasks.py\", line 506, in wait_for\n    async with timeouts.timeout(timeout):\n               ~~~~~~~~~~~~~~~~^^^^^^^^^\n  File \"/usr/local/lib/python3.13/asyncio/timeouts.py\", line 116, in __aexit__\n    raise TimeoutError from exc_val\nTimeoutError\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/app/.venv/lib/python3.13/site-packages/harbor/trial/trial.py\", line 354, in run\n    await self._execute_agent()\n  File \"/app/.venv/lib/python3.13/site-packages/harbor/trial/trial.py\", line 252, in _execute_agent\n    raise AgentTimeoutError(\n        f\"Agent execution timed out after {self._agent_timeout_sec} seconds\"\n    ) from e\nharbor.trial.trial.AgentTimeoutError: Agent execution timed out after 900.0 seconds\n",
+        "occurred_at": "2026-02-17T20:27:00.160838"
+    },
+    "started_at": "2026-02-17T20:07:20.482936Z",
+    "finished_at": "2026-02-17T20:32:13.184920Z",
+    "environment_setup": {
+        "started_at": "2026-02-17T20:07:20.484256Z",
+        "finished_at": "2026-02-17T20:11:57.749643Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-02-17T20:11:57.749720Z",
+        "finished_at": "2026-02-17T20:12:00.128790Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-02-17T20:12:00.128916Z",
+        "finished_at": "2026-02-17T20:27:00.152636Z"
+    },
+    "verifier": {
+        "started_at": "2026-02-17T20:27:00.165248Z",
+        "finished_at": "2026-02-17T20:31:47.879835Z"
+    }
+}

@@ -1,0 +1,31 @@
+{
+  "analysis": "ripgrep (rg) is not available in the environment, so we must use grep/sed to inspect the codebase. We have located tonic's metadata module. Next we need to inspect MetadataMap APIs (iteration, len, key/value access) and find how tonic::Request and Status->http response conversion works, so we can implement a MetadataValidatorLayer that can short-circuit with a Status response without cloning, closures, or if-let.",
+  "plan": "1) Inspect src/tonic/src/metadata/map.rs for MetadataMap methods: len, iter, get, keys, etc. 2) Locate tonic::Request implementation to see how it exposes metadata and how to convert Status into an HTTP response. 3) Locate existing middleware response-body wrappers (Interceptor/RecoverError) to reuse patterns for producing an immediate error response with an empty body while keeping type compatibility.",
+  "commands": [
+    {
+      "keystrokes": "grep -n \"impl MetadataMap\" -n src/tonic/src/metadata/map.rs | head\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "sed -n '1,120p' src/tonic/src/metadata/map.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "sed -n '120,260p' src/tonic/src/metadata/map.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "grep -R -n \"pub struct Request\" src/tonic/src | head\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "sed -n '1,220p' src/tonic/src/request.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "grep -R -n \"fn into_http\" src/tonic/src | head -n 50\n",
+      "duration": 1.0
+    }
+  ],
+  "task_complete": false
+}

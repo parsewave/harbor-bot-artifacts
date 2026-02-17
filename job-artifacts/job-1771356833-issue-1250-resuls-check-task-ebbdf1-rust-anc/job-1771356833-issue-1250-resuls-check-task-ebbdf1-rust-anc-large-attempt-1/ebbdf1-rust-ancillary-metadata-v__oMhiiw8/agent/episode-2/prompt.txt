@@ -1,0 +1,343 @@
+New Terminal Output:
+
+root@830ef13b33a0:/app# sed -n '1,220p' src/tonic/src/service/interceptor.rs
+//! gRPC interceptors which are a kind of middleware.
+//!
+//! See [`Interceptor`] for more details.
+
+use crate::{request::SanitizeHeaders, Status};
+use pin_project::pin_project;
+use std::{
+    fmt,
+    future::Future,
+    pin::Pin,
+    task::{Context, Poll},
+};
+use tower_layer::Layer;
+use tower_service::Service;
+
+/// A gRPC interceptor.
+///
+/// gRPC interceptors are similar to middleware but have less flexibility. An interceptor allows
+/// you to do two main things, one is to add/remove/check items in the `MetadataMap` of each
+/// request. Two, cancel a request with a `Status`.
+///
+/// Any function that satisfies the bound `FnMut(Request<()>) -> Result<Request<()>, Status>` can be
+/// used as an `Interceptor`.
+///
+/// An interceptor can be used on both the server and client side through the `tonic-build` crate's
+/// generated structs.
+///
+/// See the [interceptor example][example] for more details.
+///
+/// If you need more powerful middleware, [tower] is the recommended approach. You can find
+/// examples of how to use tower with tonic [here][tower-example].
+///
+/// Additionally, interceptors is not the recommended way to add logging to your service. For that
+/// a [tower] middleware is more appropriate since it can also act on the response. For example
+/// tower-http's [`Trace`](https://docs.rs/tower-http/latest/tower_http/trace/index.html)
+/// middleware supports gRPC out of the box.
+///
+/// [tower]: https://crates.io/crates/tower
+/// [example]: https://github.com/hyperium/tonic/tree/master/examples/src/interceptor
+/// [tower-example]: https://github.com/hyperium/tonic/tree/master/examples/src/tower
+pub trait Interceptor {
+    /// Intercept a request before it is sent, optionally cancelling it.
+    fn call(&mut self, request: crate::Request<()>) -> Result<crate::Request<()>, Status>;
+}
+
+impl<F> Interceptor for F
+where
+    F: FnMut(crate::Request<()>) -> Result<crate::Request<()>, Status>,
+{
+    fn call(&mut self, request: crate::Request<()>) -> Result<crate::Request<()>, Status> {
+        self(request)
+    }
+}
+
+/// A gRPC interceptor that can be used as a [`Layer`],
+///
+/// See [`Interceptor`] for more details.
+#[derive(Debug, Clone, Copy)]
+pub struct InterceptorLayer<I> {
+    interceptor: I,
+}
+
+impl<I> InterceptorLayer<I> {
+    /// Create a new interceptor layer.
+    ///
+    /// See [`Interceptor`] for more details.
+    pub fn new(interceptor: I) -> Self {
+        Self { interceptor }
+    }
+}
+
+impl<S, I> Layer<S> for InterceptorLayer<I>
+where
+    I: Clone,
+{
+    type Service = InterceptedService<S, I>;
+
+    fn layer(&self, service: S) -> Self::Service {
+        InterceptedService::new(service, self.interceptor.clone())
+    }
+}
+
+/// A service wrapped in an interceptor middleware.
+///
+/// See [`Interceptor`] for more details.
+#[derive(Clone, Copy)]
+pub struct InterceptedService<S, I> {
+    inner: S,
+    interceptor: I,
+}
+
+impl<S, I> InterceptedService<S, I> {
+    /// Create a new `InterceptedService` that wraps `S` and intercepts each request with the
+    /// function `F`.
+    pub fn new(service: S, interceptor: I) -> Self {
+        Self {
+            inner: service,
+            interceptor,
+        }
+    }
+}
+
+impl<S, I> fmt::Debug for InterceptedService<S, I>
+where
+    S: fmt::Debug,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("InterceptedService")
+            .field("inner", &self.inner)
+            .field("f", &format_args!("{}", std::any::type_name::<I>()))
+            .finish()
+    }
+}
+
+impl<S, I, ReqBody, ResBody> Service<http::Request<ReqBody>> for InterceptedService<S, I>
+where
+    S: Service<http::Request<ReqBody>, Response = http::Response<ResBody>>,
+    I: Interceptor,
+{
+    type Response = http::Response<ResponseBody<ResBody>>;
+    type Error = S::Error;
+    type Future = ResponseFuture<S::Future>;
+
+    #[inline]
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.inner.poll_ready(cx)
+    }
+
+    fn call(&mut self, req: http::Request<ReqBody>) -> Self::Future {
+        // It is bad practice to modify the body (i.e. Message) of the request via an interceptor.
+        // To avoid exposing the body of the request to the interceptor function, we first remove it
+        // here, allow the interceptor to modify the metadata and extensions, and then recreate the
+        // HTTP request with the body. Tonic requests do not preserve the URI, HTTP version, and
+        // HTTP method of the HTTP request, so we extract them here and then add them back in below.
+        let uri = req.uri().clone();
+        let method = req.method().clone();
+        let version = req.version();
+        let req = crate::Request::from_http(req);
+        let (metadata, extensions, msg) = req.into_parts();
+
+        match self
+            .interceptor
+            .call(crate::Request::from_parts(metadata, extensions, ()))
+        {
+            
+[... output limited to 10000 bytes; 70 interior bytes omitted ...]
+   Err(Status::permission_denied(message))
+        });
+
+        let request = http::Request::builder().body(()).unwrap();
+        let response = svc.oneshot(request).await.unwrap();
+
+        assert_eq!(expected.status(), response.status());
+        assert_eq!(expected.version(), response.version());
+        assert_eq!(expected.headers(), response.headers());
+    }
+
+    #[tokio::test]
+    async fn doesnt_change_http_method() {
+        let svc = tower::service_fn(|request: http::Request<()>| async move {
+            assert_eq!(request.method(), http::Method::OPTIONS);
+
+            Ok::<_, hyper::Error>(hyper::Response::new(()))
+        });
+
+        let svc = InterceptedService::new(svc, Ok);
+
+        let request = http::Request::builder()
+            .method(http::Method::OPTIONS)
+            .body(())
+            .unwrap();
+
+        svc.oneshot(request).await.unwrap();
+    }
+}
+root@830ef13b33a0:/app# sed -n '1,260p' src/tonic/src/service/recover_error.rs
+//! Middleware which recovers from error.
+
+use std::{
+    fmt,
+    future::Future,
+    pin::Pin,
+    task::{ready, Context, Poll},
+};
+
+use http::Response;
+use pin_project::pin_project;
+use tower_layer::Layer;
+use tower_service::Service;
+
+use crate::Status;
+
+/// Layer which applies the [`RecoverError`] middleware.
+#[derive(Debug, Default, Clone)]
+pub struct RecoverErrorLayer {
+    _priv: (),
+}
+
+impl RecoverErrorLayer {
+    /// Create a new `RecoverErrorLayer`.
+    pub fn new() -> Self {
+        Self { _priv: () }
+    }
+}
+
+impl<S> Layer<S> for RecoverErrorLayer {
+    type Service = RecoverError<S>;
+
+    fn layer(&self, inner: S) -> Self::Service {
+        RecoverError::new(inner)
+    }
+}
+
+/// Middleware that attempts to recover from service errors by turning them into a response built
+/// from the `Status`.
+#[derive(Debug, Clone)]
+pub struct RecoverError<S> {
+    inner: S,
+}
+
+impl<S> RecoverError<S> {
+    /// Create a new `RecoverError` middleware.
+    pub fn new(inner: S) -> Self {
+        Self { inner }
+    }
+}
+
+impl<S, Req, ResBody> Service<Req> for RecoverError<S>
+where
+    S: Service<Req, Response = Response<ResBody>>,
+    S::Error: Into<crate::BoxError>,
+{
+    type Response = Response<ResponseBody<ResBody>>;
+    type Error = crate::BoxError;
+    type Future = ResponseFuture<S::Future>;
+
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.inner.poll_ready(cx).map_err(Into::into)
+    }
+
+    fn call(&mut self, req: Req) -> Self::Future {
+        ResponseFuture {
+            inner: self.inner.call(req),
+        }
+    }
+}
+
+/// Response future for [`RecoverError`].
+#[pin_project]
+pub struct ResponseFuture<F> {
+    #[pin]
+    inner: F,
+}
+
+impl<F> fmt::Debug for ResponseFuture<F> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ResponseFuture").finish()
+    }
+}
+
+impl<F, E, ResBody> Future for ResponseFuture<F>
+where
+    F: Future<Output = Result<Response<ResBody>, E>>,
+    E: Into<crate::BoxError>,
+{
+    type Output = Result<Response<ResponseBody<ResBody>>, crate::BoxError>;
+
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        match ready!(self.project().inner.poll(cx)) {
+            Ok(response) => {
+                let response = response.map(ResponseBody::full);
+                Poll::Ready(Ok(response))
+            }
+            Err(err) => match Status::try_from_error(err.into()) {
+                Ok(status) => {
+                    let (parts, ()) = status.into_http::<()>().into_parts();
+                    let res = Response::from_parts(parts, ResponseBody::empty());
+                    Poll::Ready(Ok(res))
+                }
+                Err(err) => Poll::Ready(Err(err)),
+            },
+        }
+    }
+}
+
+/// Response body for [`RecoverError`].
+#[pin_project]
+pub struct ResponseBody<B> {
+    #[pin]
+    inner: Option<B>,
+}
+
+impl<B> fmt::Debug for ResponseBody<B> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ResponseBody").finish()
+    }
+}
+
+impl<B> ResponseBody<B> {
+    fn full(inner: B) -> Self {
+        Self { inner: Some(inner) }
+    }
+
+    const fn empty() -> Self {
+        Self { inner: None }
+    }
+}
+
+impl<B> http_body::Body for ResponseBody<B>
+where
+    B: http_body::Body,
+{
+    type Data = B::Data;
+    type Error = B::Error;
+
+    fn poll_frame(
+        self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+    ) -> Poll<Option<Result<http_body::Frame<Self::Data>, Self::Error>>> {
+        match self.project().inner.as_pin_mut() {
+            Some(b) => b.poll_frame(cx),
+            None => Poll::Ready(None),
+        }
+    }
+
+    fn is_end_stream(&self) -> bool {
+        match &self.inner {
+            Some(b) => b.is_end_stream(),
+            None => true,
+        }
+    }
+
+    fn size_hint(&self) -> http_body::SizeHint {
+        match &self.inner {
+            Some(body) => body.size_hint(),
+            None => http_body::SizeHint::with_exact(0),
+        }
+    }
+}
+root@830ef13b33a0:/app#

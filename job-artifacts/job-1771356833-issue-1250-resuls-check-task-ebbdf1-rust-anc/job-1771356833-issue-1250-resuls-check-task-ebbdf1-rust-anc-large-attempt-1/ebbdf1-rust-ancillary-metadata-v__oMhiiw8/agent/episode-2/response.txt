@@ -1,0 +1,23 @@
+{
+  "analysis": "interceptor.rs shows how tonic wraps a tower::Service by implementing poll_ready and call, and it converts certain errors into responses. For metadata validation we need a simpler pre-check in call(): read request headers/metadata, validate, and if invalid immediately return an HTTP response that encodes the corresponding tonic::Status. We must implement this without closures, if-let, unwrap/expect, clone, unsafe, and keep lines <= 100 chars. Next we need to inspect tonic's MetadataMap type and how to access it from an http::Request, plus how to turn a Status into an http::Response similar to interceptor.",
+  "plan": "1) Locate MetadataMap and its API in tonic (metadata module). 2) Search for existing code that converts Status into HTTP response (e.g., in interceptor call path) so our layer can return the same type expected by server stack. 3) Identify request sanitation helper (SanitizeHeaders) used by interceptor; decide whether metadata validation should use tonic::Request::from_http to access metadata. Then proceed to implement metadata_validator.rs accordingly.",
+  "commands": [
+    {
+      "keystrokes": "rg -n \"pub type MetadataMap|struct MetadataMap|MetadataMap\" src/tonic/src | head\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "ls -la src/tonic/src/metadata\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "sed -n '1,220p' src/tonic/src/metadata/mod.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "rg -n \"into_http\" src/tonic/src/service src/tonic/src | head -n 50\n",
+      "duration": 1.0
+    }
+  ],
+  "task_complete": false
+}

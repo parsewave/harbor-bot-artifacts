@@ -1,0 +1,214 @@
+New Terminal Output:
+
+root@0b8bb3e48be3:/app# cat > src/tonic/src/service/metadata_validator.rs <<'EOF'
+> //! Middleware for validating gRPC request metadata.
+> +//!
+> +//! This module provides a `MetadataValidator` trait, a builder for composing
+> +//! validation rules, and a Tower `Layer` that applies the validator to each
+> +//! incoming request before it reaches the service handler.
+> +
+> +use crate::{metadata::MetadataMap, Status, Code};
+> +use futures::future::BoxFuture;
+> +use futures::FutureExt;
+> +use std::task::{Context, Poll};
+> +use tower_layer::Layer;
+> +use tower_service::Service;
+> +
+ > +/// Trait for validating request metadata.
+> +pub trait MetadataValidator {
+> +    /// Validate the supplied metadata.
+> +    ///
+> +    /// Returns `Ok(())` when validation succeeds, otherwise a gRPC `Status`
+> +    /// describing the failure.
+> +    fn validate(&self, md: &MetadataMap) -> Result<(), Status>;
+> +}
+> +
+li> +/// Simple validator that stores configuration for a set of rules.
+> +#[derive(Clone)]
+> +struct SimpleValidator {
+f {> +    required: Vec<String>,
+> +    max_size: Option<usize>,
+ Layer> +    prefixes: Vec<(String, String)>,
+> +    max_total: Option<usize>,
+> +}
+Clo> +
+> +impl MetadataValidator for SimpleValidator {
+> +    fn validate(&self, md: &MetadataMap) -> Result<(), Status> {
+a> +        // Required headers
+> +        for name in &self.required {
+e> +            if !md.contains_key(name) {
+> +                return Err(Status::new(
+> +                    Code::FailedPrecondition,
+> +                    format!("missing required header {}", name),
+> +                ));
+> +            }
+> +        }
+ > +
+> +        // Max header size (name + value)
+,> +        if let Some(limit) = self.max_size {
+ > +            for (name, value) in md.as_ref().iter() {
+> +                let size = name.as_str().len() + value.as_bytes().len();
+> +                if size > limit {
+ > +                    return Err(Status::new(
+> +                        Code::InvalidArgument,
+> +                        format!("header {} exceeds size limit", name),
+> +                    ));
+<(), > +                }
+ > +            }
+> +        }
+> +
+y(> +        // Header prefix checks
+> +        for (name, prefix) in &self.prefixes {
+> +            match md.get(name) {
+> +                Some(v) => match v.to_str() {
+> +                    Ok(s) => {
+> +                        if !s.starts_with(prefix) {
+> +                            return Err(Status::new(
+> +                                Code::InvalidArgument,
+> +                                format!("header {} does not start with {}", name, prefix),
+> +                            ));
+> +                        }
+> +                    }
+> +                    Err(_) => {
+> +                        return Err(Status::new(
+> +                            Code::InvalidArgument,
+> +                            format!("header {} is not valid ascii", name),
+> +                        ));
+> +                    }
+> +                },
+> +                None => {}
+> +            }
+> +        }
+> +
+> +        // Max total header count
+> +        if let Some(limit) = self.max_total {
+> +            let count = md.as_ref().len();
+> +            if count > limit {
+> +                return Err(Status::new(
+> +                    Code::ResourceExhausted,
+> +                    format!("header count {} exceeds limit {}", count, limit),
+> +                ));
+> +            }
+> +        }
+> +        Ok(())
+> +    }
+> +}
+> +
+> +/// Builder for composing a `MetadataValidator`.
+> +#[derive(Default)]
+> +pub struct ValidatorBuilder {
+> +    required: Vec<String>,
+> +    max_size: Option<usize>,
+> +    prefixes: Vec<(String, String)>,
+> +    max_total: Option<usize>,
+> +}
+> +
+> +impl ValidatorBuilder {
+> +    /// Create a new builder.
+> +    pub fn new() -> Self {
+> +        Self::default()
+> +    }
+> +
+> +    /// Require that a header with the given name is present.
+> +    pub fn require_header(mut self, name: impl Into<String>) -> Self {
+> +        self.required.push(name.into());
+> +        self
+> +    }
+> +
+> +    /// Set a maximum size (in bytes) for any single header (name + value).
+> +    pub fn max_header_size(mut self, limit: usize) -> Self {
+> +        self.max_size = Some(limit);
+> +        self
+> +    }
+> +
+> +    /// Require that a header's value starts with the given prefix.
+> +    pub fn header_prefix(
+> +        mut self,
+> +        name: impl Into<String>,
+> +        prefix: impl Into<String>,
+> +    ) -> Self {
+> +        self.prefixes.push((name.into(), prefix.into()));
+> +        self
+> +    }
+> +
+> +    /// Set a maximum total number of headers allowed.
+> +    pub fn max_total_headers(mut self, limit: usize) -> Self {
+> +        self.max_total = Some(limit);
+> +        self
+> +    }
+> +
+> +    /// Build the validator.
+> +    pub fn build(self) -> SimpleValidator {
+> +        SimpleValidator {
+> +            required: self.required,
+> +            max_size: self.max_size,
+> +            prefixes: self.prefixes,
+> +            max_total: self.max_total,
+> +        }
+> +    }
+> +}
+> +
+> +/// Tower `Layer` that validates request metadata before forwarding.
+> +#[derive(Clone)]
+> +pub struct MetadataValidatorLayer<V> {
+> +    validator: V,
+> +}
+> +
+> +impl<V> MetadataValidatorLayer<V> {
+> +    /// Create a new layer with the supplied validator.
+> +    pub fn new(validator: V) -> Self {
+> +        Self { validator }
+> +    }
+> +}
+> +
+> +impl<S, V> Layer<S> for MetadataValidatorLayer<V>
+> +where
+> +    V: MetadataValidator + Clone,
+> +    S: Service<crate::Request<tonic::transport::Body>, Error = Status>,
+> +{
+> +    type Service = MetadataValidatorService<S, V>;
+> +
+> +    fn layer(&self, inner: S) -> Self::Service {
+> +        MetadataValidatorService {
+> +            inner,
+> +            validator: self.validator.clone(),
+> +        }
+> +    }
+> +}
+> +
+> +/// Service wrapper that performs validation.
+> +#[derive(Clone)]
+> +pub struct MetadataValidatorService<S, V> {
+> +    inner: S,
+> +    validator: V,
+> +}
+> +
+> +impl<S, V, ReqBody> Service<crate::Request<ReqBody>> for MetadataValidatorService<S, V>
+> +where
+> +    V: MetadataValidator,
+> +    S: Service<crate::Request<ReqBody>>,
+> +    S::Error: From<Status>,
+> +{
+> +    type Response = S::Response;
+> +    type Error = S::Error;
+> +    type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
+> +
+> +    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+> +        self.inner.poll_ready(cx)
+> +    }
+> +
+> +    fn call(&mut self, req: crate::Request<ReqBody>) -> Self::Future {
+> +        let md = req.metadata().clone();
+> +        match self.validator.validate(&md) {
+> +            Ok(()) => {
+> +                let fut = self.inner.call(req);
+> +                async move { fut.await }.boxed()
+> +            }
+> +            Err(e) => async move { Err(e.into()) }.boxed(),
+> +        }
+> +    }
+> +}
+> +EOF
+> sed -i "/pub use self::recover_error::{RecoverError, RecoverErrorLayer};/a \
+> pub mod metadata_validator;\npub use self::metadata_validator::{MetadataValidator, ValidatorBuilder, MetadataValidatorLayer};" src/tonic/src/service/mod.rs
+> cargo test --workspace\n

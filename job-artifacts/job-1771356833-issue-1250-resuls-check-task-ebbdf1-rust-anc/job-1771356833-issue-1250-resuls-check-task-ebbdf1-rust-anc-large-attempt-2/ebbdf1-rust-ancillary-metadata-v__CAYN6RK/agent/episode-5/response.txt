@@ -1,0 +1,19 @@
+{
+  "analysis": "ripgrep is not installed, so all searching must use grep/sed. We located MetadataMap::from_headers and confirmed MetadataMap offers get/get_bin, contains_key, iter, and len. The terminal currently shows part of metadata/value.rs, indicating MetadataValue<Ascii> has len() and a method yielding a &str when valid ASCII. Next we must inspect that API (likely to_str) to implement header_prefix, then implement the new service middleware module and wire it into service/mod.rs, keeping changes within 3 files and respecting constraints (no unwrap/expect/clone/if let/closures/unsafe, <=100 char lines).",
+  "plan": "1) Inspect the remainder of MetadataValue<Ascii> to find the exact method for extracting &str (to_str/as_str) and bytes access.\n2) Create src/tonic/src/service/metadata_validator.rs implementing:\n   - MetadataValidator trait\n   - ValidatorBuilder fluent API building an enum-based RulesValidator (no closures)\n   - validate rules: require_header (failed_precondition), max_header_size (invalid_argument),\n     header_prefix (starts_with, invalid_argument), max_total_headers (resource_exhausted)\n   - MetadataValidatorLayer<'a, V> holding &V (avoids clone) and Service wrapper that validates\n     before forwarding; on failure returns Status as an HTTP response with empty body.\n3) Update src/tonic/src/service/mod.rs to include and re-export the new module/types.\n4) Run tests for tonic crate.",
+  "commands": [
+    {
+      "keystrokes": "sed -n '420,520p' src/tonic/src/metadata/value.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "grep -n \"pub fn to_str\" -n src/tonic/src/metadata/value.rs | head\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "grep -n \"as_bytes\\|to_bytes\\|pub fn.*bytes\" src/tonic/src/metadata/value.rs | head -n 40\n",
+      "duration": 1.0
+    }
+  ],
+  "task_complete": false
+}

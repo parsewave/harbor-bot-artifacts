@@ -1,0 +1,111 @@
+{
+    "id": "3127dff4-455b-4529-b347-3bfd3049a834",
+    "task_name": "ebbdf1-rust-ancillary-metadata-validator-layer",
+    "trial_name": "ebbdf1-rust-ancillary-metadata-v__oMhiiw8",
+    "trial_uri": "file:///tmp/harbor-runs/job-1771356833-issue-1250-resuls-check-task-ebbdf1-rust-anc-large-attempt-1/ebbdf1-rust-ancillary-metadata-v__oMhiiw8",
+    "task_id": {
+        "path": "/tmp/harbor-runs/workspaces/tb-bot-job-1771356833-issue-1250-resuls-check-task-ebbdf1-rust-anc-0da785aa/contributor_tasks/ebbdf1-rust-ancillary-metadata-validator-layer"
+    },
+    "source": "contributor_tasks",
+    "task_checksum": "b667898c23063019035d5f5c3ad66a0eedb7adff2f9f5f863a4660851fabedb5",
+    "config": {
+        "task": {
+            "path": "/tmp/harbor-runs/workspaces/tb-bot-job-1771356833-issue-1250-resuls-check-task-ebbdf1-rust-anc-0da785aa/contributor_tasks/ebbdf1-rust-ancillary-metadata-validator-layer",
+            "git_url": null,
+            "git_commit_id": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "contributor_tasks"
+        },
+        "trial_name": "ebbdf1-rust-ancillary-metadata-v__oMhiiw8",
+        "trials_dir": "/tmp/harbor-runs/job-1771356833-issue-1250-resuls-check-task-ebbdf1-rust-anc-large-attempt-1",
+        "timeout_multiplier": 1.0,
+        "agent": {
+            "name": "terminus-2",
+            "import_path": null,
+            "model_name": "openrouter/openai/gpt-5.2",
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "kwargs": {}
+        },
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "kwargs": {}
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "job_id": "63112202-f1e9-4056-8a16-3d205215dc9f"
+    },
+    "agent_info": {
+        "name": "terminus-2",
+        "version": "2.0.0",
+        "model_info": {
+            "name": "openai/gpt-5.2",
+            "provider": "openrouter"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 239485,
+        "n_cache_tokens": 212480,
+        "n_output_tokens": 20253,
+        "cost_usd": 0.36430490249999997,
+        "rollout_details": [],
+        "metadata": {
+            "n_episodes": 16,
+            "api_request_times_msec": [
+                10983.899116516113,
+                8938.141822814941,
+                18415.96293449402,
+                28123.17681312561,
+                92178.91073226929,
+                134703.38368415833,
+                3073.7853050231934,
+                2331.261396408081,
+                2251.9969940185547,
+                2217.0755863189697,
+                2632.960081100464,
+                4356.646299362183,
+                2391.9806480407715,
+                2355.677366256714,
+                9759.39917564392,
+                6752.597093582153
+            ],
+            "summarization_count": 0
+        }
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.0
+        }
+    },
+    "exception_info": null,
+    "started_at": "2026-02-17T20:32:47.571691Z",
+    "finished_at": "2026-02-17T20:47:32.257032Z",
+    "environment_setup": {
+        "started_at": "2026-02-17T20:32:47.573325Z",
+        "finished_at": "2026-02-17T20:33:36.266046Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-02-17T20:33:36.266135Z",
+        "finished_at": "2026-02-17T20:33:38.637867Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-02-17T20:33:38.638036Z",
+        "finished_at": "2026-02-17T20:42:36.503190Z"
+    },
+    "verifier": {
+        "started_at": "2026-02-17T20:42:36.503393Z",
+        "finished_at": "2026-02-17T20:47:10.723046Z"
+    }
+}

@@ -1,0 +1,31 @@
+{
+  "analysis": "The repository is at /app/src with tonic code under src/tonic. The service module currently exposes interceptor, layered, recover_error, and router. We still need to implement the new metadata validation middleware (trait + builder + tower layer/service wrapper) and wire it into tonic/src/service/mod.rs. We also need to inspect tonic’s MetadataMap API and existing interceptor middleware patterns to ensure we validate request metadata correctly and comply with constraints (no unwrap/expect/clone/if let/closures/unsafe, <=3 files changed, <=100 char lines).",
+  "plan": "1) Inspect tonic’s MetadataMap implementation and request type to learn how to access request metadata for validation.\n2) Inspect the remainder of interceptor.rs to mirror tower Service wrapping patterns (pin_project, Future, forwarding, etc.).\n3) Implement src/tonic/src/service/metadata_validator.rs with: MetadataValidator trait, ValidatorBuilder + concrete validator, and MetadataValidatorLayer wrapping an inner Service and validating request metadata prior to calling inner.\n4) Update src/tonic/src/service/mod.rs to include and re-export the new module/types.\n5) Run tonic crate tests to ensure existing tests pass.",
+  "commands": [
+    {
+      "keystrokes": "sed -n '200,520p' src/tonic/src/service/interceptor.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "ls -la src/tonic/src/metadata\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "sed -n '1,260p' src/tonic/src/metadata/mod.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "sed -n '1,240p' src/tonic/src/metadata/map.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "rg -n \"pub struct Request\" src/tonic/src | head -n 50\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "sed -n '1,220p' src/tonic/src/request.rs\n",
+      "duration": 0.1
+    }
+  ],
+  "task_complete": false
+}

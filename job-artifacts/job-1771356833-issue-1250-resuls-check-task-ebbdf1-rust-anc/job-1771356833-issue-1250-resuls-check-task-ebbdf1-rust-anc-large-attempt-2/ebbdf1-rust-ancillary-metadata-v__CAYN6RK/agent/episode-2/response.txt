@@ -1,0 +1,27 @@
+{
+  "analysis": "We’ve inspected service/mod.rs and interceptor.rs. Interceptor middleware turns a failing Status into an HTTP response with an empty body wrapper, and it rebuilds HTTP responses by wrapping the inner body. We still need to implement metadata_validator.rs (trait + builder + rules + tower layer/service + response body wrapper) and wire it into service/mod.rs. Next we must confirm MetadataMap APIs (from_headers, into_headers, len, iter, get/get_all) so we can validate without cloning or unwraps, and then implement the middleware using patterns similar to interceptor but without closures/if let/clone/unwrap.",
+  "plan": "1) Inspect src/tonic/src/metadata/map.rs for methods we need: from_headers, into_headers, iter/keys/len, get/get_all.\n2) After confirming APIs, implement src/tonic/src/service/metadata_validator.rs with:\n   - MetadataValidator trait\n   - ValidatorBuilder fluent API accumulating enum Rule values (no closures)\n   - Concrete validator impl that loops over rules and checks MetadataMap\n   - MetadataValidatorLayer<'a, V> holding &V to avoid any cloning\n   - Service wrapper that validates by moving headers into MetadataMap (from_headers) and then restoring headers (into_headers)\n   - ResponseFuture + ResponseBody to turn validation failures into Ok(HTTP response) like interceptor.\n3) Update src/tonic/src/service/mod.rs to include and re-export the new module/types.\n4) Run cargo test for tonic crate.",
+  "commands": [
+    {
+      "keystrokes": "rg -n \"from_headers\\(\" src/tonic/src/metadata/map.rs\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "rg -n \"into_headers\" src/tonic/src/metadata/map.rs\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "rg -n \"pub fn (get|get_all|get_bin|get_all_bin|iter|len|keys)\" src/tonic/src/metadata/map.rs | head -n 80\n",
+      "duration": 1.0
+    },
+    {
+      "keystrokes": "sed -n '1,220p' src/tonic/src/metadata/map.rs\n",
+      "duration": 0.1
+    },
+    {
+      "keystrokes": "sed -n '220,420p' src/tonic/src/metadata/map.rs\n",
+      "duration": 0.1
+    }
+  ],
+  "task_complete": false
+}

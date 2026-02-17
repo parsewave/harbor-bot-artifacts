@@ -1,0 +1,43 @@
+Current Terminal Screen:
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+  Downloaded sync_wrapper v1.0.2
+  Downloaded static_assertions v1.1.0
+  Downloaded socket2 v0.6.2
+  Downloaded serde_core v1.0.228
+  Downloaded rand_core v0.10.0
+  Downloaded mime v0.3.17
+  Downloaded smallvec v1.15.1
+  Downloaded slab v0.4.12
+  Downloaded env_filter v1.0.0
+  Downloaded axum v0.8.8
+  Downloaded libc v0.2.182
+  Downloaded aho-corasick v1.1.4
+  Downloaded pin-project-lite v0.2.16
+  Downloaded matchit v0.8.4
+  Downloaded fnv v1.0.7
+  Downloaded 72 crates (6.6MiB) in 1.07s
+   Compiling proc-macro2 v1.0.106
+   Compiling quote v1.0.44
+   Compiling unicode-ident v1.0.24
+   Compiling syn v2.0.116
+   Compiling libc v0.2.182
+   Compiling pin-project-lite v0.2.16
+   Compiling bytes v1.11.1
+   Compiling futures-core v0.3.32
+   Compiling mio v1.1.1
+   Compiling socket2 v0.6.2
+   Compiling tokio-macros v2.6.0
+   Compiling itoa v1.0.17
+   Compiling http v1.4.0
+   Compiling tokio v1.49.0
+   Compiling once_cell v1.21.3
+   Compiling tracing-core v0.1.36
+   Compiling tracing-attributes v0.1.31
+   Compiling slab v0.4.12
+   Compiling equivalent v1.0.2
+   Compiling memchr v2.8.0
+   Compiling hashbrown v0.16.1
+   Compiling futures-sink v0.3.32
+   Compiling tokio-util v0.7.18
+    Building [=======>                   ] 28/87: tokio-util
